@@ -1,0 +1,33 @@
+{
+	"name": "trimly-api",
+	"version": "2.0.0",
+	"description": "A Barber shop slot booking app's backend.",
+	"main": "server.js",
+	"type": "module",
+	"scripts": {
+		"watch": "tsc -w",
+		"build": "tsc",
+		"dev": "nodemon dist/server.js",
+		"start": "node dist/server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/eDenxGT/Trimly-Barber-Shop-Booking-App-v2.git"
+	},
+	"keywords": [
+		"barber"
+	],
+	"author": "eDenGT",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/eDenxGT/Trimly-Barber-Shop-Booking-App-v2/issues"
+	},
+	"homepage": "https://github.com/eDenxGT/Trimly-Barber-Shop-Booking-App-v2#readme",
+	"devDependencies": {
+		"nodemon": "^3.1.9",
+		"typescript": "^5.8.2"
+	},
+	"dependencies": {
+		"chalk": "^5.4.1"
+	}
+}
