@@ -2,16 +2,13 @@
 	"name": "trimly-api",
 	"version": "2.0.0",
 	"description": "A Barber shop slot booking app's backend.",
-	"main": "server.js",
+	"main": "app.js",
 	"type": "module",
-	"_moduleAliases": {
-		"@": "./dist"
-	},
 	"scripts": {
 		"watch": "tsc -w",
 		"build": "tsc",
-		"dev": "nodemon dist/server.js",
-		"start": "node dist/server.js"
+		"dev": "nodemon dist/app.js",
+		"start": "node dist/app.js"
 	},
 	"repository": {
 		"type": "git",
@@ -39,9 +36,9 @@
 		"google-auth-library": "^9.15.1",
 		"helmet": "^8.1.0",
 		"jsonwebtoken": "^9.0.2",
-		"module-alias": "^2.2.3",
 		"mongoose": "^8.13.0",
 		"morgan": "^1.10.0",
+		"nodemailer": "^6.10.0",
 		"redis": "^4.7.0",
 		"reflect-metadata": "^0.2.2",
 		"tsyringe": "^4.8.0",
@@ -56,8 +53,9 @@
 		"@types/mongoose": "^5.11.96",
 		"@types/morgan": "^1.9.9",
 		"@types/node": "^22.13.13",
+		"@types/nodemailer": "^6.4.17",
 		"nodemon": "^3.1.9",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.8.2"
-	},
+	}
 }

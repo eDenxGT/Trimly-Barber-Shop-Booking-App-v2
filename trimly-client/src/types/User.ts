@@ -3,7 +3,6 @@ import { UserRoles } from "./UserRoles";
 type statusTypes = "active" | "pending" | "blocked";
 
 export interface User {
-	id?: string;
 	userId?: string;
 	fullName: string;
 	email: string;
@@ -26,6 +25,7 @@ export interface IAdmin extends User {
 }
 
 export interface IClient extends User {
+	googleId?: string;
 	location?: {
 		name?: string;
 		zipCode?: string;
@@ -34,9 +34,11 @@ export interface IClient extends User {
 	};
 }
 
-export interface IBarberShop extends User {
+export interface IBarberShop extends Omit<User, "fullName"> {
+	shopName?: string;
 	banner?: string;
 	description?: string;
+	googleId?: string;
 	openingHours: {
 		[day: string]: {
 			open?: string;

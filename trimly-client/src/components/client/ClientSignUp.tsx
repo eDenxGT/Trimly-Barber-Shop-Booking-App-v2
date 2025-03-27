@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { TextField, Button } from "@mui/material";
-import { Eye, EyeOff } from "lucide-react";
 import BarberToolsBG from "@/assets/common/barber-tools.png";
 import BarberHappy from "@/assets/common/barber-happy.png";
 import { UserRoles } from "@/types/UserRoles";
@@ -32,8 +30,6 @@ const ClientSignUp = ({
 	isLoading,
 	handleGoogleAuth,
 }: SignUpProps) => {
-	const [showPassword, setShowPassword] = useState(false);
-	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
 	const [isSending, setIsSending] = useState(false);
 	const [userData, setUserData] = useState<User>({} as User);

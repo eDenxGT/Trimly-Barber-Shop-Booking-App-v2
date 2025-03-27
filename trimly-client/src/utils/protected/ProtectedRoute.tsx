@@ -28,7 +28,7 @@ export const ProtectedRoute = ({
 	const session = useSelector(getActiveSession);
 
 	if (!session) return <Navigate to="/" />;
-	if (!allowedRoles.includes(session.role))
+	if (!allowedRoles.includes(session.role as string))
 		return <Navigate to="/unauthorized" />;
 
 	return element;
