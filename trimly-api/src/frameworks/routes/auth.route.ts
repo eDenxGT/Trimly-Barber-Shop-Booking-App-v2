@@ -22,13 +22,13 @@ export class AuthRoutes extends BaseRoute {
 		// 	authController.authenticateWithGoogle(req, res);
 		// });
 
-		// this.router.post("/send-otp", (req: Request, res: Response) => {
-		// 	authController.sendOtpEmail(req, res);
-		// });
+		this.router.post("/send-otp", (req: Request, res: Response) => {
+			authController.sendOtpEmail(req, res);
+		});
 
-		// this.router.post("/verify-otp", (req: Request, res: Response) => {
-		// 	authController.verifyOtp(req, res);
-		// });
+		this.router.post("/verify-otp", (req: Request, res: Response) => {
+			authController.verifyOtp(req, res);
+		});
 
 		// this.router.post("/forgot-password", (req: Request, res: Response) => {
 		// 	authController.forgotPassword(req, res);

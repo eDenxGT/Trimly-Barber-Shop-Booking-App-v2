@@ -12,6 +12,9 @@ import {
 	SUCCESS_MESSAGES,
 } from "../../../shared/constants.js";
 import { handleErrorResponse } from "../../../shared/utils/errorHandler.js";
+import { IVerifyOtpUseCase } from "../../../entities/useCaseInterfaces/auth/verify-otp-usecase.interface.js";
+import { ISendOtpEmailUseCase } from "../../../entities/useCaseInterfaces/auth/sent-otp-usecase.interface.js";
+import { otpMailValidationSchema } from "./validations/otp-mail.validation.schema.js";
 // import { forgotPasswordValidationSchema } from "./validations/forgot-password.validation.schema";
 // import { ILoginUserUseCase } from "@/entities/useCaseInterfaces/auth/login-usecase.interface";
 // import { LoginUserDTO, UserDTO } from "@/shared/dtos/user.dto";
@@ -32,14 +35,14 @@ import { handleErrorResponse } from "../../../shared/utils/errorHandler.js";
 export class AuthController implements IAuthController {
 	constructor(
 		@inject("IRegisterUserUseCase")
-		private _registerUserUseCase: IRegisterUserUseCase // @inject("IGoogleUseCase") // private _googleUseCase: IGoogleUseCase, // @inject("ILoginUserUseCase") // private _loginUserUseCase: ILoginUserUseCase, // @inject("IRefreshTokenUseCase")
-	) // private _refreshTokenUseCase: IRefreshTokenUseCase,
-	// @inject("IVerifyOtpUseCase")
-	// private _verifyOtpUseCase: IVerifyOtpUseCase,
+		private _registerUserUseCase: IRegisterUserUseCase,
+		@inject("IVerifyOtpUseCase")
+		private _verifyOtpUseCase: IVerifyOtpUseCase,
+		@inject("ISendOtpEmailUseCase")
+		private _sendOtpEmailUseCase: ISendOtpEmailUseCase // private _refreshTokenUseCase: IRefreshTokenUseCase,
+	) // @inject("IGoogleUseCase") // private _googleUseCase: IGoogleUseCase, // @inject("ILoginUserUseCase") // private _loginUserUseCase: ILoginUserUseCase, // @inject("IRefreshTokenUseCase")
 	// @inject("IResetPasswordUseCase")
 	// private _resetPasswordUseCase: IResetPasswordUseCase,
-	// @inject("ISendOtpEmailUseCase")
-	// private _sendOtpEmailUseCase: ISendOtpEmailUseCase,
 	// @inject("IGenerateTokenUseCase")
 	// private _generateTokenUseCase: IGenerateTokenUseCase,
 	// @inject("IForgotPasswordUseCase")
@@ -230,6 +233,7 @@ export class AuthController implements IAuthController {
 	async register(req: Request, res: Response): Promise<void> {
 		try {
 			const { role } = req.body as { role: keyof typeof userSchemas };
+			console.log(req.body);
 			const schema = userSchemas[role];
 			if (!schema) {
 				res.status(HTTP_STATUS.BAD_REQUEST).json({
@@ -272,37 +276,37 @@ export class AuthController implements IAuthController {
 	// 	}
 	// }
 
-	// //* ─────────────────────────────────────────────────────────────
-	// //*                     🛠️ Sent Otp Email
-	// //* ─────────────────────────────────────────────────────────────
-	// async sendOtpEmail(req: Request, res: Response): Promise<void> {
-	// 	try {
-	// 		const { email } = req.body;
-	// 		await this._sendOtpEmailUseCase.execute(email);
-	// 		res.status(HTTP_STATUS.OK).json({
-	// 			message: SUCCESS_MESSAGES.OTP_SEND_SUCCESS,
-	// 			success: true,
-	// 		});
-	// 	} catch (error) {
-	// 		handleErrorResponse(res, error);
-	// 	}
-	// }
+	//* ─────────────────────────────────────────────────────────────
+	//*                     🛠️ Sent Otp Email
+	//* ─────────────────────────────────────────────────────────────
+	async sendOtpEmail(req: Request, res: Response): Promise<void> {
+		try {
+			const { email } = req.body;
+			await this._sendOtpEmailUseCase.execute(email);
+			res.status(HTTP_STATUS.OK).json({
+				message: SUCCESS_MESSAGES.OTP_SEND_SUCCESS,
+				success: true,
+			});
+		} catch (error) {
+			handleErrorResponse(res, error);
+		}
+	}
 
-	// //* ─────────────────────────────────────────────────────────────
-	// //*                      🛠️ Verify Otp
-	// //* ─────────────────────────────────────────────────────────────
-	// async verifyOtp(req: Request, res: Response): Promise<void> {
-	// 	try {
-	// 		const { email, otp } = req.body;
-	// 		const validatedData = otpMailValidationSchema.parse({ email, otp });
-	// 		await this._verifyOtpUseCase.execute(validatedData);
+	//* ─────────────────────────────────────────────────────────────
+	//*                      🛠️ Verify Otp
+	//* ─────────────────────────────────────────────────────────────
+	async verifyOtp(req: Request, res: Response): Promise<void> {
+		try {
+			const { email, otp } = req.body;
+			const validatedData = otpMailValidationSchema.parse({ email, otp });
+			await this._verifyOtpUseCase.execute(validatedData);
 
-	// 		res.status(HTTP_STATUS.OK).json({
-	// 			success: true,
-	// 			message: SUCCESS_MESSAGES.VERIFICATION_SUCCESS,
-	// 		});
-	// 	} catch (error) {
-	// 		handleErrorResponse(res, error);
-	// 	}
-	// }
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.VERIFICATION_SUCCESS,
+			});
+		} catch (error) {
+			handleErrorResponse(res, error);
+		}
+	}
 }

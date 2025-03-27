@@ -17,8 +17,8 @@ export const clientSchema = new Schema<IClientModel>(
 		},
 		googleId: { type: String },
 		location: {
-			name: { type: String },
-			zipCode: { type: String },
+			name: { type: String, default: null },
+			zipCode: { type: String, default: null },
 			latitude: { type: Number, default: null },
 			longitude: { type: Number, default: null },
 		},

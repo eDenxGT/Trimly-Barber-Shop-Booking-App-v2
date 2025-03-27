@@ -14,7 +14,7 @@ export const otpSchema = new Schema<IOtpModel>(
 		expiresAt: {
 			type: Date,
 			required: true,
-			index: { expires: 60 },
+			expires: 60,
 		},
 	},
 	{ timestamps: true }

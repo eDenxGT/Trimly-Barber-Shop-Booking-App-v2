@@ -11,6 +11,7 @@ import { IAdminRepository } from "../../entities/repositoryInterfaces/users/admi
 import { IClientEntity } from "../../entities/models/client.entity.js";
 import { IBarberShopEntity } from "../../entities/models/barber-shop.entity.js";
 import { generateUniqueId } from "../../frameworks/security/uniqueuid.bcrypt.js";
+import { IUserExistenceService } from "../../entities/useCaseInterfaces/services/user-existence-service.interface.js";
 
 @injectable()
 export class RegisterUserUseCase implements IRegisterUserUseCase {
@@ -20,7 +21,9 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 		@inject("IClientRepository")
 		private _clientRepository: IClientRepository,
 		@inject("IAdminRepository") private _adminRepository: IAdminRepository,
-		@inject("IPasswordBcrypt") private _passwordBcrypt: IBcrypt
+		@inject("IPasswordBcrypt") private _passwordBcrypt: IBcrypt,
+		@inject("IUserExistenceService")
+		private _userExistenceService: IUserExistenceService
 	) {}
 
 	async execute(
@@ -28,14 +31,10 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 	): Promise<IBarberShopEntity | IClientEntity | null> {
 		const { role, email, password } = user;
 
-		const [existingBarber, existingClient, existingAdmin] =
-			await Promise.all([
-				this._barberRepository.findOne({ email }),
-				this._clientRepository.findOne({ email }),
-				this._adminRepository.findOne({ email }),
-			]);
-
-		if (existingBarber || existingClient || existingAdmin) {
+		const isEmailExisting = await this._userExistenceService.emailExists(
+			email
+		);
+		if (isEmailExisting) {
 			throw new CustomError(
 				ERROR_MESSAGES.EMAIL_EXISTS,
 				HTTP_STATUS.CONFLICT

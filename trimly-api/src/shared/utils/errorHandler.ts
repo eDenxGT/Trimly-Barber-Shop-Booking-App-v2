@@ -4,6 +4,7 @@ import { ERROR_MESSAGES, HTTP_STATUS } from "../constants.js";
 import { CustomError } from "../../entities/utils/custom.error.js";
 
 export const handleErrorResponse = (res: Response, error: unknown) => {
+	console.error(error);
 	if (error instanceof ZodError) {
 		const errors = error.errors.map((err) => ({
 			message: err.message,
@@ -23,7 +24,6 @@ export const handleErrorResponse = (res: Response, error: unknown) => {
 		});
 	}
 
-	console.error(error);
 	return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
 		success: false,
 		message: ERROR_MESSAGES.SERVER_ERROR,

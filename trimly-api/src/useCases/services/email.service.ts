@@ -26,7 +26,7 @@ export class EmailService implements IEmailService {
 		html: string;
 	}) {
 		const info = await this._transporter.sendMail(mailOptions);
-		console.log(chalk.bgGreenBright(`📧 Email sent:`), info.response);
+		console.log(chalk.bgGreenBright(`📧 Email sent:dd`), info.response);
 	}
 
 	async sendOtpEmail(

@@ -82,6 +82,7 @@ export const ERROR_MESSAGES = {
 	CATEGORY_NOT_FOUND: "Category not found",
 	INVALID_TOKEN: "Invalid session please login again",
 	INVALID_ROLE: "Access denied",
+	INVALID_OTP: "Invalid or expired otp",
 	INVALID_CREDENTIALS: "Wrong email or password",
 	USER_NOT_FOUND: "User not found",
 	ROUTE_NOT_FOUND: "Page not found",
@@ -131,10 +132,10 @@ export const VERIFICATION_MAIL_CONTENT = (
    <div style="background-color: #f9f9f9; border-radius: 8px; padding: 20px; margin: 25px 0; text-align: center;">
       <p style="margin-bottom: 10px; font-size: 16px;">Your verification code is:</p>
       <h1 style="background-color: #f2f2f2; color: #FEBA43; font-size: 36px; margin: 10px 0; padding: 20px; border-radius: 8px; letter-spacing: 5px;">
-         \${otp}
+         ${otp.trim()}
       </h1>
       <p style="color: #666; font-size: 14px;">
-         ⏰ Code expires in 2 minutes
+         ⏰ Code expires in 1 minute
       </p>
    </div>
    
@@ -304,7 +305,7 @@ export const SHOP_REJECTED_MAIL_CONTENT = (
    </p>
 
    <div style="text-align: center; margin: 30px 0;">
-      <a href="https://trimly.in/support" 
+      <a href="${config.cors.ALLOWED_ORIGIN}/support" 
          style="background-color: #FEBA43; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-size: 16px; display: inline-block;">
          Contact Support
       </a>
