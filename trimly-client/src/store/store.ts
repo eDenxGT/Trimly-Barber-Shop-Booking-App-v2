@@ -1,0 +1,44 @@
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import persistReducer from "redux-persist/es/persistReducer";
+import clientReducer from "./slices/client.slice";
+import barberShopReducer from "./slices/barber-shop.slice";
+import adminReducer from "./slices/admin.slice";
+
+// const clientPersistConfig = {
+// 	key: "client",
+// 	storage,
+// };
+
+// const barberPersistConfig = {
+// 	key: "barber",
+// 	storage,
+// };
+
+const rootPersistConfig = {
+	key: "session",
+	storage,
+};
+
+const rootReducer = combineReducers({
+	client: clientReducer,
+	barberShop: barberShopReducer,
+	admin: adminReducer
+});
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
+
+export const store = configureStore({
+	reducer: persistedReducer,
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			serializableCheck: {
+				ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+			},
+		}),
+});
+
+export const persistor = persistStore(store);
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

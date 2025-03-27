@@ -4,6 +4,9 @@
 	"description": "A Barber shop slot booking app's backend.",
 	"main": "server.js",
 	"type": "module",
+	"_moduleAliases": {
+		"@": "./dist"
+	},
 	"scripts": {
 		"watch": "tsc -w",
 		"build": "tsc",
@@ -23,11 +26,38 @@
 		"url": "https://github.com/eDenxGT/Trimly-Barber-Shop-Booking-App-v2/issues"
 	},
 	"homepage": "https://github.com/eDenxGT/Trimly-Barber-Shop-Booking-App-v2#readme",
+	"dependencies": {
+		"bcryptjs": "^3.0.2",
+		"chalk": "^5.4.1",
+		"cookie-parser": "^1.4.7",
+		"cors": "^2.8.5",
+		"crypto": "^1.0.1",
+		"dotenv": "^16.4.7",
+		"express": "^4.21.2",
+		"express-rate-limit": "^7.5.0",
+		"fs": "^0.0.1-security",
+		"google-auth-library": "^9.15.1",
+		"helmet": "^8.1.0",
+		"jsonwebtoken": "^9.0.2",
+		"module-alias": "^2.2.3",
+		"mongoose": "^8.13.0",
+		"morgan": "^1.10.0",
+		"redis": "^4.7.0",
+		"reflect-metadata": "^0.2.2",
+		"tsyringe": "^4.8.0",
+		"uuid": "^11.1.0",
+		"zod": "^3.24.2"
+	},
 	"devDependencies": {
+		"@types/cookie-parser": "^1.4.8",
+		"@types/cors": "^2.8.17",
+		"@types/express": "^5.0.1",
+		"@types/jsonwebtoken": "^9.0.9",
+		"@types/mongoose": "^5.11.96",
+		"@types/morgan": "^1.9.9",
+		"@types/node": "^22.13.13",
 		"nodemon": "^3.1.9",
+		"ts-node": "^10.9.2",
 		"typescript": "^5.8.2"
 	},
-	"dependencies": {
-		"chalk": "^5.4.1"
-	}
 }

@@ -1,14 +1,23 @@
-import { useState } from 'react'
-import './App.css'
-import { Button } from './components/ui/button'
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// import { PublicRoutes } from "./components/routes/PublicRoutes";
+import { ClientRoutes } from "./routes/ClientRoutes";
+import ScrollToTop from "./utils/ScrollToTop";
+import { UnauthorizedPage } from "./pages/common/UnauthorizedPage";
+// import { BarberShopRoutes } from "./routes/BarberShopRoutes";
+// import { AdminRoutes } from "./routes/AdminRoutes";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-    </>
-  )
+	return (
+		<Router>
+			<ScrollToTop />
+			<Routes>
+				<Route path="/*" element={<ClientRoutes />} />
+				{/* <Route path="/barber-shop/*" element={<BarberShopRoutes />} /> */}
+				{/* <Route path="/admin/*" element={<AdminRoutes />} /> */}
+				<Route path="/unauthorized" element={<UnauthorizedPage />} /> 
+			</Routes>
+		</Router>
+	);
 }
 
-export default App
+export default App;
