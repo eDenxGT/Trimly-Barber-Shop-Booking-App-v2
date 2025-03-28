@@ -22,8 +22,8 @@ export const ClientLayout = () => {
 		logoutReq(undefined, {
 			onSuccess: (data) => {
 				dispatch(clientLogout());
-				successToast(data.message);
 				navigate("/");
+				successToast(data.message);
 			},
 			onError: (err: any) => {
 				errorToast(err.response.data.message);

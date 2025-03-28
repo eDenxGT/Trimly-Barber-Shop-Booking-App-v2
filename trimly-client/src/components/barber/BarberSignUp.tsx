@@ -104,7 +104,6 @@ export const BarberSignUp = ({
 		},
 		validationSchema: barberSignupSchema,
 		onSubmit: (values) => {
-			console.log(values);
 			setUserData({
 				...values,
 				status: "pending",

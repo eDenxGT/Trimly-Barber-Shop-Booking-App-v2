@@ -21,6 +21,18 @@ import { OtpService } from "../../useCases/services/otp.service.js";
 import { OtpBcrypt } from "../security/otp.bcrypt.js";
 import { IEmailService } from "../../entities/useCaseInterfaces/services/email-service.interface.js";
 import { EmailService } from "../../useCases/services/email.service.js";
+import { ILoginUserUseCase } from "../../entities/useCaseInterfaces/auth/login-usecase.interface.js";
+import { LoginUserUseCase } from "../../useCases/auth/login-user.usecase.js";
+import { ITokenService } from "../../entities/useCaseInterfaces/services/token-service.interface.js";
+import { JWTService } from "../../useCases/services/jwt.service.js";
+import { IRefreshTokenUseCase } from "../../entities/useCaseInterfaces/auth/refresh-token-usecase.interface.js";
+import { RefreshTokenUseCase } from "../../useCases/auth/refresh-token.usecase.js";
+import { IGenerateTokenUseCase } from "../../entities/useCaseInterfaces/auth/generate-token-usecase.interface.js";
+import { GenerateTokenUseCase } from "../../useCases/auth/generate-token.usecase.js";
+import { IRevokeRefreshTokenUseCase } from "../../entities/useCaseInterfaces/auth/revoke-refresh-token-usecase.interface.js";
+import { RevokeRefreshTokenUseCase } from "../../useCases/auth/revoke-refresh-token.usecase.js";
+import { IBlackListTokenUseCase } from "../../entities/useCaseInterfaces/auth/blacklist-token-usecase.interface.js";
+import { BlackListTokenUseCase } from "../../useCases/auth/blacklist-token.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -35,6 +47,29 @@ export class UseCaseRegistry {
 
 		container.register<IVerifyOtpUseCase>("IVerifyOtpUseCase", {
 			useClass: VerifyOtpUseCase,
+		});
+
+		container.register<ILoginUserUseCase>("ILoginUserUseCase", {
+			useClass: LoginUserUseCase,
+		});
+
+		container.register<IRefreshTokenUseCase>("IRefreshTokenUseCase", {
+			useClass: RefreshTokenUseCase,
+		});
+
+		container.register<IGenerateTokenUseCase>("IGenerateTokenUseCase", {
+			useClass: GenerateTokenUseCase,
+		});
+
+		container.register<IRevokeRefreshTokenUseCase>(
+			"IRevokeRefreshTokenUseCase",
+			{
+				useClass: RevokeRefreshTokenUseCase,
+			}
+		);
+
+		container.register<IBlackListTokenUseCase>("IBlackListTokenUseCase", {
+			useClass: BlackListTokenUseCase,
 		});
 
 		//* ====== Register Bcrypts ====== *//
@@ -57,6 +92,10 @@ export class UseCaseRegistry {
 
 		container.register<IEmailService>("IEmailService", {
 			useClass: EmailService,
+		});
+
+		container.register<ITokenService>("ITokenService", {
+			useClass: JWTService,
 		});
 	}
 }

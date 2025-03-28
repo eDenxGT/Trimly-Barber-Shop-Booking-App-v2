@@ -97,6 +97,7 @@ export const ERROR_MESSAGES = {
 	SHOP_BLOCKED: "This shop is blocked by admin",
 	MISSING_PARAMETERS: "Some details are missing",
 	WRONG_CURRENT_PASSWORD: "Current password is incorrect",
+   ACCOUNT_UNDER_VERIFICATION: "Your account is under verification. Please wait for admin approval.",
 	SAME_CURR_NEW_PASSWORD:
 		"New password must be different from current password",
 	INSUFFICIENT_FUNDS: "Not enough balance",

@@ -1,6 +1,5 @@
 export interface IGenerateTokenUseCase {
 	execute(
-		id: string,
 		userId: string,
 		email: string,
 		role: string

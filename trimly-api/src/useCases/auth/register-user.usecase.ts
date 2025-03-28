@@ -10,8 +10,8 @@ import { IClientRepository } from "../../entities/repositoryInterfaces/users/cli
 import { IAdminRepository } from "../../entities/repositoryInterfaces/users/admin-repository.interface.js";
 import { IClientEntity } from "../../entities/models/client.entity.js";
 import { IBarberEntity } from "../../entities/models/barber.entity.js";
-import { generateUniqueId } from "../../frameworks/security/uniqueuid.bcrypt.js";
 import { IUserExistenceService } from "../../entities/useCaseInterfaces/services/user-existence-service.interface.js";
+import { generateUniqueId } from "../services/uniqueuid.service.js";
 
 @injectable()
 export class RegisterUserUseCase implements IRegisterUserUseCase {
@@ -59,7 +59,6 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 				HTTP_STATUS.BAD_REQUEST
 			);
 		}
-		console.log(user);
 		return await repository.save({
 			...user,
 			password: hashedPassword ?? "",

@@ -17,7 +17,7 @@ export const barberSignupSchema = Yup.object({
 		.oneOf([Yup.ref("password")], "Passwords must match"),
 	location: Yup.object({
 		name: Yup.string().required("Location name is required"),
-		zipCode: Yup.string().required("Zip code is required"),
+		zipCode: Yup.string().required("Zip code is required. Choose another location"),
 		latitude: Yup.number().nullable(),
 		longitude: Yup.number().nullable(),
 	}),

@@ -50,7 +50,6 @@ export function LocationInputField({
 		getCurrentLocation,
 		clearSearch,
 	} = useLocation();
-	console.log(suggestions);
 
 	const handleCurrentLocation = async (e: React.MouseEvent) => {
 		e.preventDefault();

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
-import client from "../../frameworks/cache/redis.client.js";
 import { JWTService } from "../../useCases/services/jwt.service.js";
+import { redisClient } from "./../../frameworks/cache/redis.client.js";
 
 const tokenService = new JWTService();
 
@@ -45,7 +45,7 @@ export const verifyAuth = async (
 		const user = tokenService.verifyAccessToken(
 			token.access_token
 		) as CustomJwtPayload;
-		if (!user || !user.id) {
+		if (!user || !user.userId) {
 			res.status(HTTP_STATUS.UNAUTHORIZED).json({
 				message: ERROR_MESSAGES.TOKEN_EXPIRED,
 			});
@@ -95,7 +95,7 @@ const extractToken = (
 //* ─────────────────────────────────────────────────────────────
 const isBlacklisted = async (token: string): Promise<boolean> => {
 	try {
-		const result = await client.get(token);
+		const result = await redisClient.get(token);
 		return result !== null;
 	} catch (error) {
 		console.error("Redis error:", error);

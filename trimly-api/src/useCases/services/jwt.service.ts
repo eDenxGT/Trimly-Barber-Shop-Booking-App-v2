@@ -5,7 +5,6 @@ import { ITokenService } from "../../entities/useCaseInterfaces/services/token-s
 import { config } from "../../shared/config.js";
 
 interface JWTPayloadData {
-	id: string;
 	userId: string;
 	email: string;
 	role: string;
@@ -34,7 +33,6 @@ export class JWTService implements ITokenService {
 	}
 
 	generateAccessToken(payload: {
-		id: string;
 		userId: string;
 		email: string;
 		role: string;
@@ -44,7 +42,6 @@ export class JWTService implements ITokenService {
 		});
 	}
 	generateRefreshToken(payload: {
-		id: string;
 		userId: string;
 		email: string;
 		role: string;

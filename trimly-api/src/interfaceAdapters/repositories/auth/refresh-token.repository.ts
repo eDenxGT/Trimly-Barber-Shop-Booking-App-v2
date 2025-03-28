@@ -8,4 +8,7 @@ export class RefreshTokenRepository extends BaseRepository<IRefreshTokenModel> {
 	constructor() {
 		super(RefreshTokenModel);
 	}
+	async revokeRefreshToken(token: string): Promise<void> {
+		await RefreshTokenModel.deleteOne({ token });
+	}
 }

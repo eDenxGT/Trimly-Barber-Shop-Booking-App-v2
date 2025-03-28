@@ -1,28 +1,28 @@
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useLogout } from "@/hooks/auth/useLogout";
 import { useDispatch, useSelector } from "react-redux";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { RootState } from "@/store/store";
-import { PrivateHeader } from "./../mainComponents/PrivateHeader";
+import { logoutAdmin } from "@/services/auth/authService";
+import { adminLogout } from "@/store/slices/admin.slice";
+import { PrivateHeader } from "../mainComponents/PrivateHeader";
 import { Sidebar } from "../mainComponents/SideBar";
-import { useLogout } from "@/hooks/auth/useLogout";
-import { logoutBarber } from "@/services/auth/authService";
-import { barberLogout } from "@/store/slices/barber.slice";
 
-export const BarberLayout = () => {
+export const AdminLayout = () => {
 	const [isSideBarVisible, setIsSideBarVisible] = useState(false);
 	const [notifications] = useState(2);
 	const { successToast, errorToast } = useToaster();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const user = useSelector((state: RootState) => state.barber.barber);
-	const { mutate: logoutReq } = useLogout(logoutBarber);
+	const user = useSelector((state: RootState) => state.admin.admin);
+	const { mutate: logoutReq } = useLogout(logoutAdmin);
 
 	const handleLogout = () => {
 		logoutReq(undefined, {
 			onSuccess: (data) => {
-				dispatch(barberLogout());
-				navigate("/barber");
+				dispatch(adminLogout());
+				navigate("/admin");
 				successToast(data.message);
 			},
 			onError: (err: any) => {
@@ -32,7 +32,7 @@ export const BarberLayout = () => {
 	};
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-screen bg-gray-100">
 			{/* Header */}
 			<PrivateHeader
 				className="z-40"
@@ -44,7 +44,7 @@ export const BarberLayout = () => {
 
 			{/* Main content area with sidebar and outlet */}
 			<Sidebar
-				role="barber"
+				role="admin"
 				isVisible={isSideBarVisible}
 				onClose={() => setIsSideBarVisible(false)}
 				handleLogout={handleLogout}

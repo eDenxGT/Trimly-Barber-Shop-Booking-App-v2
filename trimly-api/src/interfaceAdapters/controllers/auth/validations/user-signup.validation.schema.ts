@@ -30,7 +30,7 @@ const barberSchema = z.object({
 		latitude: z.number(),
 		longitude: z.number(),
 	}),
-	status: z.enum(["pending", "approved", "blocked"]),
+	status: z.enum(["pending", "active", "blocked"]),
 	role: z.literal("barber"),
 });
 
