@@ -20,7 +20,7 @@ export interface ClientDTO {
 	role: "client";
 }
 
-export interface BarberShopDTO {
+export interface BarberDTO {
 	googleId?: string;
 	userId?: string;
 	shopName: string;
@@ -28,10 +28,10 @@ export interface BarberShopDTO {
 	phoneNumber?: string;
 	avatar?: string;
 	password?: string;
-	role: "barberShop";
+	role: "barber";
 }
 
-export type UserDTO = AdminDTO | ClientDTO | BarberShopDTO;
+export type UserDTO = AdminDTO | ClientDTO | BarberDTO;
 
 export interface LoginUserDTO {
 	email: string;

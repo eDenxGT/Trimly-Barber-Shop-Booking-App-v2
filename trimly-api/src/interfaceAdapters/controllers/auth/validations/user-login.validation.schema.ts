@@ -5,5 +5,5 @@ import { passwordSchema } from "../../../../shared/validations/password.validati
 export const loginSchema = z.object({
 	email: strongEmailRegex,
 	password: passwordSchema,
-	role: z.enum(["admin", "client", "barberShop"]),
+	role: z.enum(["admin", "client", "barber"]),
 });

@@ -4,8 +4,8 @@ import { container } from "tsyringe";
 //* ====== Repository Imports ====== *//
 import { IClientRepository } from "../../entities/repositoryInterfaces/users/client-repository.interface.js";
 import { ClientRepository } from "../../interfaceAdapters/repositories/users/client.repository.js";
-import { BarberShopRepository } from "../../interfaceAdapters/repositories/users/barber-shop.repository.js";
-import { IBarberShopRepository } from "../../entities/repositoryInterfaces/users/barber-shop-repository.interface.js";
+import { BarberRepository } from "../../interfaceAdapters/repositories/users/barber.repository.js";
+import { IBarberRepository } from "../../entities/repositoryInterfaces/users/barber-repository.interface.js";
 import { AdminRepository } from "../../interfaceAdapters/repositories/users/admin.repository.js";
 import { IAdminRepository } from "../../entities/repositoryInterfaces/users/admin-repository.interface.js";
 import { IOtpRepository } from "../../entities/repositoryInterfaces/auth/otp-repository.interface.js";
@@ -20,8 +20,8 @@ export class RepositoryRegistry {
 			useClass: ClientRepository,
 		});
 
-		container.register<IBarberShopRepository>("IBarberShopRepository", {
-			useClass: BarberShopRepository,
+		container.register<IBarberRepository>("IBarberRepository", {
+			useClass: BarberRepository,
 		});
 
 		container.register<IAdminRepository>("IAdminRepository", {

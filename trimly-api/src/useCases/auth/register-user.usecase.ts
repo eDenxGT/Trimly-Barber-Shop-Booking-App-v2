@@ -4,20 +4,20 @@ import { CustomError } from "../../entities/utils/custom.error.js";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
 import { IBcrypt } from "../../frameworks/security/bcrypt.interface.js";
 import { IUserEntity } from "../../entities/models/user.entity.js";
-import { IBarberShopRepository } from "../../entities/repositoryInterfaces/users/barber-shop-repository.interface.js";
+import { IBarberRepository } from "../../entities/repositoryInterfaces/users/barber-repository.interface.js";
 import { IRegisterUserUseCase } from "../../entities/useCaseInterfaces/auth/register-usecase.interface.js";
 import { IClientRepository } from "../../entities/repositoryInterfaces/users/client-repository.interface.js";
 import { IAdminRepository } from "../../entities/repositoryInterfaces/users/admin-repository.interface.js";
 import { IClientEntity } from "../../entities/models/client.entity.js";
-import { IBarberShopEntity } from "../../entities/models/barber-shop.entity.js";
+import { IBarberEntity } from "../../entities/models/barber.entity.js";
 import { generateUniqueId } from "../../frameworks/security/uniqueuid.bcrypt.js";
 import { IUserExistenceService } from "../../entities/useCaseInterfaces/services/user-existence-service.interface.js";
 
 @injectable()
 export class RegisterUserUseCase implements IRegisterUserUseCase {
 	constructor(
-		@inject("IBarberShopRepository")
-		private _barberRepository: IBarberShopRepository,
+		@inject("IBarberRepository")
+		private _barberRepository: IBarberRepository,
 		@inject("IClientRepository")
 		private _clientRepository: IClientRepository,
 		@inject("IAdminRepository") private _adminRepository: IAdminRepository,
@@ -28,7 +28,7 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 
 	async execute(
 		user: UserDTO
-	): Promise<IBarberShopEntity | IClientEntity | null> {
+	): Promise<IBarberEntity | IClientEntity | null> {
 		const { role, email, password } = user;
 
 		const isEmailExisting = await this._userExistenceService.emailExists(
@@ -50,7 +50,7 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 		let repository;
 		if (role === "client") {
 			repository = this._clientRepository;
-		} else if (role === "barberShop") {
+		} else if (role === "barber") {
 			repository = this._barberRepository;
 		} else {
 			throw new CustomError(

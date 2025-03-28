@@ -28,7 +28,7 @@ export class OtpService implements IOtpService {
 			new Date() > otpEntry.expiresAt ||
 			!(await this._otpBcrypt.compare(otp, otpEntry.otp))
 		) {
-			await this._otpRepository.delete({ email });
+			// await this._otpRepository.delete({ email });
 			return false;
 		}
 		await this._otpRepository.delete({ email });

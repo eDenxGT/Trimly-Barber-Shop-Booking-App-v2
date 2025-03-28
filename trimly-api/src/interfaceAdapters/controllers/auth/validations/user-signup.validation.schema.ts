@@ -18,16 +18,16 @@ const clientSchema = z.object({
 	role: z.literal("client"),
 });
 
-const barberShopSchema = z.object({
+const barberSchema = z.object({
 	shopName: nameSchema,
 	email: strongEmailRegex,
 	phoneNumber: phoneNumberSchema,
 	password: passwordSchema,
-	role: z.literal("barberShop"),
+	role: z.literal("barber"),
 });
 
 export const userSchemas = {
 	admin: adminSchema,
 	client: clientSchema,
-	barberShop: barberShopSchema,
+	barber: barberSchema,
 };

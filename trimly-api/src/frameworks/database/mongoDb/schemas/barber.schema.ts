@@ -1,13 +1,13 @@
 import { Schema } from "mongoose";
-import { IBarberShopModel } from "../models/barber-shop.model.js";
+import { IBarberModel } from "../models/barber.model.js";
 
-export const barberShopSchema = new Schema<IBarberShopModel>(
+export const barberSchema = new Schema<IBarberModel>(
 	{
 		userId: { type: String, unique: true },
 		email: { type: String, required: true, unique: true },
 		phoneNumber: { type: String, required: true },
 		password: { type: String, required: true },
-		role: { type: String, default: "barberShop" },
+		role: { type: String, default: "barber" },
 		avatar: { type: String },
 		banner: { type: String },
 		status: {

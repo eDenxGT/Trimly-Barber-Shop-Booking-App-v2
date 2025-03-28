@@ -3,7 +3,7 @@ import { persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import persistReducer from "redux-persist/es/persistReducer";
 import clientReducer from "./slices/client.slice";
-import barberShopReducer from "./slices/barber-shop.slice";
+import barberReducer from "./slices/barber.slice";
 import adminReducer from "./slices/admin.slice";
 
 // const clientPersistConfig = {
@@ -23,8 +23,8 @@ const rootPersistConfig = {
 
 const rootReducer = combineReducers({
 	client: clientReducer,
-	barberShop: barberShopReducer,
-	admin: adminReducer
+	barber: barberReducer,
+	admin: adminReducer,
 });
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ClientRoutes } from "./routes/ClientRoutes";
 import ScrollToTop from "./utils/ScrollToTop";
 import { UnauthorizedPage } from "./pages/common/UnauthorizedPage";
-// import { BarberShopRoutes } from "./routes/BarberShopRoutes";
+// import { BarberRoutes } from "./routes/BarberRoutes";
 // import { AdminRoutes } from "./routes/AdminRoutes";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
 			<ScrollToTop />
 			<Routes>
 				<Route path="/*" element={<ClientRoutes />} />
-				{/* <Route path="/barber-shop/*" element={<BarberShopRoutes />} /> */}
+				{/* <Route path="/barber/*" element={<BarberRoutes />} /> */}
 				{/* <Route path="/admin/*" element={<AdminRoutes />} /> */}
 				<Route path="/unauthorized" element={<UnauthorizedPage />} /> 
 			</Routes>

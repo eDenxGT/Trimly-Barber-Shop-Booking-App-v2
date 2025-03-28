@@ -1,16 +1,16 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { store } from "@/store/store";
-import { barberShopLogout } from "@/store/slices/barber-shop.slice";
+import { barberLogout } from "@/store/slices/barber.slice";
 
-export const barberShopAxiosInstance = axios.create({
+export const barberAxiosInstance = axios.create({
 	baseURL: import.meta.env.VITE_PRIVATE_API_URL + "/_ba",
 	withCredentials: true,
 });
 
 let isRefreshing = false;
 
-barberShopAxiosInstance.interceptors.response.use(
+barberAxiosInstance.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config;
@@ -20,13 +20,13 @@ barberShopAxiosInstance.interceptors.response.use(
 			if (!isRefreshing) {
 				isRefreshing = true;
 				try {
-					await barberShopAxiosInstance.post("/barber/refresh-token");
+					await barberAxiosInstance.post("/barber/refresh-token");
 					isRefreshing = false;
-					return barberShopAxiosInstance(originalRequest);
+					return barberAxiosInstance(originalRequest);
 				} catch (refreshError) {
 					isRefreshing = false;
 
-					store.dispatch(barberShopLogout());
+					store.dispatch(barberLogout());
 
 					window.location.href = "/";
 					toast("Please login again");
@@ -44,7 +44,7 @@ barberShopAxiosInstance.interceptors.response.use(
 				!originalRequest._retry)
 		) {
 			console.log("Session ended");
-			store.dispatch(barberShopLogout());
+			store.dispatch(barberLogout());
 
 			window.location.href = "/barber";
 			toast("Please login again");

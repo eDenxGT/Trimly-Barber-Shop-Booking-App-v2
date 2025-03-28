@@ -2,10 +2,11 @@ import { ZodError } from "zod";
 import { Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../constants.js";
 import { CustomError } from "../../entities/utils/custom.error.js";
+import chalk from "chalk";
 
 export const handleErrorResponse = (res: Response, error: unknown) => {
-	console.error(error);
 	if (error instanceof ZodError) {
+		console.error(chalk.bgRedBright(error.name), chalk.redBright(error));
 		const errors = error.errors.map((err) => ({
 			message: err.message,
 		}));

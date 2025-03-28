@@ -47,7 +47,7 @@ export function PrivateHeader({
 	const navigate = useNavigate();
 
 	const isClient = user?.role === "client";
-	const isBarber = user?.role === "barberShop";
+	const isBarber = user?.role === "barber";
 	const isAdmin = user?.role === "admin";
 
 	const displayName = user?.name || "User";
@@ -69,12 +69,12 @@ export function PrivateHeader({
 	const settingsPath = isClient
 		? "/settings"
 		: isBarber
-		? "/barber-shop/settings"
+		? "/barber/settings"
 		: "/admin/settings";
 	const profilePath = isClient
 		? "/settings/profile"
 		: isBarber
-		? "/barber-shop/settings/profile"
+		? "/barber/settings/profile"
 		: "/admin/settings/profile";
 
 	return (

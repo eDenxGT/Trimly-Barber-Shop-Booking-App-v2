@@ -42,7 +42,7 @@ const SignIn = ({
 
 	const handleForgotPasswordRedirection = () => {
 		switch (userType) {
-			case "barberShop":
+			case "barber":
 				navigate("/barber/forgot-password");
 				break;
 			case "admin":

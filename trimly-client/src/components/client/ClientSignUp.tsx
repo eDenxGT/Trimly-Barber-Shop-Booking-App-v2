@@ -38,6 +38,7 @@ const ClientSignUp = ({
 		useSendOTPMutation();
 	const { mutate: verifyOTP, isPending: isVerifyOtpPending } =
 		useVerifyOTPMutation();
+		
 	const { successToast, errorToast } = useToaster();
 
 	const submitRegister = () => {

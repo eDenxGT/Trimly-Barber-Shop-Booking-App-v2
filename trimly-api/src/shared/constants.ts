@@ -3,12 +3,12 @@ import { config } from "./config.js";
 export const ROLES = {
 	ADMIN: "admin",
 	CLIENT: "client",
-	BARBER_SHOP: "barberShop",
+	BARBER_SHOP: "barber",
 } as const;
 
 export type statusTypes = "active" | "pending" | "blocked";
 
-export type TRole = "client" | "admin" | "barberShop";
+export type TRole = "client" | "admin" | "barber";
 
 export const HTTP_STATUS = {
 	// ✅ Success responses

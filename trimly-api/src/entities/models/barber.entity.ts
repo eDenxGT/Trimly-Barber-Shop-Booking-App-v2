@@ -1,7 +1,7 @@
 import { IReviewEntity } from "./review.entity.js";
 import { IUserEntity } from "./user.entity.js";
 
-export interface IBarberShopEntity extends Omit<IUserEntity, "fullName"> {
+export interface IBarberEntity extends Omit<IUserEntity, "fullName"> {
 	shopName?: string;
 	banner?: string;
 	description?: string;

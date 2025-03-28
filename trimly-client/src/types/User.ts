@@ -34,7 +34,7 @@ export interface IClient extends User {
 	};
 }
 
-export interface IBarberShop extends Omit<User, "fullName"> {
+export interface IBarber extends Omit<User, "fullName"> {
 	shopName?: string;
 	banner?: string;
 	description?: string;
@@ -61,4 +61,4 @@ export interface IBarberShop extends Omit<User, "fullName"> {
 	}[];
 }
 
-export type UserDTO = IAdmin | IClient | IBarberShop;
+export type UserDTO = IAdmin | IClient | IBarber;

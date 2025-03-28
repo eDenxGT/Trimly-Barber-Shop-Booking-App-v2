@@ -106,12 +106,12 @@ export default function OTPModal({
 									<button
 										onClick={handleResend}
 										disabled={isSending || isTimerRunning}
-										className="text-[#F9A826] font-medium disabled:opacity-50">
+										className="text-[#F9A826] cursor-pointer font-medium disabled:opacity-50">
 										{isSending ? "Sending..." : "Resend"}
 									</button>
 								</TooltipTrigger>
 								<TooltipContent
-									className="bg-gray-200 data-[side=top]:before:hidden data-[side=bottom]:before:hidden data-[side=left]:before:hidden data-[side=right]:before:hidden"
+									className="bg-gray-400 data-[side=top]:before:hidden data-[side=bottom]:before:hidden data-[side=left]:before:hidden data-[side=right]:before:hidden"
 									side="bottom">
 									{isTimerRunning
 										? `Resend in ${timer}s`
@@ -123,7 +123,7 @@ export default function OTPModal({
 
 					<Button
 						onClick={handleVerify}
-						disabled={otp.length !== 4 || isVerifying}						
+						disabled={otp.length !== 4 || isVerifying}
 						className="w-full bg-[var(--yellow)] hover:bg-[var(--yellow-hover)] text-white font-medium">
 						{isVerifying ? "Verifying..." : "Verify"}
 					</Button>
