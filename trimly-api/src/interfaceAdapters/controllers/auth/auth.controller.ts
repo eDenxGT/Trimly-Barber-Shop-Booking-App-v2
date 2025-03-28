@@ -25,6 +25,10 @@ import { IRefreshTokenUseCase } from "../../../entities/useCaseInterfaces/auth/r
 import { IBlackListTokenUseCase } from "../../../entities/useCaseInterfaces/auth/blacklist-token-usecase.interface.js";
 import { IRevokeRefreshTokenUseCase } from "../../../entities/useCaseInterfaces/auth/revoke-refresh-token-usecase.interface.js";
 import { IGenerateTokenUseCase } from "../../../entities/useCaseInterfaces/auth/generate-token-usecase.interface.js";
+import { IResetPasswordUseCase } from "../../../entities/useCaseInterfaces/auth/reset-password-usecase.interface.js";
+import { IForgotPasswordUseCase } from "../../../entities/useCaseInterfaces/auth/forgot-password-usecase.interface.js";
+import { forgotPasswordValidationSchema } from "./validations/forgot-password.validation.schema.js";
+import { resetPasswordValidationSchema } from "./validations/reset-password.validation.schema.js";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -44,11 +48,13 @@ export class AuthController implements IAuthController {
 		@inject("IRevokeRefreshTokenUseCase")
 		private _revokeRefreshToken: IRevokeRefreshTokenUseCase,
 		@inject("IGenerateTokenUseCase")
-		private _generateTokenUseCase: IGenerateTokenUseCase // @inject("IForgotPasswordUseCase") // @inject("IGoogleUseCase") // private _googleUseCase: IGoogleUseCase,
-	) // @inject("IResetPasswordUseCase") //
-	// private _resetPasswordUseCase: IResetPasswordUseCase,
-	// private _forgotPasswordUseCase: IForgotPasswordUseCase,
-	{}
+		private _generateTokenUseCase: IGenerateTokenUseCase,
+		@inject("IForgotPasswordUseCase")
+		private _forgotPasswordUseCase: IForgotPasswordUseCase,
+		// @inject("IGoogleUseCase") // private _googleUseCase: IGoogleUseCase,
+		@inject("IResetPasswordUseCase") //
+		private _resetPasswordUseCase: IResetPasswordUseCase
+	) {}
 
 	//* ─────────────────────────────────────────────────────────────
 	//*                     🛠️ User Register
@@ -204,50 +210,50 @@ export class AuthController implements IAuthController {
 	// //* ─────────────────────────────────────────────────────────────
 	// //*                  🛠️ User Forgot Password
 	// //* ─────────────────────────────────────────────────────────────
-	// async forgotPassword(req: Request, res: Response): Promise<void> {
-	// 	try {
-	// 		const validatedData = forgotPasswordValidationSchema.parse(
-	// 			req.body
-	// 		);
-	// 		if (!validatedData) {
-	// 			res.status(HTTP_STATUS.BAD_REQUEST).json({
-	// 				success: false,
-	// 				message: ERROR_MESSAGES.VALIDATION_ERROR,
-	// 			});
-	// 		}
-	// 		await this._forgotPasswordUseCase.execute(validatedData);
+	async forgotPassword(req: Request, res: Response): Promise<void> {
+		try {
+			const validatedData = forgotPasswordValidationSchema.parse(
+				req.body
+			);
+			if (!validatedData) {
+				res.status(HTTP_STATUS.BAD_REQUEST).json({
+					success: false,
+					message: ERROR_MESSAGES.VALIDATION_ERROR,
+				});
+			}
+			await this._forgotPasswordUseCase.execute(validatedData);
 
-	// 		res.status(HTTP_STATUS.OK).json({
-	// 			success: true,
-	// 			message: SUCCESS_MESSAGES.EMAIL_SENT_SUCCESSFULLY,
-	// 		});
-	// 	} catch (error) {
-	// 		handleErrorResponse(res, error);
-	// 	}
-	// }
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.EMAIL_SENT_SUCCESSFULLY,
+			});
+		} catch (error) {
+			handleErrorResponse(res, error);
+		}
+	}
 
 	//* ─────────────────────────────────────────────────────────────
 	//*                    🛠️ User Reset Password
 	//* ─────────────────────────────────────────────────────────────
-	// async resetPassword(req: Request, res: Response): Promise<void> {
-	// 	try {
-	// 		const validatedData = resetPasswordValidationSchema.parse(req.body);
-	// 		if (!validatedData) {
-	// 			res.status(HTTP_STATUS.BAD_REQUEST).json({
-	// 				success: false,
-	// 				message: ERROR_MESSAGES.VALIDATION_ERROR,
-	// 			});
-	// 		}
+	async resetPassword(req: Request, res: Response): Promise<void> {
+		try {
+			const validatedData = resetPasswordValidationSchema.parse(req.body);
+			if (!validatedData) {
+				res.status(HTTP_STATUS.BAD_REQUEST).json({
+					success: false,
+					message: ERROR_MESSAGES.VALIDATION_ERROR,
+				});
+			}
 
-	// 		await this._resetPasswordUseCase.execute(validatedData);
-	// 		res.status(HTTP_STATUS.OK).json({
-	// 			success: true,
-	// 			message: SUCCESS_MESSAGES.PASSWORD_RESET_SUCCESS,
-	// 		});
-	// 	} catch (error) {
-	// 		handleErrorResponse(res, error);
-	// 	}
-	// }
+			await this._resetPasswordUseCase.execute(validatedData);
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.PASSWORD_RESET_SUCCESS,
+			});
+		} catch (error) {
+			handleErrorResponse(res, error);
+		}
+	}
 
 	// //* ─────────────────────────────────────────────────────────────
 	// //*                 🛠️ Token Refresh Handler

@@ -1,3 +1,5 @@
+import ForgotPassword from "@/components/auth/ForgotPassword";
+import ResetPassword from "@/components/auth/ResetPassword";
 import { AdminLayout } from "@/components/layouts/AdminLayout";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
@@ -33,7 +35,7 @@ export const AdminRoutes = () => {
 			</Route>
 
 			{/*//? Forgot and reset pages */}
-			{/* <Route
+			<Route
 				path="/forgot-password"
 				element={
 					<NoAuthRoute
@@ -52,7 +54,7 @@ export const AdminRoutes = () => {
 						}
 					/>
 				}
-			/> */}
+			/>
 		</Routes>
 	);
 };

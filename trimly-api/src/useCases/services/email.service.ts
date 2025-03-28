@@ -3,7 +3,10 @@ import { injectable } from "tsyringe";
 import nodemailer from "nodemailer";
 import { config } from "../../shared/config.js";
 import { IEmailService } from "../../entities/useCaseInterfaces/services/email-service.interface.js";
-import { PASSWORD_RESET_MAIL_CONTENT, VERIFICATION_MAIL_CONTENT } from "../../shared/constants.js";
+import {
+	PASSWORD_RESET_MAIL_CONTENT,
+	VERIFICATION_MAIL_CONTENT,
+} from "../../shared/constants.js";
 
 @injectable()
 export class EmailService implements IEmailService {
@@ -26,7 +29,7 @@ export class EmailService implements IEmailService {
 		html: string;
 	}) {
 		const info = await this._transporter.sendMail(mailOptions);
-		console.log(chalk.bgGreenBright(`📧 Email sent:`), info.response);
+		console.log(chalk.bgGreenBright.bold(`📧 Email sent:`), info.response);
 	}
 
 	async sendOtpEmail(
@@ -55,6 +58,12 @@ export class EmailService implements IEmailService {
 			html: PASSWORD_RESET_MAIL_CONTENT(resetLink),
 		};
 		await this._sendMail(mailOptions);
+		console.log(
+			chalk.bgYellowBright.bold(
+				`🔁 Reset Password Link:`
+			),
+				chalk.cyanBright.bold(resetLink)
+		);
 	}
 
 	async sendCustomEmail(

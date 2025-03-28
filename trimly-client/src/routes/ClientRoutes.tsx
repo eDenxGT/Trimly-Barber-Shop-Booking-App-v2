@@ -1,18 +1,10 @@
+import ForgotPassword from "@/components/auth/ForgotPassword";
+import ResetPassword from "@/components/auth/ResetPassword";
 import { ClientLayout } from "@/components/layouts/ClientLayout";
 import { ClientAuth } from "@/pages/client/ClientAuth";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
-// import { ClientAuth } from "@/pages/client/ClientAuth";
-// import { ClientLayout } from "@/pages/layouts/ClientLayout";
-// import ClientHomePage from "@/pages/client/ClientHomePage";
-// import { NoAuthRoute } from "@/utils/protected/PublicRoute";
-// import ForgotPassword from "@/components/auth/ForgotPassword";
-// import ResetPassword from "@/components/auth/ResetPassword";
-// import { ClientSettingsPage } from "@/pages/client/settings/ClientSettings";
-// import { ClientChangePassword } from "@/pages/client/settings/ClientChangePassword";
-// import { ClientProfileEdit } from "@/pages/client/settings/ClientProfileEdit";
-// import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 
 export const ClientRoutes = () => {
 	return (
@@ -42,7 +34,7 @@ export const ClientRoutes = () => {
 			</Route>
 
 			{/*//? Forgot and reset pages */}
-			{/* <Route
+			<Route
 				path="/forgot-password"
 				element={
 					<NoAuthRoute
@@ -59,7 +51,7 @@ export const ClientRoutes = () => {
 						element={<ResetPassword role="client" signInPath="/" />}
 					/>
 				}
-			/> */}
+			/>
 		</Routes>
 	);
 };

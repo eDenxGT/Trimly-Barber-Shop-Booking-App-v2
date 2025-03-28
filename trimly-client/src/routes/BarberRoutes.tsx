@@ -1,18 +1,10 @@
-// import ForgotPassword from "@/components/auth/ForgotPassword";
-// import ResetPassword from "@/components/auth/ResetPassword";
 import { BarberLayout } from "@/components/layouts/BarberLayout";
-// import { BarberDashboard } from "@/pages/barber/BarberDashboard";
-// import { BarberChangePassword } from "@/pages/barber/settings/BarberChangePassword";
-// import { BarberProfileEdit } from "@/pages/barber/settings/BarberEditProfile";
-// import { BarberSettingsPage } from "@/pages/barber/settings/BarberSettings";
-// import { BarberShopDetails } from "@/pages/barber/shop/BarberShopDetails";
-// import { BarberShopEditPage } from "@/pages/barber/shop/BarberShopEditPage";
-// import { BarberShopRegister } from "@/pages/barber/shop/BarberShopRegister";
-// import { BarberShopList } from "@/pages/barber/shop/BarberShopsList";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
 import { BarberAuth } from '@/pages/barber/BarberAuth';
+import ResetPassword from "@/components/auth/ResetPassword";
+import ForgotPassword from "@/components/auth/ForgotPassword";
 
 export const BarberRoutes = () => {
 	return (
@@ -43,7 +35,7 @@ export const BarberRoutes = () => {
 			</Route>
 
 			{/*//? Forgot and reset pages */}
-			{/* <Route
+			<Route
 				path="/forgot-password"
 				element={
 					<NoAuthRoute
@@ -65,7 +57,7 @@ export const BarberRoutes = () => {
 						}
 					/>
 				}
-			/> */}
+			/>
 		</Routes>
 	);
 };

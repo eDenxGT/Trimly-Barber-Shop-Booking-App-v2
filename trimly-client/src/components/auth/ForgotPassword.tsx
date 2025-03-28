@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { TextField, Button } from "@mui/material";
-import { ArrowLeft, Mail, CheckCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle } from "lucide-react";
 import { useFormik } from "formik";
 import { motion } from "framer-motion";
 import BarberToolsBG from "@/assets/common/barber-tools.png";
@@ -87,7 +86,7 @@ const ForgotPassword = ({ role, signInPath }: ForgotPasswordProps) => {
 						{/* Go Back Link */}
 						<button
 							onClick={() => navigate(signInPath)}
-							className="flex items-center text-muted-foreground hover:text-[var(--yellow)] transition-colors">
+							className="flex items-center cursor-pointer text-muted-foreground hover:text-[var(--yellow)] transition-colors">
 							<ArrowLeft className="mr-1 h-4 w-4" />
 							Back to Sign In
 						</button>
