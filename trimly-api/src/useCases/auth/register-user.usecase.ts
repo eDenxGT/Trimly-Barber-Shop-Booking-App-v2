@@ -11,7 +11,7 @@ import { IAdminRepository } from "../../entities/repositoryInterfaces/users/admi
 import { IClientEntity } from "../../entities/models/client.entity.js";
 import { IBarberEntity } from "../../entities/models/barber.entity.js";
 import { IUserExistenceService } from "../../entities/useCaseInterfaces/services/user-existence-service.interface.js";
-import { generateUniqueId } from "../services/uniqueuid.service.js";
+import { generateUniqueId } from "../../shared/utils/unique-uuid.helper.js";
 
 @injectable()
 export class RegisterUserUseCase implements IRegisterUserUseCase {
@@ -27,14 +27,14 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 	) {}
 
 	async execute(
-		user: UserDTO
+		user: UserDTO,
+		authType: "google" | "normal" = "normal"
 	): Promise<IBarberEntity | IClientEntity | null> {
 		const { role, email, password } = user;
 
 		const isEmailExisting = await this._userExistenceService.emailExists(
 			email
 		);
-		console.log("isEmailExisting", isEmailExisting);
 		if (isEmailExisting) {
 			throw new CustomError(
 				ERROR_MESSAGES.EMAIL_EXISTS,

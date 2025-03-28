@@ -67,6 +67,7 @@ export class LoginUserUseCase implements ILoginUserUseCase {
 				user.password,
 				userData.password
 			);
+			console.log(user.password, isPasswordMatch)
 			if (!isPasswordMatch) {
 				throw new CustomError(
 					ERROR_MESSAGES.INVALID_CREDENTIALS,

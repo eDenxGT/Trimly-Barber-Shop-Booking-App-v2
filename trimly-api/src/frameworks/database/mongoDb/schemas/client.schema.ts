@@ -9,7 +9,7 @@ export const clientSchema = new Schema<IClientModel>(
 		role: { type: String, default: "client" },
 		password: { type: String, required: true },
 		avatar: { type: String },
-		phoneNumber: { type: String, required: true },
+		phoneNumber: { type: String },
 		status: {
 			type: String,
 			enum: ["active", "blocked", "pending"],

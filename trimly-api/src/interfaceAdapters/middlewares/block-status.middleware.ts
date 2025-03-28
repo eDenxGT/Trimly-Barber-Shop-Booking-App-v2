@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { clearAuthCookies } from "../../shared/utils/cookieHelper.js";
+import { clearAuthCookies } from "../../shared/utils/cookie.helper.js";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
 import { CustomRequest } from "./auth.middleware.js";
 import { NextFunction, Response } from "express";

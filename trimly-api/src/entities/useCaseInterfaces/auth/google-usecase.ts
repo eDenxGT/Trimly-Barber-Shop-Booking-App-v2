@@ -1,4 +1,6 @@
 import { TRole } from "../../../shared/constants.js";
+import { IBarberEntity } from "../../models/barber.entity.js";
+import { IClientEntity } from "../../models/client.entity.js";
 import { IUserEntity } from "../../models/user.entity.js";
 
 export interface IGoogleUseCase {
@@ -6,5 +8,5 @@ export interface IGoogleUseCase {
 		credential: string,
 		client_id: string,
 		role: TRole
-	): Promise<Partial<IUserEntity>>;
+	): Promise<Partial<IBarberEntity | IClientEntity>>;
 }

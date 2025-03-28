@@ -97,7 +97,8 @@ export const ERROR_MESSAGES = {
 	SHOP_BLOCKED: "This shop is blocked by admin",
 	MISSING_PARAMETERS: "Some details are missing",
 	WRONG_CURRENT_PASSWORD: "Current password is incorrect",
-   ACCOUNT_UNDER_VERIFICATION: "Your account is under verification. Please wait for admin approval.",
+	ACCOUNT_UNDER_VERIFICATION:
+		"Your account is under verification. Please wait for admin approval.",
 	SAME_CURR_NEW_PASSWORD:
 		"New password must be different from current password",
 	INSUFFICIENT_FUNDS: "Not enough balance",
@@ -322,5 +323,93 @@ export const SHOP_REJECTED_MAIL_CONTENT = (
 
    <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #888;">
       © ${new Date().getFullYear()} Trimly. All rights reserved.
+   </div>
+</div>`;
+
+export const GOOGLE_REGISTRATION_MAIL_CONTENT = (
+	fullName: string,
+	tempPassword: string
+) => `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333; background: #fff;">
+   <!-- Logo Section -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 48px; font-weight: bold; margin: 0;">
+         ✂️ <span style="color: #FEBA43;">Trimly</span>
+      </h1>
+   </div>
+
+   <!-- Welcome Section -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <h2 style="color: #FEBA43; font-size: 28px; margin: 0;">
+         Welcome to Trimly, ${fullName}! 🎉
+      </h2>
+      <p style="color: #666; font-size: 16px; margin: 10px 0 0 0;">
+         Your Google registration is complete. Here's everything you need to get started!
+      </p>
+   </div>
+
+   <!-- Account Info -->
+   <div style="border-radius: 15px; padding: 25px; margin-bottom: 25px; background: linear-gradient(to bottom, #fff, #fcfcfc);">
+      <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+         We've generated a temporary password for you. Please use this password to log in and change it ASAP! 🔐
+      </p>
+
+      <!-- Temporary Password -->
+      <div style="text-align: center; padding: 15px; border-radius: 8px; background-color: #FEBA43; color: white; font-size: 18px; font-weight: bold; display: inline-block; margin: 10px 0;">
+         ${tempPassword}
+      </div>
+
+      <p style="color: #666; font-size: 14px; text-align: center; margin-top: 10px;">
+         ✨ Make sure to update your password as soon as possible to keep your account secure!
+      </p>
+   </div>
+
+   <!-- Change Password Reminder -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <a href="${config.cors.ALLOWED_ORIGIN}" 
+         style="background-color: #FEBA43; color: white; padding: 16px 40px; 
+                text-decoration: none; border-radius: 8px; font-weight: 500; 
+                display: inline-block; margin: 10px 0; font-size: 16px; 
+                box-shadow: 0 2px 4px rgba(254, 186, 67, 0.2); 
+                transition: all 0.3s ease; 
+                cursor: pointer;"
+         onmouseover="this.style.backgroundColor='#E6A936'"
+         onmouseout="this.style.backgroundColor='#FEBA43'"
+         rel="noopener noreferrer"
+      >
+         Log in & Change Password 🔑
+      </a>
+   </div>
+
+   <!-- Security Section -->
+   <div style="border-radius: 8px; padding: 20px; margin: 25px 0; background-color: #FFF8E1; box-shadow: 0 2px 8px rgba(254, 186, 67, 0.15);">
+      <div style="text-align: left; margin-bottom: 15px; display: flex; align-items: center;">
+         <span style="font-size: 24px; margin-right: 10px;">⚠️</span>
+         <h3 style="color: #B76E00; margin: 0; font-size: 18px;">Security Reminders</h3>
+      </div>
+      <ul style="list-style: none; padding: 0; margin: 0;">
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Change your password immediately after logging in
+         </li>
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Never share your password with anyone
+         </li>
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Always ensure you're on the official Trimly website before entering your credentials
+         </li>
+      </ul>
+   </div>
+
+   <!-- Support Section -->
+   <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+      <p style="font-size: 14px; color: #888;">
+         Need help? We're here for you! 💡<br>
+         Contact us at <a href="mailto:support@trimly.in" style="color: #FEBA43; text-decoration: none;">support@trimly.in</a>
+      </p>
+   </div>
+
+   <!-- Footer -->
+   <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #888;">
+      © ${new Date().getFullYear()} Trimly. All rights reserved.<br>
+      <span style="color: #FEBA43;">✦</span> Your Style, Our Priority <span style="color: #FEBA43;">✦</span>
    </div>
 </div>`;

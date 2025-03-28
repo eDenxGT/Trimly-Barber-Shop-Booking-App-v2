@@ -15,12 +15,14 @@ export class AuthRoutes extends BaseRoute {
 		this.router.post("/signup", (req: Request, res: Response) => {
 			authController.register(req, res);
 		});
+
 		this.router.post("/signin", (req: Request, res: Response) => {
 			authController.login(req, res);
 		});
-		// this.router.post("/google-auth", (req: Request, res: Response) => {
-		// 	authController.authenticateWithGoogle(req, res);
-		// });
+
+		this.router.post("/google-auth", (req: Request, res: Response) => {
+			authController.authenticateWithGoogle(req, res);
+		});
 
 		this.router.post("/send-otp", (req: Request, res: Response) => {
 			authController.sendOtpEmail(req, res);

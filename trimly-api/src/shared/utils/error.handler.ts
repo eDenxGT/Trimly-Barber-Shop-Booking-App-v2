@@ -6,7 +6,11 @@ import chalk from "chalk";
 
 export const handleErrorResponse = (res: Response, error: unknown) => {
 	if (error instanceof ZodError) {
-		console.error(chalk.bgRedBright(error.name), chalk.redBright(error));
+		console.error(
+			chalk.bgRedBright(error.name),
+			": ",
+			chalk.redBright(error)
+		);
 		const errors = error.errors.map((err) => ({
 			message: err.message,
 		}));
@@ -19,12 +23,28 @@ export const handleErrorResponse = (res: Response, error: unknown) => {
 	}
 
 	if (error instanceof CustomError) {
+		console.error(
+			chalk.bgRedBright(error.name),
+			": ",
+			chalk.redBright(error)
+		);
 		return res.status(error.statusCode).json({
 			success: false,
 			message: error.message,
 		});
 	}
-
+	if (error instanceof Error) {
+		console.error(
+			chalk.bgRedBright(error.name),
+			": ",
+			chalk.redBright(error)
+		);
+	} else {
+		console.error(
+			chalk.bgRedBright("Unknown Error: "),
+			chalk.redBright(error)
+		);
+	}
 	return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
 		success: false,
 		message: ERROR_MESSAGES.SERVER_ERROR,

@@ -8,7 +8,7 @@ import {
 	HTTP_STATUS,
 	SUCCESS_MESSAGES,
 } from "../../../shared/constants.js";
-import { handleErrorResponse } from "../../../shared/utils/errorHandler.js";
+import { handleErrorResponse } from "../../../shared/utils/error.handler.js";
 import { IVerifyOtpUseCase } from "../../../entities/useCaseInterfaces/auth/verify-otp-usecase.interface.js";
 import { ISendOtpEmailUseCase } from "../../../entities/useCaseInterfaces/auth/sent-otp-usecase.interface.js";
 import { otpMailValidationSchema } from "./validations/otp-mail.validation.schema.js";
@@ -16,7 +16,7 @@ import {
 	clearAuthCookies,
 	setAuthCookies,
 	updateCookieWithAccessToken,
-} from "../../../shared/utils/cookieHelper.js";
+} from "../../../shared/utils/cookie.helper.js";
 import { loginSchema } from "./validations/user-login.validation.schema.js";
 import { LoginUserDTO } from "../../../shared/dtos/user.dto.js";
 import { ILoginUserUseCase } from "../../../entities/useCaseInterfaces/auth/login-usecase.interface.js";
@@ -29,6 +29,7 @@ import { IResetPasswordUseCase } from "../../../entities/useCaseInterfaces/auth/
 import { IForgotPasswordUseCase } from "../../../entities/useCaseInterfaces/auth/forgot-password-usecase.interface.js";
 import { forgotPasswordValidationSchema } from "./validations/forgot-password.validation.schema.js";
 import { resetPasswordValidationSchema } from "./validations/reset-password.validation.schema.js";
+import { IGoogleUseCase } from "../../../entities/useCaseInterfaces/auth/google-usecase.js";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -51,7 +52,7 @@ export class AuthController implements IAuthController {
 		private _generateTokenUseCase: IGenerateTokenUseCase,
 		@inject("IForgotPasswordUseCase")
 		private _forgotPasswordUseCase: IForgotPasswordUseCase,
-		// @inject("IGoogleUseCase") // private _googleUseCase: IGoogleUseCase,
+		@inject("IGoogleUseCase") private _googleUseCase: IGoogleUseCase,
 		@inject("IResetPasswordUseCase") //
 		private _resetPasswordUseCase: IResetPasswordUseCase
 	) {}
@@ -71,7 +72,7 @@ export class AuthController implements IAuthController {
 				return;
 			}
 			const validatedData = schema.parse(req.body);
-			await this._registerUserUseCase.execute(validatedData);
+			await this._registerUserUseCase.execute(validatedData, "normal");
 			if (role === "barber") {
 				res.status(HTTP_STATUS.CREATED).json({
 					success: true,
@@ -88,9 +89,9 @@ export class AuthController implements IAuthController {
 		}
 	}
 
-	// //* ─────────────────────────────────────────────────────────────
-	// //*                     🛠️ User Login
-	// //* ─────────────────────────────────────────────────────────────
+	//* ─────────────────────────────────────────────────────────────
+	//*                     🛠️ User Login
+	//* ─────────────────────────────────────────────────────────────
 	async login(req: Request, res: Response): Promise<void> {
 		try {
 			const data = req.body as LoginUserDTO;
@@ -141,49 +142,47 @@ export class AuthController implements IAuthController {
 	//* ─────────────────────────────────────────────────────────────
 	//*                  🛠️ Google Authentication
 	//* ─────────────────────────────────────────────────────────────
-	// async authenticateWithGoogle(req: Request, res: Response): Promise<void> {
-	// 	try {
-	// 		const { credential, client_id, role } = req.body;
-	// 		const user = await this._googleUseCase.execute(
-	// 			credential,
-	// 			client_id,
-	// 			role
-	// 		);
-	// 		if (!user.id || !user.email || !user.role) {
-	// 			throw new Error("User ID, email, or role is missing");
-	// 		}
+	async authenticateWithGoogle(req: Request, res: Response): Promise<void> {
+		try {
+			const { credential, client_id, role } = req.body;
+			const user = await this._googleUseCase.execute(
+				credential,
+				client_id,
+				role
+			);
+			if (!user.userId || !user.email || !user.role) {
+				throw new Error("User ID, email, or role is missing");
+			}
 
-	// 		const tokens = await this._generateTokenUseCase.execute(
-	// 			user.id,
-	// 			user.userId as string,
-	// 			user.email,
-	// 			user.role
-	// 		);
+			const tokens = await this._generateTokenUseCase.execute(
+				user.userId,
+				user.email,
+				user.role
+			);
 
-	// 		const accessTokenName = `${user.role}_access_token`;
-	// 		const refreshTokenName = `${user.role}_refresh_token`;
+			const accessTokenName = `${user.role}_access_token`;
+			const refreshTokenName = `${user.role}_refresh_token`;
 
-	// 		setAuthCookies(
-	// 			res,
-	// 			tokens.accessToken,
-	// 			tokens.refreshToken,
-	// 			accessTokenName,
-	// 			refreshTokenName
-	// 		);
-	// 		console.log(user);
-	// 		res.status(HTTP_STATUS.OK).json({
-	// 			success: true,
-	// 			message: SUCCESS_MESSAGES.LOGIN_SUCCESS,
-	// 			user: user,
-	// 		});
-	// 	} catch (error) {
-	// 		handleErrorResponse(res, error);
-	// 	}
-	// }
+			setAuthCookies(
+				res,
+				tokens.accessToken,
+				tokens.refreshToken,
+				accessTokenName,
+				refreshTokenName
+			);
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.LOGIN_SUCCESS,
+				user: user,
+			});
+		} catch (error) {
+			handleErrorResponse(res, error);
+		}
+	}
 
-	// //* ─────────────────────────────────────────────────────────────
-	// //*                     🛠️ User Logout
-	// //* ─────────────────────────────────────────────────────────────
+	//* ─────────────────────────────────────────────────────────────
+	//*                     🛠️ User Logout
+	//* ─────────────────────────────────────────────────────────────
 	async logout(req: Request, res: Response): Promise<void> {
 		try {
 			await this._blackListTokenUseCase.execute(
@@ -207,9 +206,9 @@ export class AuthController implements IAuthController {
 		}
 	}
 
-	// //* ─────────────────────────────────────────────────────────────
-	// //*                  🛠️ User Forgot Password
-	// //* ─────────────────────────────────────────────────────────────
+	//* ─────────────────────────────────────────────────────────────
+	//*                  🛠️ User Forgot Password
+	//* ─────────────────────────────────────────────────────────────
 	async forgotPassword(req: Request, res: Response): Promise<void> {
 		try {
 			const validatedData = forgotPasswordValidationSchema.parse(
@@ -255,9 +254,9 @@ export class AuthController implements IAuthController {
 		}
 	}
 
-	// //* ─────────────────────────────────────────────────────────────
-	// //*                 🛠️ Token Refresh Handler
-	// //* ─────────────────────────────────────────────────────────────
+	//* ─────────────────────────────────────────────────────────────
+	//*                 🛠️ Token Refresh Handler
+	//* ─────────────────────────────────────────────────────────────
 	handleTokenRefresh(req: Request, res: Response): void {
 		try {
 			const refreshToken = (req as CustomRequest).user.refresh_token;
