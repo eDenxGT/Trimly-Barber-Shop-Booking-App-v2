@@ -39,10 +39,8 @@ export class AuthController implements IAuthController {
 		@inject("IVerifyOtpUseCase")
 		private _verifyOtpUseCase: IVerifyOtpUseCase,
 		@inject("ISendOtpEmailUseCase")
-		private _sendOtpEmailUseCase: ISendOtpEmailUseCase // private _refreshTokenUseCase: IRefreshTokenUseCase,
-	) // @inject("IGoogleUseCase") // private _googleUseCase: IGoogleUseCase, // @inject("ILoginUserUseCase") // private _loginUserUseCase: ILoginUserUseCase, // @inject("IRefreshTokenUseCase")
-	// @inject("IResetPasswordUseCase")
-	// private _resetPasswordUseCase: IResetPasswordUseCase,
+		private _sendOtpEmailUseCase: ISendOtpEmailUseCase // private _refreshTokenUseCase: IRefreshTokenUseCase, // @inject("IGoogleUseCase") // private _googleUseCase: IGoogleUseCase, // @inject("ILoginUserUseCase") // private _loginUserUseCase: ILoginUserUseCase, // @inject("IRefreshTokenUseCase") // @inject("IResetPasswordUseCase")
+	) // private _resetPasswordUseCase: IResetPasswordUseCase,
 	// @inject("IGenerateTokenUseCase")
 	// private _generateTokenUseCase: IGenerateTokenUseCase,
 	// @inject("IForgotPasswordUseCase")
@@ -244,6 +242,13 @@ export class AuthController implements IAuthController {
 			}
 			const validatedData = schema.parse(req.body);
 			await this._registerUserUseCase.execute(validatedData);
+			if (role === "barber") {
+				res.status(HTTP_STATUS.CREATED).json({
+					success: true,
+					message: SUCCESS_MESSAGES.APPLICATION_SUBMITTED,
+				});
+				return;
+			}
 			res.status(HTTP_STATUS.CREATED).json({
 				success: true,
 				message: SUCCESS_MESSAGES.REGISTRATION_SUCCESS,

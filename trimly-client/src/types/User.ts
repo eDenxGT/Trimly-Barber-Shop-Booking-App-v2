@@ -28,6 +28,7 @@ export interface IClient extends User {
 	googleId?: string;
 	location?: {
 		name?: string;
+		displayName?: string;
 		zipCode?: string;
 		latitude?: number | null;
 		longitude?: number | null;
@@ -39,7 +40,7 @@ export interface IBarber extends Omit<User, "fullName"> {
 	banner?: string;
 	description?: string;
 	googleId?: string;
-	openingHours: {
+	openingHours?: {
 		[day: string]: {
 			open?: string;
 			close?: string;
@@ -47,6 +48,7 @@ export interface IBarber extends Omit<User, "fullName"> {
 	};
 	location?: {
 		name?: string;
+		displayName?: string;
 		zipCode?: string;
 		latitude?: number | null;
 		longitude?: number | null;

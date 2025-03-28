@@ -14,6 +14,7 @@ export interface IBarberEntity extends Omit<IUserEntity, "fullName"> {
 	};
 	location?: {
 		name?: string;
+		displayName?: string;
 		zipCode?: string;
 		latitude?: number | null;
 		longitude?: number | null;

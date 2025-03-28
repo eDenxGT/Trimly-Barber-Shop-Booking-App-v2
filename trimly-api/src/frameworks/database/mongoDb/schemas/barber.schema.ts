@@ -29,6 +29,7 @@ export const barberSchema = new Schema<IBarberModel>(
 		},
 		location: {
 			name: { type: String },
+			displayName: { type: String },
 			zipCode: { type: String },
 			latitude: { type: Number, default: null },
 			longitude: { type: Number, default: null },

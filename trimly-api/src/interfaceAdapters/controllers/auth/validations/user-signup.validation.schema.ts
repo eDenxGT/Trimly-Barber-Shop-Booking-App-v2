@@ -23,6 +23,14 @@ const barberSchema = z.object({
 	email: strongEmailRegex,
 	phoneNumber: phoneNumberSchema,
 	password: passwordSchema,
+	location: z.object({
+		name: z.string(),
+		displayName: z.string(),
+		zipCode: z.string(),
+		latitude: z.number(),
+		longitude: z.number(),
+	}),
+	status: z.enum(["pending", "approved", "blocked"]),
 	role: z.literal("barber"),
 });
 

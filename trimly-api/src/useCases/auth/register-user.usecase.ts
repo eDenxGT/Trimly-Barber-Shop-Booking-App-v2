@@ -34,6 +34,7 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 		const isEmailExisting = await this._userExistenceService.emailExists(
 			email
 		);
+		console.log("isEmailExisting", isEmailExisting);
 		if (isEmailExisting) {
 			throw new CustomError(
 				ERROR_MESSAGES.EMAIL_EXISTS,
@@ -58,7 +59,7 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 				HTTP_STATUS.BAD_REQUEST
 			);
 		}
-
+		console.log(user);
 		return await repository.save({
 			...user,
 			password: hashedPassword ?? "",

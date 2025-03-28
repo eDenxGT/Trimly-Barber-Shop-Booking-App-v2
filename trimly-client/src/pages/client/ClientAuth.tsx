@@ -1,5 +1,5 @@
 import { useRegisterMutation } from "@/hooks/auth/useRegister";
-import { ILoginData, User } from "@/types/User";
+import { IClient, ILoginData, User } from "@/types/User";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SignUp from "@/components/client/ClientSignUp";
@@ -34,7 +34,7 @@ export const ClientAuth = () => {
 			{
 				onSuccess: (data) => {
 					successToast(data.message);
-					dispatch(clientLogin(data.user));
+					dispatch(clientLogin(data.user as IClient));
 					navigate("/home");
 				},
 				onError: (error: any) =>
@@ -60,7 +60,7 @@ export const ClientAuth = () => {
 			{
 				onSuccess: (data) => {
 					successToast(data.message);
-					dispatch(clientLogin(data.user));
+					dispatch(clientLogin(data.user as IClient));
 					navigate("/home");
 				},
 				onError: (error: any) => {

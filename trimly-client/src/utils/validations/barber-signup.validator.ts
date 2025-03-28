@@ -1,31 +1,24 @@
 import * as Yup from "yup";
 
-export const barberSignupSchema = Yup.object().shape({
-	shopName: Yup.string()
-		.matches(
-			/^[a-zA-Z\s]+$/,
-			"Full name should only contain letters and spaces"
-		)
-		.min(1, "Full name must be at least 1 character")
-		.max(50, "Full name must not exceed 50 characters")
-		.required("Full name is required"),
+export const barberSignupSchema = Yup.object({
+	shopName: Yup.string().required("Shop name is required"),
 	email: Yup.string()
 		.email("Invalid email address")
 		.required("Email is required"),
 	phoneNumber: Yup.string()
-		.matches(/^\+?[1-9]\d{9}$/, "Invalid phone number")
-		.required("Contact number is required"),
+		.required("Phone number is required")
+		.matches(/^[0-9]+$/, "Must be only digits")
+		.min(10, "Must be at least 10 digits"),
 	password: Yup.string()
-		.min(8, "Password must be at least 8 characters")
-		.matches(
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-			"Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character"
-		)
-		.required("Password is required"),
+		.required("Password is required")
+		.min(8, "Password must be at least 8 characters"),
 	confirmPassword: Yup.string()
-		.oneOf(
-			[Yup.ref("password") as unknown as string],
-			"Passwords must match"
-		)
-		.required("Confirm Password is required"),
+		.required("Please confirm your password")
+		.oneOf([Yup.ref("password")], "Passwords must match"),
+	location: Yup.object({
+		name: Yup.string().required("Location name is required"),
+		zipCode: Yup.string().required("Zip code is required"),
+		latitude: Yup.number().nullable(),
+		longitude: Yup.number().nullable(),
+	}),
 });
