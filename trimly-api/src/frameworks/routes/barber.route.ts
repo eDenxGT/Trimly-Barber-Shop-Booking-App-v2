@@ -4,6 +4,7 @@ import { Request, RequestHandler, Response } from "express";
 //* ====== Middleware Imports ====== *//;
 import {
 	authorizeRole,
+	decodeToken,
 	verifyAuth,
 } from "../../interfaceAdapters/middlewares/auth.middleware.js";
 
@@ -41,6 +42,15 @@ export class BarberRoutes extends BaseRoute {
 			blockStatusMiddleware.checkStatus as RequestHandler,
 			(req: Request, res: Response) => {
 				authController.logout(req, res);
+			}
+		);
+
+		this.router.post(
+			"/barber/refresh-token",
+			decodeToken,
+			(req: Request, res: Response) => {
+				console.log("refreshing barber", req.body);
+				authController.handleTokenRefresh(req, res);
 			}
 		);
 	}

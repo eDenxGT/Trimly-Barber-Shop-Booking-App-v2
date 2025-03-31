@@ -138,7 +138,7 @@ export function Sidebar({
 							size="icon"
 							onClick={onClose}
 							className="text-white hover:text-[var(--yellow)] hover:bg-transparent">
-							<ArrowLeftCircle  />
+							<ArrowLeftCircle />
 						</Button>
 					</div>
 
@@ -187,7 +187,7 @@ export function Sidebar({
 						<Button
 							variant="outline"
 							onClick={() => setIsConfirmationModalOpen(false)}
-							className="border-[#2a2a2a] text-white hover:bg-[#2a2a2a] hover:text-white">
+							className="border-[#2a2a2a] text-white bg-[#161616] hover:bg-[#2a2a2a] hover:text-white">
 							Cancel
 						</Button>
 						<Button

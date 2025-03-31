@@ -7,9 +7,14 @@ import { Request, RequestHandler, Response } from "express";
 import { BaseRoute } from "./base.route.js";
 import {
 	authorizeRole,
+	decodeToken,
 	verifyAuth,
 } from "../../interfaceAdapters/middlewares/auth.middleware.js";
-import { authController, blockStatusMiddleware, userController } from "../di/resolver.js";
+import {
+	authController,
+	blockStatusMiddleware,
+	userController,
+} from "../di/resolver.js";
 
 export class ClientRoutes extends BaseRoute {
 	constructor() {
@@ -35,6 +40,14 @@ export class ClientRoutes extends BaseRoute {
 			blockStatusMiddleware.checkStatus as RequestHandler,
 			(req: Request, res: Response) => {
 				authController.logout(req, res);
+			}
+		);
+		this.router.post(
+			"/client/refresh-token",
+			decodeToken,
+			(req: Request, res: Response) => {
+				console.log("refreshing client", req.body);
+				authController.handleTokenRefresh(req, res);
 			}
 		);
 	}

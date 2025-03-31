@@ -106,7 +106,6 @@ export class UserController implements IUserController {
 		try {
 			const data = req.body;
 			const { userId, role } = (req as CustomRequest).user;
-         console.log(userId, role)
 			const updatedUser = await this._updateUserDetailsUseCase.execute(
 				userId,
 				role,

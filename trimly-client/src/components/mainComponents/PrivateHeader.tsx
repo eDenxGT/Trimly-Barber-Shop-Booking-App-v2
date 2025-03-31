@@ -279,7 +279,7 @@ export function PrivateHeader({
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
 									<div className="cursor-pointer">
-										<Avatar className="h-8 w-8 ring-offset-background transition-colors hover:ring-2 hover:ring-[var(--yellow)] hover:ring-offset-2">
+										<Avatar className="h-8 w-8 ring-offset-amber-200 transition-colors hover:ring-2  hover:ring-offset-2">
 											<AvatarImage
 												className="object-cover hover:scale-110 transition-transform duration-200"
 												src={user?.avatar}

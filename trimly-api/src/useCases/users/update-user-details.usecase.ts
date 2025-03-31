@@ -38,14 +38,12 @@ export class UpdateUserDetailsUseCase implements IUpdateUserDetailsUseCase {
 			);
 		}
 		const user = await repository.update({ userId }, userDetails);
-		console.log(role, user)
 
 		if (!user) {
-			console.log("No suer")
-			// throw new CustomError(
-			// 	ERROR_MESSAGES.USER_NOT_FOUND,
-			// 	HTTP_STATUS.NOT_FOUND
-			// );
+			throw new CustomError(
+				ERROR_MESSAGES.USER_NOT_FOUND,
+				HTTP_STATUS.NOT_FOUND
+			);
 		}
 		return user;
 	}
