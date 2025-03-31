@@ -41,6 +41,8 @@ import { IGoogleUseCase } from "../../entities/useCaseInterfaces/auth/google-use
 import { GoogleUseCase } from "../../useCases/auth/google.usecase.js";
 import { ISendEmailUseCase } from "../../entities/useCaseInterfaces/common/send-email-usecase.interface.js";
 import { SendEmailUseCase } from "../../useCases/common/send-email.usecase.js";
+import { IUpdateUserDetailsUseCase } from "../../entities/useCaseInterfaces/users/update-user-details-usecase.interface.js";
+import { UpdateUserDetailsUseCase } from "../../useCases/users/update-user-details.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -95,6 +97,13 @@ export class UseCaseRegistry {
 		container.register<ISendEmailUseCase>("ISendEmailUseCase", {
 			useClass: SendEmailUseCase,
 		});
+
+		container.register<IUpdateUserDetailsUseCase>(
+			"IUpdateUserDetailsUseCase",
+			{
+				useClass: UpdateUserDetailsUseCase,
+			}
+		);
 
 		//* ====== Register Bcrypts ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {

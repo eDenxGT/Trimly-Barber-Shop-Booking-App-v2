@@ -4,6 +4,7 @@ import { IBarberModel } from "../models/barber.model.js";
 export const barberSchema = new Schema<IBarberModel>(
 	{
 		userId: { type: String, unique: true },
+		shopName: { type: String },
 		email: { type: String, required: true, unique: true },
 		phoneNumber: { type: String, required: true },
 		password: { type: String, required: true },
@@ -16,7 +17,6 @@ export const barberSchema = new Schema<IBarberModel>(
 			default: "pending",
 		},
 		description: { type: String },
-		shopName: { type: String },
 		googleId: { type: String },
 		openingHours: {
 			monday: { type: Object, default: null },

@@ -7,6 +7,7 @@ interface MuiTextFieldProps {
 	name: string;
 	type?: string;
 	label: string;
+	disabled?: boolean;
 	placeholder?: string;
 	value: string;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -23,6 +24,7 @@ export const MuiTextField: React.FC<MuiTextFieldProps> = ({
 	label,
 	placeholder,
 	value,
+	disabled = false,
 	onChange,
 	onBlur,
 	error,
@@ -40,6 +42,7 @@ export const MuiTextField: React.FC<MuiTextFieldProps> = ({
 			placeholder={placeholder}
 			value={value}
 			onChange={onChange}
+			disabled={disabled}
 			onBlur={onBlur}
 			error={error}
 			helperText={helperText}

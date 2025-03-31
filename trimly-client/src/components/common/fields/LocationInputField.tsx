@@ -116,7 +116,7 @@ export function LocationInputField({
 							type="button"
 							variant="ghost"
 							size="icon"
-							className="absolute right-2 text-gray-500 hover:text-[var(--yellow)] rounded-full"
+							className="absolute cursor-pointer right-2 text-gray-500 hover:text-[var(--yellow)] rounded-full"
 							onClick={handleCurrentLocation}
 							disabled={disabled || geoLoading}>
 							{geoLoading ? (

@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { IClient, UserDTO } from "@/types/User";
+import { IAdmin, IBarber, IClient, UserDTO } from "@/types/User";
 import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
@@ -48,10 +48,11 @@ export function PrivateHeader({
 
 	const isClient = user?.role === "client";
 	const isBarber = user?.role === "barber";
-	const isAdmin = user?.role === "admin";
 
-	const displayName = user?.name || "User";
-	const initials = `${user?.name?.[0] || ""}`;
+	const displayName = isBarber
+		? (user as IBarber)?.shopName
+		: (user as IClient | IAdmin)?.fullName || "User";
+	const initials = `${displayName?.trim().slice(0, 1) || ""}`;
 
 	useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -64,8 +65,7 @@ export function PrivateHeader({
 		return () => document.removeEventListener("keydown", down);
 	}, []);
 
-	const userAsClient = isClient ? (user as IClient) : null;
-	const locationName = userAsClient?.location?.name;
+	const locationName = (user as IBarber | IClient)?.location?.name;
 	const settingsPath = isClient
 		? "/settings"
 		: isBarber
@@ -83,7 +83,7 @@ export function PrivateHeader({
 				"fixed top-0 left-0 right-0 h-16 border-b bg-[#121212] shadow-md",
 				className
 			)}>
-			<div className="container justify-between flex h-full items-center  px-4">
+			<div className=" mx-auto justify-between flex h-full items-center px-4">
 				{/* Hamburger menu button */}
 				<div className="flex items-center">
 					<Tooltip title="Toggle sidebar" arrow placement="bottom">
@@ -95,6 +95,9 @@ export function PrivateHeader({
 								color: "white",
 								"&:hover": {
 									backgroundColor: "#2a2a2a",
+								},
+								"& .MuiButton-startIcon": {
+									margin: 0, // Fix padding issue in Edge
 								},
 							}}
 							onClick={onSidebarToggle}>
@@ -179,19 +182,21 @@ export function PrivateHeader({
 				{/* Right Section */}
 				<div className="ml-8 flex items-center space-x-6">
 					{/* User Info */}
-					{isClient && (
-						<div className="hidden md:flex items-center space-x-4">
-							<div className="flex flex-col items-end">
-								<span className="text-sm font-medium text-white">
-									{displayName}
-								</span>
-								<div className="flex items-center text-xs text-gray-400">
-									<MapPin className="mr-1 h-3 w-3" />
-									{locationName?.slice(0, 50) || "Location"}
+					{isClient ||
+						(isBarber && (
+							<div className="hidden md:flex items-center space-x-4">
+								<div className="flex flex-col items-end">
+									<span className="text-sm font-medium text-white">
+										{displayName}
+									</span>
+									<div className="flex items-center text-xs text-gray-400">
+										<MapPin className="mr-1 h-3 w-3" />
+										{locationName?.slice(0, 50) ||
+											"Location"}
+									</div>
 								</div>
 							</div>
-						</div>
-					)}
+						))}
 
 					{/* Notifications */}
 					<Tooltip title="Notifications" arrow placement="bottom">
@@ -217,7 +222,7 @@ export function PrivateHeader({
 									</IconButton>
 								</PopoverTrigger>
 								<PopoverContent
-									className="w-80 bg-[#1e1e1e] text-white border-[#2a2a2a]"
+									className="w-80 bg-[#1e1e1e] text-white border-[#2a2a2a] shadow-lg"
 									align="end">
 									<div className="space-y-2">
 										<h4 className="font-medium leading-none">
@@ -274,7 +279,7 @@ export function PrivateHeader({
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
 									<div className="cursor-pointer">
-										<Avatar className="h-8 w-8">
+										<Avatar className="h-8 w-8 ring-offset-background transition-colors hover:ring-2 hover:ring-[var(--yellow)] hover:ring-offset-2">
 											<AvatarImage
 												className="object-cover hover:scale-110 transition-transform duration-200"
 												src={user?.avatar}
@@ -287,7 +292,7 @@ export function PrivateHeader({
 									</div>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent
-									className="w-56 bg-[#1e1e1e] text-white border-[#2a2a2a]"
+									className="w-56 bg-[#1e1e1e] text-white border-[#2a2a2a] shadow-lg"
 									align="end">
 									<DropdownMenuLabel>
 										My Account
@@ -298,7 +303,7 @@ export function PrivateHeader({
 											onClick={() =>
 												navigate(profilePath)
 											}
-											className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a]">
+											className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a] focus:text-white">
 											<User className="mr-2 h-4 w-4" />
 											<span>Profile</span>
 										</DropdownMenuItem>
@@ -306,18 +311,18 @@ export function PrivateHeader({
 											onClick={() =>
 												navigate(settingsPath)
 											}
-											className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a]">
+											className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a] focus:text-white">
 											<Settings2 className="mr-2 h-4 w-4" />
 											<span>Settings</span>
 										</DropdownMenuItem>
-										<DropdownMenuItem className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a]">
+										<DropdownMenuItem className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a] focus:text-white">
 											<HelpCircle className="mr-2 h-4 w-4" />
 											<span>Help & Support</span>
 										</DropdownMenuItem>
 									</DropdownMenuGroup>
 									<DropdownMenuSeparator className="bg-[#2a2a2a]" />
 									<DropdownMenuItem
-										className="cursor-pointer text-red-500 hover:bg-red-500/10 focus:bg-red-500/10"
+										className="cursor-pointer text-red-500 hover:text-red-500 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-white"
 										onClick={onLogout}>
 										<LogOut className="mr-2 h-4 w-4" />
 										<span>Log out</span>

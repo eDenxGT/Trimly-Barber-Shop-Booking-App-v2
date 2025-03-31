@@ -2,6 +2,7 @@ import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
 import { ClientLayout } from "@/components/layouts/ClientLayout";
 import { ClientAuth } from "@/pages/client/ClientAuth";
+import { ClientProfileEditPage } from "@/pages/client/settings/ClientProfileEditPage";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
@@ -15,10 +16,7 @@ export const ClientRoutes = () => {
 				element={
 					<ProtectedRoute
 						allowedRoles={["client"]}
-					element={
-					<ClientLayout />
-
-					   }
+						element={<ClientLayout />}
 					/>
 				}>
 				{/* <Route path="home" element={<ClientHomePage />} />
@@ -27,10 +25,11 @@ export const ClientRoutes = () => {
 					path="settings/change-password"
 					element={<ClientChangePassword />}
 				/>
+				*/}
 				<Route
 					path="settings/profile"
-					element={<ClientProfileEdit />}
-				/> */}
+					element={<ClientProfileEditPage />}
+				/>
 			</Route>
 
 			{/*//? Forgot and reset pages */}

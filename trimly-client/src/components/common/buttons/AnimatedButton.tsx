@@ -49,20 +49,24 @@ const MuiAnimatedButton: React.FC<AnimatedButtonProps> = ({
 			type={type}
 			onClick={onClick}
 			disabled={disabled || loading}
-			className={`px-4 py-2 border-[1px] font-medium transition-all disabled:opacity-60 flex items-center justify-center gap-2 ${
+			className={`px-4 py-2 border-[1px] font-medium cursor-pointer transition-all disabled:opacity-60 flex items-center justify-center gap-2 ${
 				fullWidth ? "w-full" : ""
 			} ${className}`}
 			style={{
 				backgroundColor: backgroundColors[variant] || "var(--yellow)",
 				color: textColors[variant] || "#fff",
-				borderColor: variant === "outlined" ? "var(--darkblue)" : "transparent",
+				borderColor:
+					variant === "outlined" ? "var(--darkblue)" : "transparent",
 				borderRadius: "8px",
 			}}
 			whileHover={{ borderRadius: "999px" }}
 			whileTap={{ scale: 0.95 }}
-			transition={{ duration: 0.2 }}
-		>
-			{loading ? <CircularProgress size={24} color="inherit" /> : children}
+			transition={{ duration: 0.3 }}>
+			{loading ? (
+				<CircularProgress size={24} color="inherit" />
+			) : (
+				children
+			)}
 		</motion.button>
 	);
 };

@@ -7,15 +7,15 @@ import type { IBarber } from "@/types/User";
 import { useFormik } from "formik";
 import { barberSignupSchema } from "@/utils/validations/barber-signup.validator";
 import { PublicHeader } from "@/components/mainComponents/PublicHeader";
-import OTPModal from "../modals/OTPModal";
 import { useToaster } from "@/hooks/ui/useToaster";
 import type { CredentialResponse } from "@react-oauth/google";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuth";
 import { useSendOTPMutation } from "@/hooks/auth/useSendOtp";
 import { useVerifyOTPMutation } from "@/hooks/auth/useVerifyOtp";
-import MuiButton from "../common/buttons/MuiButton";
-import { MuiTextField } from "../common/fields/MuiTextField";
-import { LocationInputField } from "../common/fields/LocationInputField";
+import { MuiTextField } from "@/components/common/fields/MuiTextField";
+import { LocationInputField } from "@/components/common/fields/LocationInputField";
+import MuiButton from "@/components/common/buttons/MuiButton";
+import OTPModal from "@/components/modals/OTPModal";
 
 interface SignUpProps {
 	userType: UserRoles;

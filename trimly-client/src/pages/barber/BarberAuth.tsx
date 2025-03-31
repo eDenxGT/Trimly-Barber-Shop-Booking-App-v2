@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useGoogleMutation } from "@/hooks/auth/useGoogle";
 import { CredentialResponse } from "@react-oauth/google";
 import { barberLogin } from "@/store/slices/barber.slice";
-import { BarberSignUp } from "@/components/barber/BarberSignUp";
+import { BarberSignUp } from "@/components/barber/auth/BarberSignUp";
 
 export const BarberAuth = () => {
 	const [isLogin, setIsLogin] = useState(true);

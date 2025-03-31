@@ -53,7 +53,7 @@ export class AuthController implements IAuthController {
 		@inject("IForgotPasswordUseCase")
 		private _forgotPasswordUseCase: IForgotPasswordUseCase,
 		@inject("IGoogleUseCase") private _googleUseCase: IGoogleUseCase,
-		@inject("IResetPasswordUseCase") //
+		@inject("IResetPasswordUseCase") 
 		private _resetPasswordUseCase: IResetPasswordUseCase
 	) {}
 

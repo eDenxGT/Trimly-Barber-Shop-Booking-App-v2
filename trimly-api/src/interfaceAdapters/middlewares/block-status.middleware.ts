@@ -7,6 +7,8 @@ import { IBlackListTokenUseCase } from "../../entities/useCaseInterfaces/auth/bl
 import { IBarberRepository } from "../../entities/repositoryInterfaces/users/barber-repository.interface.js";
 import { IClientRepository } from "../../entities/repositoryInterfaces/users/client-repository.interface.js";
 import { IRevokeRefreshTokenUseCase } from "../../entities/useCaseInterfaces/auth/revoke-refresh-token-usecase.interface.js";
+import { IAdminRepository } from "../../entities/repositoryInterfaces/users/admin-repository.interface.js";
+import { CustomError } from "../../entities/utils/custom.error.js";
 
 @injectable()
 export class BlockStatusMiddleware {
@@ -15,6 +17,8 @@ export class BlockStatusMiddleware {
 		private readonly _clientRepository: IClientRepository,
 		@inject("IBarberRepository")
 		private readonly _barberRepository: IBarberRepository,
+		@inject("IAdminRepository")
+		private readonly _adminRepository: IAdminRepository,
 		@inject("IBlackListTokenUseCase")
 		private readonly _blacklistTokenUseCase: IBlackListTokenUseCase,
 		@inject("IRevokeRefreshTokenUseCase")
@@ -22,7 +26,19 @@ export class BlockStatusMiddleware {
 	) {}
 	private async getUserStatus(userId: string, role: string) {
 		const repo =
-			role === "client" ? this._clientRepository : this._barberRepository;
+			{
+				client: this._clientRepository,
+				barber: this._barberRepository,
+				admin: this._adminRepository,
+			}[role] || null;
+
+		if (!repo) {
+			throw new CustomError(
+				ERROR_MESSAGES.INVALID_ROLE,
+				HTTP_STATUS.BAD_REQUEST
+			);
+		}
+
 		const user = await repo.findOne({ userId });
 		return user?.status;
 	}

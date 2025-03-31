@@ -2,9 +2,10 @@ import { BarberLayout } from "@/components/layouts/BarberLayout";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
-import { BarberAuth } from '@/pages/barber/BarberAuth';
+import { BarberAuth } from "@/pages/barber/BarberAuth";
 import ResetPassword from "@/components/auth/ResetPassword";
 import ForgotPassword from "@/components/auth/ForgotPassword";
+import { BarberProfileEditPage } from "@/pages/barber/settings/BarberProfileEditPage";
 
 export const BarberRoutes = () => {
 	return (
@@ -24,14 +25,16 @@ export const BarberRoutes = () => {
 					path="settings/change-password"
 					element={<BarberChangePassword />}
 				/>
+				*/}
 				<Route
 					path="settings/profile"
-					element={<BarberProfileEdit />}
+					element={<BarberProfileEditPage />}
 				/>
-				<Route path="shop" element={<BarberShopList />} />
+				{/* <Route path="shop" element={<BarberShopList />} />
 				<Route path="shop/:shopId" element={<BarberShopDetails role="barber" />} />
 				<Route path="shop/:shopId/edit" element={<BarberShopEditPage />} />
-				<Route path="shop/create" element={<BarberShopRegister />} /> */}
+				<Route path="shop/create" element={<BarberShopRegister />} /> 
+				*/}
 			</Route>
 
 			{/*//? Forgot and reset pages */}

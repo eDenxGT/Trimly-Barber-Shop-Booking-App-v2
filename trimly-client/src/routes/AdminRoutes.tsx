@@ -2,6 +2,7 @@ import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
 import { AdminLayout } from "@/components/layouts/AdminLayout";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
+import { AdminProfileEditPage } from "@/pages/admin/settings/AdminProfileEditPage";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
@@ -31,7 +32,8 @@ export const AdminRoutes = () => {
 					path="settings/change-password"
 					element={<AdminChangePassword />}
 				/>
-				<Route path="settings/profile" element={<AdminProfileEdit />} /> */}
+				*/}
+				<Route path="settings/profile" element={<AdminProfileEditPage />} /> 
 			</Route>
 
 			{/*//? Forgot and reset pages */}

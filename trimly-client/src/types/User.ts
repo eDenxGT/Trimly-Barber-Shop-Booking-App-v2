@@ -20,6 +20,11 @@ export interface ILoginData {
 	role: UserRoles;
 }
 
+export interface UpdatePasswordData {
+	oldPassword: string;
+	newPassword: string;
+}
+
 export interface IAdmin extends User {
 	isSuperAdmin?: boolean;
 }

@@ -2,7 +2,6 @@ import { useRegisterMutation } from "@/hooks/auth/useRegister";
 import { IClient, ILoginData, User } from "@/types/User";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import SignUp from "@/components/client/ClientSignUp";
 import SignIn from "@/components/auth/SignIn";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { useLoginMutation } from "@/hooks/auth/useLogin";
@@ -11,6 +10,7 @@ import { clientLogin } from "@/store/slices/client.slice";
 import { useNavigate } from "react-router-dom";
 import { useGoogleMutation } from "@/hooks/auth/useGoogle";
 import { CredentialResponse } from "@react-oauth/google";
+import ClientSignUp from "@/components/client/auth/ClientSignUp";
 
 export const ClientAuth = () => {
 	const [isLogin, setIsLogin] = useState(true);
@@ -88,7 +88,7 @@ export const ClientAuth = () => {
 							handleGoogleAuth={googleAuth}
 						/>
 					) : (
-						<SignUp
+						<ClientSignUp
 							isLoading={isPending}
 							userType="client"
 							onSubmit={handleSignUpSubmit}
