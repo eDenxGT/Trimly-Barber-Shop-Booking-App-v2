@@ -11,6 +11,7 @@ import {
 import { CustomError } from "../../entities/utils/custom.error.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
 import { IUpdateUserDetailsUseCase } from "../../entities/useCaseInterfaces/users/update-user-details-usecase.interface.js";
+import { IChangeUserPasswordUseCase } from "../../entities/useCaseInterfaces/users/change-user-password-usecase.interface.js";
 
 @injectable()
 export class UserController implements IUserController {
@@ -19,8 +20,8 @@ export class UserController implements IUserController {
 		// private _getAllUsersUseCase: IGetAllUsersUseCase,
 		// @inject("IUpdateUserStatusUseCase")
 		// private _updateUserStatusUseCase: IUpdateUserStatusUseCase,
-		// @inject("IChangeUserPasswordUseCase")
-		// private _changePasswordUseCase: IChangeUserPasswordUseCase,
+		@inject("IChangeUserPasswordUseCase")
+		private _changePasswordUseCase: IChangeUserPasswordUseCase,
 		@inject("IUpdateUserDetailsUseCase")
 		private _updateUserDetailsUseCase: IUpdateUserDetailsUseCase
 	) {}
@@ -79,25 +80,25 @@ export class UserController implements IUserController {
 	//* ─────────────────────────────────────────────────────────────
 	//*                  🛠️ Change User Password
 	//* ─────────────────────────────────────────────────────────────
-	// async changeUserPassword(req: Request, res: Response): Promise<void> {
-	// 	try {
-	// 		const { oldPassword, newPassword } = req.body;
-	// 		const { email, role } = (req as CustomRequest).user;
+	async changeUserPassword(req: Request, res: Response): Promise<void> {
+		try {
+			const { oldPassword, newPassword } = req.body;
+			const { email, role } = (req as CustomRequest).user;
 
-	// 		await this._changePasswordUseCase.execute({
-	// 			oldPassword,
-	// 			newPassword,
-	// 			email,
-	// 			role,
-	// 		});
-	// 		res.status(HTTP_STATUS.OK).json({
-	// 			success: true,
-	// 			message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
-	// 		});
-	// 	} catch (error) {
-	// 		handleErrorResponse(res, error);
-	// 	}
-	// }
+			await this._changePasswordUseCase.execute({
+				oldPassword,
+				newPassword,
+				email,
+				role,
+			});
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+			});
+		} catch (error) {
+			handleErrorResponse(res, error);
+		}
+	}
 
 	//* ─────────────────────────────────────────────────────────────
 	//*                  🛠️ Update User Details

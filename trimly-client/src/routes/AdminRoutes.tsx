@@ -2,6 +2,7 @@ import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
 import { AdminLayout } from "@/components/layouts/AdminLayout";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
+import { AdminChangePasswordPage } from "@/pages/admin/settings/AdminChangePasswordPage";
 import { AdminProfileEditPage } from "@/pages/admin/settings/AdminProfileEditPage";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
@@ -28,12 +29,15 @@ export const AdminRoutes = () => {
 					element={<AdminBarberShopApplication />}
 				/>
 				<Route path="settings" element={<AdminSettingsPage />} />
+				*/}
 				<Route
 					path="settings/change-password"
-					element={<AdminChangePassword />}
+					element={<AdminChangePasswordPage />}
 				/>
-				*/}
-				<Route path="settings/profile" element={<AdminProfileEditPage />} /> 
+				<Route
+					path="settings/profile"
+					element={<AdminProfileEditPage />}
+				/>
 			</Route>
 
 			{/*//? Forgot and reset pages */}

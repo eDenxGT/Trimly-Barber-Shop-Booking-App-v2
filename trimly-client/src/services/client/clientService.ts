@@ -1,30 +1,30 @@
 import { clientAxiosInstance } from "@/api/client.axios";
-import { ClientResponse } from "@/types/Response";
-import { IClient } from "@/types/User";
+import { IAxiosResponse, IClientResponse } from "@/types/Response";
+import { IClient, UpdatePasswordData } from "@/types/User";
 
 export type IUpdateClientData = Pick<
 	IClient,
 	"fullName" | "email" | "phoneNumber" | "avatar" | "location"
 >;
 
-// export const updateClientPassword = async ({
-// 	oldPassword,
-// 	newPassword,
-// }: UpdatePasswordData): Promise<IAxiosResponse> => {
-// 	const response = await clientAxiosInstance.put<IAxiosResponse>(
-// 		"/client/update-password",
-// 		{
-// 			oldPassword,
-// 			newPassword,
-// 		}
-// 	);
-// 	return response.data;
-// };
+export const updateClientPassword = async ({
+	oldPassword,
+	newPassword,
+}: UpdatePasswordData): Promise<IAxiosResponse> => {
+	const response = await clientAxiosInstance.put<IAxiosResponse>(
+		"/client/update-password",
+		{
+			oldPassword,
+			newPassword,
+		}
+	);
+	return response.data;
+};
 
 export const updateClientProfile = async (
 	data: IUpdateClientData
-): Promise<ClientResponse> => {
-	const response = await clientAxiosInstance.put<ClientResponse>(
+): Promise<IClientResponse> => {
+	const response = await clientAxiosInstance.put<IClientResponse>(
 		"/client/details",
 		data
 	);

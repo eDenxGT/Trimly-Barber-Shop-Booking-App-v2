@@ -1,6 +1,6 @@
 import { adminAxiosInstance } from "@/api/admin.axios";
-import { IAdminResponse } from "@/types/Response";
-import { IAdmin } from "@/types/User";
+import { IAdminResponse, IAxiosResponse } from "@/types/Response";
+import { IAdmin, UpdatePasswordData } from "@/types/User";
 
 export type IUpdateAdminData = Pick<
 	IAdmin,
@@ -58,19 +58,19 @@ export type IUpdateAdminData = Pick<
 // 	return response.data;
 // };
 
-// export const updateAdminPassword = async ({
-// 	oldPassword,
-// 	newPassword,
-// }: UpdatePasswordData): Promise<IAxiosResponse> => {
-// 	const response = await adminAxiosInstance.put<IAxiosResponse>(
-// 		"/admin/update-password",
-// 		{
-// 			oldPassword,
-// 			newPassword,
-// 		}
-// 	);
-// 	return response.data;
-// };
+export const updateAdminPassword = async ({
+	oldPassword,
+	newPassword,
+}: UpdatePasswordData): Promise<IAxiosResponse> => {
+	const response = await adminAxiosInstance.put<IAxiosResponse>(
+		"/admin/update-password",
+		{
+			oldPassword,
+			newPassword,
+		}
+	);
+	return response.data;
+};
 
 export const updateAdminProfile = async (
 	data: IUpdateAdminData

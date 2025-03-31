@@ -34,6 +34,16 @@ export class AdminRoutes extends BaseRoute {
 				}
 			);
 
+		this.router.put(
+			"/admin/update-password",
+			verifyAuth,
+			authorizeRole(["admin"]),
+			blockStatusMiddleware.checkStatus as RequestHandler,
+			(req: Request, res: Response) => {
+				userController.changeUserPassword(req, res);
+			}
+		);
+
 		// logout
 		this.router.post(
 			"/admin/logout",

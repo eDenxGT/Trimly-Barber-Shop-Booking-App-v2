@@ -43,6 +43,8 @@ import { ISendEmailUseCase } from "../../entities/useCaseInterfaces/common/send-
 import { SendEmailUseCase } from "../../useCases/common/send-email.usecase.js";
 import { IUpdateUserDetailsUseCase } from "../../entities/useCaseInterfaces/users/update-user-details-usecase.interface.js";
 import { UpdateUserDetailsUseCase } from "../../useCases/users/update-user-details.usecase.js";
+import { IChangeUserPasswordUseCase } from "../../entities/useCaseInterfaces/users/change-user-password-usecase.interface.js";
+import { ChangeUserPasswordUseCase } from "../../useCases/users/change-user-password.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -102,6 +104,13 @@ export class UseCaseRegistry {
 			"IUpdateUserDetailsUseCase",
 			{
 				useClass: UpdateUserDetailsUseCase,
+			}
+		);
+
+		container.register<IChangeUserPasswordUseCase>(
+			"IChangeUserPasswordUseCase",
+			{
+				useClass: ChangeUserPasswordUseCase,
 			}
 		);
 

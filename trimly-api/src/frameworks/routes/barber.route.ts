@@ -34,6 +34,16 @@ export class BarberRoutes extends BaseRoute {
 				}
 			);
 
+		this.router.put(
+			"/barber/update-password",
+			verifyAuth,
+			authorizeRole(["barber"]),
+			blockStatusMiddleware.checkStatus as RequestHandler,
+			(req: Request, res: Response) => {
+				userController.changeUserPassword(req, res);
+			}
+		);
+
 		// logout
 		this.router.post(
 			"/barber/logout",

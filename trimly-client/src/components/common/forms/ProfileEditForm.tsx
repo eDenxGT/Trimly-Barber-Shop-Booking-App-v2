@@ -8,6 +8,9 @@ import { ImageUploadField } from "./../../common/fields/ImageUploadField";
 import MuiAnimatedButton from "@/components/common/buttons/AnimatedButton";
 import { getValidationSchema } from "@/utils/validations/profile-edit.validator";
 import { uploadImageToCloudinary } from "@/services/cloudinary/cloudinary";
+import { IconButton, Typography } from "@mui/material";
+import { ArrowLeftCircleIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ILocation {
 	name: string;
@@ -108,6 +111,8 @@ export default function ProfileEditForm({
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const isProcessing = isLoading || isSubmitting;
+
+	const navigate = useNavigate();
 
 	const [avatarUrl, setAvatarUrl] = useState<string | null>(
 		initialData?.avatar || null
@@ -335,8 +340,27 @@ export default function ProfileEditForm({
 
 	return (
 		<div className="max-w-6xl mx-auto p-6 mt-16">
-			<h1 className="text-2xl font-bold mb-8">Edit Profile</h1>
-
+			<div className="flex items-center mb-4 space-x-6">
+				<IconButton
+					sx={{
+						minWidth: "auto",
+						padding: "7px",
+						color: "var(--yellow)",
+						position: "relative",
+						"&:hover": {
+							color: "var(--yellow-hover)",
+						},
+					}}
+					onClick={(e) => {
+						e.preventDefault();
+						navigate(-1);
+					}}>
+					<ArrowLeftCircleIcon className="h-6 w-6" />
+				</IconButton>
+				<Typography variant="h5" component="h1">
+					Edit Profile
+				</Typography>
+			</div>
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 				{/* Form Fields */}
 				<div className="md:col-span-2">
