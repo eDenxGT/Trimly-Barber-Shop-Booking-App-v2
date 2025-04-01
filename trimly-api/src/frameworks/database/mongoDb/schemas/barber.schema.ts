@@ -34,20 +34,6 @@ export const barberSchema = new Schema<IBarberModel>(
 			latitude: { type: Number, default: null },
 			longitude: { type: Number, default: null },
 		},
-		services: [
-			{
-				serviceId: { type: String, required: true },
-				name: { type: String, required: true },
-				price: { type: Number, required: true },
-				duration: { type: String, required: true },
-				genderType: {
-					type: String,
-					enum: ["male", "female", "unisex"],
-					required: true,
-				},
-				description: { type: String },
-			},
-		],
 	},
 	{ timestamps: true }
 );

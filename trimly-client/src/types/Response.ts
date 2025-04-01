@@ -1,3 +1,4 @@
+import { IService } from "./Service";
 import { IAdmin, IBarber, IClient, UserDTO } from "./User";
 
 export interface IAxiosResponse {
@@ -19,6 +20,12 @@ export type IBarberResponse = {
 	success: boolean;
 	message: string;
 	user: IBarber;
+};
+
+export type IServiceResponse = {
+	success: boolean;
+	message: string;
+	services: IService[];
 };
 
 export type IAdminResponse = {

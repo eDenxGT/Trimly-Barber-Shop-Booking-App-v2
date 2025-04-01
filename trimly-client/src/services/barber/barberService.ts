@@ -1,5 +1,10 @@
 import { barberAxiosInstance } from "@/api/barber.axios";
-import { IAxiosResponse, IBarberResponse } from "@/types/Response";
+import {
+	IAxiosResponse,
+	IBarberResponse,
+	IServiceResponse,
+} from "@/types/Response";
+import { IService } from "@/types/Service";
 import { IBarber, UpdatePasswordData } from "@/types/User";
 
 export type IUpdateBarberData = Pick<
@@ -34,6 +39,44 @@ export const updateBarberProfile = async (
 		"/barber/details",
 		data
 	);
+	return response.data;
+};
+
+// * Services Apis
+export const updateBarberService = async (
+	data: Partial<IService>
+): Promise<IAxiosResponse> => {
+	const response = await barberAxiosInstance.put<IAxiosResponse>(
+		`/barber/services/${data.serviceId}`,
+		data
+	);
+	return response.data;
+};
+
+export const deleteBarberService = async (
+	serviceId: string
+): Promise<IAxiosResponse> => {
+	const response = await barberAxiosInstance.delete<IAxiosResponse>(
+		`/barber/services/${serviceId}`
+	);
+	return response.data;
+};
+
+export const addBarberService = async (
+	data: IService
+): Promise<IAxiosResponse> => {
+	const response = await barberAxiosInstance.post<IAxiosResponse>(
+		"/barber/services",
+		data
+	);
+	return response.data;
+};
+
+export const getBarberServices = async (): Promise<IServiceResponse> => {
+	const response = await barberAxiosInstance.get<IServiceResponse>(
+		"/barber/services"
+	);
+	console.log("barberdata", response.data);
 	return response.data;
 };
 

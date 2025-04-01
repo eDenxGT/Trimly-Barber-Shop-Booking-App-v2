@@ -1,3 +1,4 @@
+import { IService } from "./Service";
 import { UserRoles } from "./UserRoles";
 
 type statusTypes = "active" | "pending" | "blocked";
@@ -58,14 +59,7 @@ export interface IBarber extends Omit<User, "fullName"> {
 		latitude?: number | null;
 		longitude?: number | null;
 	};
-	services?: {
-		serviceId: string;
-		name: string;
-		price: number;
-		duration: string;
-		genderType: "male" | "female" | "unisex";
-		description?: string;
-	}[];
+	services?: IService[];
 }
 
 export type UserDTO = IAdmin | IClient | IBarber;

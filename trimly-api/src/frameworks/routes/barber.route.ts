@@ -15,6 +15,7 @@ import { BaseRoute } from "./base.route.js";
 import {
 	authController,
 	blockStatusMiddleware,
+	serviceController,
 	userController,
 } from "../di/resolver.js";
 
@@ -34,6 +35,43 @@ export class BarberRoutes extends BaseRoute {
 				}
 			);
 
+		this.router
+			.route("/barber/services")
+			.get(
+				verifyAuth,
+				authorizeRole(["barber"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					console.log("getting services", req.body);
+					serviceController.getAllServicesByBarberId(req, res);
+				}
+			)
+			.post(
+				verifyAuth,
+				authorizeRole(["barber"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					serviceController.addService(req, res);
+				}
+			);
+		this.router
+			.route("/barber/services/:serviceId")
+			.put(
+				verifyAuth,
+				authorizeRole(["barber"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					serviceController.updateServiceById(req, res);
+				}
+			)
+			.delete(
+				verifyAuth,
+				authorizeRole(["barber"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					serviceController.deleteServiceById(req, res);
+				}
+			);
 		this.router.put(
 			"/barber/update-password",
 			verifyAuth,

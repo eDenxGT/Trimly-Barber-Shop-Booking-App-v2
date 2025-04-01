@@ -7,6 +7,8 @@ import { IAuthController } from "../../entities/controllerInterfaces/users/auth-
 import { BlockStatusMiddleware } from "../../interfaceAdapters/middlewares/block-status.middleware.js";
 import { UserController } from "../../interfaceAdapters/controllers/user.controller.js";
 import { IUserController } from "../../entities/controllerInterfaces/users/user-controller.interface.js";
+import { IServiceController } from "../../entities/controllerInterfaces/service/service-controller.interface.js";
+import { ServiceController } from "../../interfaceAdapters/controllers/service.controller.js";
 
 //* ====== Middleware Imports ====== *//
 
@@ -26,5 +28,8 @@ export const userController =
 
 export const authController =
 	container.resolve<IAuthController>(AuthController);
+
+export const serviceController =
+	container.resolve<IServiceController>(ServiceController);
 
 // export const shopController = container.resolve(ShopController);

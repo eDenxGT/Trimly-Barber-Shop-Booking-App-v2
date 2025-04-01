@@ -4,6 +4,9 @@ import { IBaseRepository } from "../../entities/repositoryInterfaces/base-reposi
 export class BaseRepository<T> implements IBaseRepository<T> {
 	constructor(protected model: Model<T>) {}
 
+	async find(filter: FilterQuery<T> = {}) {
+		return this.model.find(filter);
+	}
 	async findAll(filter: FilterQuery<T> = {}, skip = 0, limit = 10) {
 		const [items, total] = await Promise.all([
 			this.model.find(filter).skip(skip).limit(limit).lean() as Promise<

@@ -45,6 +45,14 @@ import { IUpdateUserDetailsUseCase } from "../../entities/useCaseInterfaces/user
 import { UpdateUserDetailsUseCase } from "../../useCases/users/update-user-details.usecase.js";
 import { IChangeUserPasswordUseCase } from "../../entities/useCaseInterfaces/users/change-user-password-usecase.interface.js";
 import { ChangeUserPasswordUseCase } from "../../useCases/users/change-user-password.usecase.js";
+import { IAddServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/add-service-usecase.interface.js";
+import { AddServiceUseCase } from "../../useCases/shop-service/add-service.usecase.js";
+import { IGetAllServicesUseCase } from "../../entities/useCaseInterfaces/shop-service/get-all-services-usecase.interface.js";
+import { GetAllServicesUseCase } from "../../useCases/shop-service/get-all-services.usecase.js";
+import { IUpdateServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/update-service-usecase.interface.js";
+import { UpdateServiceUseCase } from "../../useCases/shop-service/update-service.usecase.js";
+import { IDeleteServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/delete-service-usecase.interface.js";
+import { DeleteServiceUseCase } from "../../useCases/shop-service/delete-service.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -113,6 +121,22 @@ export class UseCaseRegistry {
 				useClass: ChangeUserPasswordUseCase,
 			}
 		);
+
+		container.register<IAddServiceUseCase>("IAddServiceUseCase", {
+			useClass: AddServiceUseCase,
+		});
+
+		container.register<IGetAllServicesUseCase>("IGetAllServicesUseCase", {
+			useClass: GetAllServicesUseCase,
+		});
+
+		container.register<IUpdateServiceUseCase>("IUpdateServiceUseCase", {
+			useClass: UpdateServiceUseCase,
+		});
+
+		container.register<IDeleteServiceUseCase>("IDeleteServiceUseCase", {
+			useClass: DeleteServiceUseCase,
+		});
 
 		//* ====== Register Bcrypts ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {

@@ -1,4 +1,5 @@
 import { IReviewEntity } from "./review.entity.js";
+import { IServiceEntity } from "./service.enity.js";
 import { IUserEntity } from "./user.entity.js";
 
 export interface IBarberEntity extends Omit<IUserEntity, "fullName"> {
@@ -19,12 +20,4 @@ export interface IBarberEntity extends Omit<IUserEntity, "fullName"> {
 		latitude?: number | null;
 		longitude?: number | null;
 	};
-	services?: {
-		serviceId: string;
-		name: string;
-		price: number;
-		duration: string;
-		genderType: "male" | "female" | "unisex";
-		description?: string;
-	}[];
 }

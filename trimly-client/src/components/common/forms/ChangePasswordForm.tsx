@@ -1,15 +1,13 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { motion } from "framer-motion";
 import {
 	Container,
 	Paper,
 	IconButton,
 	Typography,
-	InputAdornment,
 } from "@mui/material";
-import { ArrowLeftCircleIcon, Eye, EyeOff } from "lucide-react";
+import { ArrowLeftCircleIcon} from "lucide-react";
 import { MuiTextField } from "@/components/common/fields/MuiTextField";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { useNavigate } from "react-router-dom";

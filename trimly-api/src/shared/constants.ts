@@ -39,6 +39,7 @@ export const HTTP_STATUS = {
 export const SUCCESS_MESSAGES = {
 	BOOKING_SUCCESS: "Booking completed",
 	CREATED: "Successfully created",
+	ADDED: "Successfully Added",
 	LOGIN_SUCCESS: "Logged in",
 	REGISTRATION_SUCCESS: "Registration completed",
 	OTP_SEND_SUCCESS: "OTP sent",
@@ -79,8 +80,8 @@ export const ERROR_MESSAGES = {
 	EMAIL_EXISTS: "Email already registered",
 	USERNAME_EXISTS: "Username already taken",
 	REQUEST_NOT_FOUND: "Request not found",
-	CATEGORY_EXISTS: "Category already exists",
-	CATEGORY_NOT_FOUND: "Category not found",
+	SERVICE_EXISTS: "Service already exists",
+	SERVICE_NOT_FOUND: "Service not found",
 	INVALID_TOKEN: "Invalid session please login again",
 	INVALID_ROLE: "Access denied",
 	INVALID_OTP: "Invalid or expired otp",
