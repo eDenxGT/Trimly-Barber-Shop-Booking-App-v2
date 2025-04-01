@@ -65,6 +65,25 @@ export class AdminRoutes extends BaseRoute {
 				}
 			);
 
+		this.router
+			.route("/admin/users")
+			.get(
+				verifyAuth,
+				authorizeRole(["admin"]),
+				(req: Request, res: Response) => {
+					userController.getAllUsers(req, res);
+				}
+			);
+
+		this.router.patch(
+			"/admin/user-status",
+			verifyAuth,
+			authorizeRole(["admin"]),
+			(req: Request, res: Response) => {
+				userController.updateUserStatus(req, res);
+			}
+		);
+
 		// logout
 		this.router.post(
 			"/admin/logout",

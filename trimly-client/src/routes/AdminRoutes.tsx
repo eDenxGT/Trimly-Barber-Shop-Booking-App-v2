@@ -3,6 +3,8 @@ import ResetPassword from "@/components/auth/ResetPassword";
 import { AdminLayout } from "@/components/layouts/AdminLayout";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { AdminBarberShopApplicationPage } from "@/pages/admin/applications/AdminBarberApplicationPage";
+import { AdminBarberManagementPage } from "@/pages/admin/managementPages/AdminBarberShopManagementPage";
+import { AdminClientManagementPage } from "@/pages/admin/managementPages/AdminClientManagementPage";
 import { AdminChangePasswordPage } from "@/pages/admin/settings/AdminChangePasswordPage";
 import { AdminProfileEditPage } from "@/pages/admin/settings/AdminProfileEditPage";
 import { AdminSettingsPage } from "@/pages/admin/settings/AdminSettingsPage";
@@ -25,8 +27,9 @@ export const AdminRoutes = () => {
 				{/* <Route path="dashboard" element={<AdminDashboard />} />
 				<Route path="clients" element={<AdminClientManagement />} />
 				<Route path="barbers" element={<AdminBarberManagement />} />
-				<Route path="shops" element={<AdminBarberShopManagement />} />
 				*/}
+				<Route path="shops" element={<AdminBarberManagementPage />} />
+				<Route path="clients" element={<AdminClientManagementPage />} />
 				<Route
 					path="shop-applications"
 					element={<AdminBarberShopApplicationPage />}

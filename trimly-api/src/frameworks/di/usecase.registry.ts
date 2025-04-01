@@ -57,6 +57,10 @@ import { IUpdateServiceUseCase } from "../../entities/useCaseInterfaces/shop/ser
 import { IDeleteServiceUseCase } from "../../entities/useCaseInterfaces/shop/service/delete-service-usecase.interface.js";
 import { IUpdateShopStatusUseCase } from "../../entities/useCaseInterfaces/shop/update-shop-status-usecase.interface.js";
 import { UpdateShopStatusUseCase } from "../../useCases/shop/update-shop-status.usecase.js";
+import { IGetAllUsersUseCase } from "../../entities/useCaseInterfaces/users/get-all-users-usecase.interface.js";
+import { GetAllUsersUseCase } from "../../useCases/users/get-all-users.usecase.js";
+import { IUpdateUserStatusUseCase } from "../../entities/useCaseInterfaces/users/update-user-status-usecase.interface.js";
+import { UpdateUserStatusUseCase } from "../../useCases/users/update-user-status.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -150,6 +154,17 @@ export class UseCaseRegistry {
 			"IUpdateShopStatusUseCase",
 			{
 				useClass: UpdateShopStatusUseCase,
+			}
+		);
+
+		container.register<IGetAllUsersUseCase>("IGetAllUsersUseCase", {
+			useClass: GetAllUsersUseCase,
+		});
+
+		container.register<IUpdateUserStatusUseCase>(
+			"IUpdateUserStatusUseCase",
+			{
+				useClass: UpdateUserStatusUseCase,
 			}
 		);
 

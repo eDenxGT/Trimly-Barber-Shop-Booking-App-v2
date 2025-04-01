@@ -12,14 +12,16 @@ import { CustomError } from "../../entities/utils/custom.error.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
 import { IUpdateUserDetailsUseCase } from "../../entities/useCaseInterfaces/users/update-user-details-usecase.interface.js";
 import { IChangeUserPasswordUseCase } from "../../entities/useCaseInterfaces/users/change-user-password-usecase.interface.js";
+import { IGetAllUsersUseCase } from "../../entities/useCaseInterfaces/users/get-all-users-usecase.interface.js";
+import { IUpdateUserStatusUseCase } from "../../entities/useCaseInterfaces/users/update-user-status-usecase.interface.js";
 
 @injectable()
 export class UserController implements IUserController {
 	constructor(
-		// @inject("IGetAllUsersUseCase")
-		// private _getAllUsersUseCase: IGetAllUsersUseCase,
-		// @inject("IUpdateUserStatusUseCase")
-		// private _updateUserStatusUseCase: IUpdateUserStatusUseCase,
+		@inject("IGetAllUsersUseCase")
+		private _getAllUsersUseCase: IGetAllUsersUseCase,
+		@inject("IUpdateUserStatusUseCase")
+		private _updateUserStatusUseCase: IUpdateUserStatusUseCase,
 		@inject("IChangeUserPasswordUseCase")
 		private _changePasswordUseCase: IChangeUserPasswordUseCase,
 		@inject("IUpdateUserDetailsUseCase")
@@ -29,53 +31,53 @@ export class UserController implements IUserController {
 	//* ─────────────────────────────────────────────────────────────
 	//*               🛠️ Get All Users (Role Based)
 	//* ─────────────────────────────────────────────────────────────
-	// async getAllUsers(req: Request, res: Response): Promise<void> {
-	// 	try {
-	// 		const { page = 1, limit = 10, search = "", userType } = req.query;
-	// 		const pageNumber = Number(page);
-	// 		const pageSize = Number(limit);
-	// 		const userTypeString =
-	// 			typeof userType === "string" ? userType : "client";
-	// 		const searchTermString = typeof search === "string" ? search : "";
+	async getAllUsers(req: Request, res: Response): Promise<void> {
+		try {
+			const { page = 1, limit = 10, search = "", userType } = req.query;
+			const pageNumber = Number(page);
+			const pageSize = Number(limit);
+			const userTypeString =
+				typeof userType === "string" ? userType : "client";
+			const searchTermString = typeof search === "string" ? search : "";
 
-	// 		const { user, total } = await this._getAllUsersUseCase.execute(
-	// 			userTypeString,
-	// 			pageNumber,
-	// 			pageSize,
-	// 			searchTermString
-	// 		);
+			const { users, total } = await this._getAllUsersUseCase.execute(
+				userTypeString,
+				pageNumber,
+				pageSize,
+				searchTermString
+			);
 
-	// 		res.status(HTTP_STATUS.OK).json({
-	// 			success: true,
-	// 			users: user,
-	// 			totalPages: total,
-	// 			currentPage: pageNumber,
-	// 		});
-	// 	} catch (error) {
-	// 		handleErrorResponse(res, error);
-	// 	}
-	// }
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				users,
+				totalPages: total,
+				currentPage: pageNumber,
+			});
+		} catch (error) {
+			handleErrorResponse(res, error);
+		}
+	}
 
 	//* ─────────────────────────────────────────────────────────────
 	//*                  🛠️ Update User Status
 	//* ─────────────────────────────────────────────────────────────
-	// async updateUserStatus(req: Request, res: Response): Promise<void> {
-	// 	try {
-	// 		const { userType, userId } = req.query as {
-	// 			userType: string;
-	// 			userId: any;
-	// 		};
+	async updateUserStatus(req: Request, res: Response): Promise<void> {
+		try {
+			const { userType, userId } = req.query as {
+				userType: string;
+				userId: any;
+			};
 
-	// 		await this._updateUserStatusUseCase.execute(userType, userId);
+			await this._updateUserStatusUseCase.execute(userType, userId);
 
-	// 		res.status(HTTP_STATUS.OK).json({
-	// 			success: true,
-	// 			message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
-	// 		});
-	// 	} catch (error) {
-	// 		handleErrorResponse(res, error);
-	// 	}
-	// }
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+			});
+		} catch (error) {
+			handleErrorResponse(res, error);
+		}
+	}
 
 	//* ─────────────────────────────────────────────────────────────
 	//*                  🛠️ Change User Password

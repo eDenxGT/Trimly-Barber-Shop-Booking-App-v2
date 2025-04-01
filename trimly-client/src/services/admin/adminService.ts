@@ -1,33 +1,34 @@
 import { adminAxiosInstance } from "@/api/admin.axios";
+import { FetchUsersParams, UsersResponse } from "@/hooks/admin/useAllUsers";
 import { FetchShopsParams } from "@/hooks/barber/useAllBarberShops";
 import {
 	IAdminResponse,
 	IAllBarberShopsResponse,
 	IAxiosResponse,
 } from "@/types/Response";
-import { IAdmin, IBarber, UpdatePasswordData } from "@/types/User";
+import { IAdmin, IBarber, IClient, UpdatePasswordData } from "@/types/User";
 
 export type IUpdateAdminData = Pick<
 	IAdmin,
 	"fullName" | "email" | "phoneNumber" | "avatar"
 >;
 
-// export const getAllUsers = async <T extends IClient | IBarber>({
-// 	userType,
-// 	page = 1,
-// 	limit = 10,
-// 	search = "",
-// }: FetchUsersParams): Promise<UsersResponse<T>> => {
-// 	const response = await adminAxiosInstance.get("/admin/users", {
-// 		params: { userType, page, limit, search },
-// 	});
+export const getAllUsers = async <T extends IClient | IBarber>({
+	userType,
+	page = 1,
+	limit = 10,
+	search = "",
+}: FetchUsersParams): Promise<UsersResponse<T>> => {
+	const response = await adminAxiosInstance.get("/admin/users", {
+		params: { userType, page, limit, search },
+	});
 
-// 	return {
-// 		users: response.data.users,
-// 		totalPages: response.data.totalPages,
-// 		currentPage: response.data.currentPage,
-// 	};
-// };
+	return {
+		users: response.data.users,
+		totalPages: response.data.totalPages,
+		currentPage: response.data.currentPage,
+	};
+};
 
 export const getAllShops = async ({
 	forType = "non-active",
@@ -62,22 +63,22 @@ export const updateBarberShopStatusById = async ({
 	return response.data;
 };
 
-// export const updateUserStatus = async (data: {
-// 	userType: string;
-// 	userId: string;
-// }): Promise<IAxiosResponse> => {
-// 	const response = await adminAxiosInstance.patch(
-// 		"/admin/user-status",
-// 		{},
-// 		{
-// 			params: {
-// 				userType: data.userType,
-// 				userId: data.userId,
-// 			},
-// 		}
-// 	);
-// 	return response.data;
-// };
+export const updateUserStatus = async (data: {
+	userType: string;
+	userId: string;
+}): Promise<IAxiosResponse> => {
+	const response = await adminAxiosInstance.patch(
+		"/admin/user-status",
+		{},
+		{
+			params: {
+				userType: data.userType,
+				userId: data.userId,
+			},
+		}
+	);
+	return response.data;
+};
 
 export const updateAdminPassword = async ({
 	oldPassword,
