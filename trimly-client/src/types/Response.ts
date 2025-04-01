@@ -22,6 +22,12 @@ export type IBarberResponse = {
 	user: IBarber;
 };
 
+export type IAllBarberShopsResponse = {
+	totalPages: number;
+	currentPage: number;
+	shops: IBarber[];
+};
+
 export type IAdminResponse = {
 	success: boolean;
 	message: string;

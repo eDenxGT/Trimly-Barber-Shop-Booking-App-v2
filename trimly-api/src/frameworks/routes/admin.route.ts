@@ -13,6 +13,7 @@ import {
 import {
 	authController,
 	blockStatusMiddleware,
+	shopController,
 	userController,
 } from "../di/resolver.js";
 
@@ -43,6 +44,26 @@ export class AdminRoutes extends BaseRoute {
 				userController.changeUserPassword(req, res);
 			}
 		);
+		this.router
+			.route("/admin/shops")
+			.get(
+				verifyAuth,
+				authorizeRole(["admin"]),
+				(req: Request, res: Response) => {
+					shopController.getAllShops(req, res);
+				}
+			);
+
+		this.router
+			.route("/admin/shop/:shopId")
+			.put(
+				verifyAuth,
+				authorizeRole(["admin"]),
+				(req: Request, res: Response) => {
+					console.log(req.body);
+					shopController.updateShopStatus(req, res);
+				}
+			);
 
 		// logout
 		this.router.post(

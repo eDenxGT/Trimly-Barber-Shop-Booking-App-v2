@@ -1,6 +1,11 @@
 import { adminAxiosInstance } from "@/api/admin.axios";
-import { IAdminResponse, IAxiosResponse } from "@/types/Response";
-import { IAdmin, UpdatePasswordData } from "@/types/User";
+import { FetchShopsParams } from "@/hooks/barber/useAllBarberShops";
+import {
+	IAdminResponse,
+	IAllBarberShopsResponse,
+	IAxiosResponse,
+} from "@/types/Response";
+import { IAdmin, IBarber, UpdatePasswordData } from "@/types/User";
 
 export type IUpdateAdminData = Pick<
 	IAdmin,
@@ -24,22 +29,38 @@ export type IUpdateAdminData = Pick<
 // 	};
 // };
 
-// export const getAllShops = async ({
-// 	forType = "non-active",
-// 	page = 1,
-// 	limit = 10,
-// 	search = "",
-// }: FetchShopsParams): Promise<ShopsResponse> => {
-// 	const response = await adminAxiosInstance.get("/admin/shop", {
-// 		params: { forType, page, limit, search },
-// 	});
+export const getAllShops = async ({
+	forType = "non-active",
+	page = 1,
+	limit = 10,
+	search = "",
+}: FetchShopsParams): Promise<IAllBarberShopsResponse> => {
+	const response = await adminAxiosInstance.get("/admin/shops", {
+		params: { forType, page, limit, search },
+	});
 
-// 	return {
-// 		shops: response.data.shops as IBarberShopData[],
-// 		totalPages: response.data.totalPages,
-// 		currentPage: response.data.currentPage,
-// 	};
-// };
+	return {
+		shops: response.data.shops as IBarber[],
+		totalPages: response.data.totalPages,
+		currentPage: response.data.currentPage,
+	};
+};
+
+export const updateBarberShopStatusById = async ({
+	id,
+	status,
+	message,
+}: {
+	id: string;
+	status: string;
+	message?: string;
+}): Promise<IAxiosResponse> => {
+	const response = await adminAxiosInstance.put<IAxiosResponse>(
+		`/admin/shop/${id}`,
+		{ status, message }
+	);
+	return response.data;
+};
 
 // export const updateUserStatus = async (data: {
 // 	userType: string;

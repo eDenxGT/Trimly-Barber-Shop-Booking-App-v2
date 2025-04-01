@@ -8,11 +8,11 @@ import {
 	SUCCESS_MESSAGES,
 } from "../../shared/constants.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
-import { IAddServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/add-service-usecase.interface.js";
-import { IGetAllServicesUseCase } from "../../entities/useCaseInterfaces/shop-service/get-all-services-usecase.interface.js";
-import { IUpdateServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/update-service-usecase.interface.js";
+import { IAddServiceUseCase } from "../../entities/useCaseInterfaces/shop/service/add-service-usecase.interface.js";
+import { IGetAllServicesUseCase } from "../../entities/useCaseInterfaces/shop/service/get-all-services-usecase.interface.js";
+import { IUpdateServiceUseCase } from "../../entities/useCaseInterfaces/shop/service/update-service-usecase.interface.js";
+import { IDeleteServiceUseCase } from "../../entities/useCaseInterfaces/shop/service/delete-service-usecase.interface.js";
 import { IServiceEntity } from "../../entities/models/service.enity.js";
-import { IDeleteServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/delete-service-usecase.interface.js";
 
 @injectable()
 export class ServiceController implements IServiceController {

@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { IDeleteServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/delete-service-usecase.interface.js";
-import { IServiceRepository } from "../../entities/repositoryInterfaces/service/service-repository.interface.js";
+import { IServiceRepository } from "../../../entities/repositoryInterfaces/service/service-repository.interface.js";
+import { IDeleteServiceUseCase } from "../../../entities/useCaseInterfaces/shop/service/delete-service-usecase.interface.js";
 
 @injectable()
 export class DeleteServiceUseCase implements IDeleteServiceUseCase {

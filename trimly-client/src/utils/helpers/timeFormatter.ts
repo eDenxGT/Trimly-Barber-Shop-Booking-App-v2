@@ -14,12 +14,21 @@ export const formatTo24Hour = (time12: string): string => {
 };
 
 export const formatTo12Hour = (time24: string): string => {
-  if (!time24) return ""
-  
-  const [hours, minutes] = time24.split(':').map(Number)
-  const period = hours >= 12 ? 'PM' : 'AM'
-  const hours12 = hours % 12 || 12
-  const formattedMinutes = minutes.toString().padStart(2, '0')
-  
-  return `${hours12}:${formattedMinutes} ${period}`
-}
+	if (!time24) return "";
+
+	const [hours, minutes] = time24.split(":").map(Number);
+	const period = hours >= 12 ? "PM" : "AM";
+	const hours12 = hours % 12 || 12;
+	const formattedMinutes = minutes.toString().padStart(2, "0");
+
+	return `${hours12}:${formattedMinutes} ${period}`;
+};
+
+export const formatDate = (dateString: string) => {
+	const date = new Date(dateString);
+	return date.toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	});
+};

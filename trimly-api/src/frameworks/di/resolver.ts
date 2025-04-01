@@ -9,6 +9,8 @@ import { UserController } from "../../interfaceAdapters/controllers/user.control
 import { IUserController } from "../../entities/controllerInterfaces/users/user-controller.interface.js";
 import { IServiceController } from "../../entities/controllerInterfaces/service/service-controller.interface.js";
 import { ServiceController } from "../../interfaceAdapters/controllers/service.controller.js";
+import { ShopController } from "../../interfaceAdapters/controllers/shop.controller.js";
+import { IShopController } from "../../entities/controllerInterfaces/shop/shop-controller.interface.js";
 
 //* ====== Middleware Imports ====== *//
 
@@ -32,4 +34,5 @@ export const authController =
 export const serviceController =
 	container.resolve<IServiceController>(ServiceController);
 
-// export const shopController = container.resolve(ShopController);
+export const shopController =
+	container.resolve<IShopController>(ShopController);

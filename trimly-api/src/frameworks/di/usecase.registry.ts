@@ -45,14 +45,18 @@ import { IUpdateUserDetailsUseCase } from "../../entities/useCaseInterfaces/user
 import { UpdateUserDetailsUseCase } from "../../useCases/users/update-user-details.usecase.js";
 import { IChangeUserPasswordUseCase } from "../../entities/useCaseInterfaces/users/change-user-password-usecase.interface.js";
 import { ChangeUserPasswordUseCase } from "../../useCases/users/change-user-password.usecase.js";
-import { IAddServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/add-service-usecase.interface.js";
-import { AddServiceUseCase } from "../../useCases/shop-service/add-service.usecase.js";
-import { IGetAllServicesUseCase } from "../../entities/useCaseInterfaces/shop-service/get-all-services-usecase.interface.js";
-import { GetAllServicesUseCase } from "../../useCases/shop-service/get-all-services.usecase.js";
-import { IUpdateServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/update-service-usecase.interface.js";
-import { UpdateServiceUseCase } from "../../useCases/shop-service/update-service.usecase.js";
-import { IDeleteServiceUseCase } from "../../entities/useCaseInterfaces/shop-service/delete-service-usecase.interface.js";
-import { DeleteServiceUseCase } from "../../useCases/shop-service/delete-service.usecase.js";
+import { AddServiceUseCase } from "../../useCases/shop/service/add-service.usecase.js";
+import { GetAllServicesUseCase } from "../../useCases/shop/service/get-all-services.usecase.js";
+import { UpdateServiceUseCase } from "../../useCases/shop/service/update-service.usecase.js";
+import { DeleteServiceUseCase } from "../../useCases/shop/service/delete-service.usecase.js";
+import { IGetAllShopsUseCase } from "../../entities/useCaseInterfaces/shop/get-all-shops-usecase.interface.js";
+import { GetAllShopsUseCase } from "../../useCases/shop/get-all-shops.usecase.js";
+import { IAddServiceUseCase } from "../../entities/useCaseInterfaces/shop/service/add-service-usecase.interface.js";
+import { IGetAllServicesUseCase } from "../../entities/useCaseInterfaces/shop/service/get-all-services-usecase.interface.js";
+import { IUpdateServiceUseCase } from "../../entities/useCaseInterfaces/shop/service/update-service-usecase.interface.js";
+import { IDeleteServiceUseCase } from "../../entities/useCaseInterfaces/shop/service/delete-service-usecase.interface.js";
+import { IUpdateShopStatusUseCase } from "../../entities/useCaseInterfaces/shop/update-shop-status-usecase.interface.js";
+import { UpdateShopStatusUseCase } from "../../useCases/shop/update-shop-status.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -137,6 +141,17 @@ export class UseCaseRegistry {
 		container.register<IDeleteServiceUseCase>("IDeleteServiceUseCase", {
 			useClass: DeleteServiceUseCase,
 		});
+
+		container.register<IGetAllShopsUseCase>("IGetAllShopsUseCase", {
+			useClass: GetAllShopsUseCase,
+		});
+
+		container.register<IUpdateShopStatusUseCase>(
+			"IUpdateShopStatusUseCase",
+			{
+				useClass: UpdateShopStatusUseCase,
+			}
+		);
 
 		//* ====== Register Bcrypts ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {
