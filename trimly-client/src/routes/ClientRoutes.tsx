@@ -4,6 +4,7 @@ import { ClientLayout } from "@/components/layouts/ClientLayout";
 import { ClientAuth } from "@/pages/client/ClientAuth";
 import { ClientChangePasswordPage } from "@/pages/client/settings/ClientChangePasswordPage";
 import { ClientProfileEditPage } from "@/pages/client/settings/ClientProfileEditPage";
+import { ClientSettingsPage } from "@/pages/client/settings/ClientSettingsPage";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
@@ -21,8 +22,8 @@ export const ClientRoutes = () => {
 					/>
 				}>
 				{/* <Route path="home" element={<ClientHomePage />} />
-				<Route path="settings" element={<ClientSettingsPage />} />
 				*/}
+				<Route path="settings" element={<ClientSettingsPage />} />
 				<Route
 					path="settings/change-password"
 					element={<ClientChangePasswordPage />}

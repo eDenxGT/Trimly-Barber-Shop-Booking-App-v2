@@ -4,6 +4,7 @@ import { AdminLayout } from "@/components/layouts/AdminLayout";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { AdminChangePasswordPage } from "@/pages/admin/settings/AdminChangePasswordPage";
 import { AdminProfileEditPage } from "@/pages/admin/settings/AdminProfileEditPage";
+import { AdminSettingsPage } from "@/pages/admin/settings/AdminSettingsPage";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
@@ -28,8 +29,8 @@ export const AdminRoutes = () => {
 					path="shop-applications"
 					element={<AdminBarberShopApplication />}
 				/>
-				<Route path="settings" element={<AdminSettingsPage />} />
 				*/}
+				<Route path="settings" element={<AdminSettingsPage />} />
 				<Route
 					path="settings/change-password"
 					element={<AdminChangePasswordPage />}
