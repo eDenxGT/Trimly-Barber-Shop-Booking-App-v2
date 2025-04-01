@@ -22,14 +22,23 @@ export type IBarberResponse = {
 	user: IBarber;
 };
 
+export type IAdminResponse = {
+	success: boolean;
+	message: string;
+	user: IAdmin;
+};
+
 export type IServiceResponse = {
 	success: boolean;
 	message: string;
 	services: IService[];
 };
 
-export type IAdminResponse = {
-	success: boolean;
-	message: string;
-	user: IAdmin;
-};
+export interface IBarberHoursResponse extends IAxiosResponse {
+	openingHours?: {
+		[day: string]: {
+			open?: string;
+			close?: string;
+		} | null;
+	};
+}

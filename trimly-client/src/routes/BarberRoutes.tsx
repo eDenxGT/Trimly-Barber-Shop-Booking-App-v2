@@ -8,6 +8,7 @@ import ForgotPassword from "@/components/auth/ForgotPassword";
 import { BarberProfileEditPage } from "@/pages/barber/settings/BarberProfileEditPage";
 import { BarberChangePasswordPage } from "@/pages/barber/settings/BarberChangePasswordPage";
 import { BarberServiceManagementPage } from "@/pages/barber/settings/BarberServiceManagementPage";
+import { BarberOpeningHoursPage } from "@/pages/barber/settings/BarberOpeningHoursPage";
 
 export const BarberRoutes = () => {
 	return (
@@ -27,6 +28,10 @@ export const BarberRoutes = () => {
 				<Route
 					path="settings/services"
 					element={<BarberServiceManagementPage />}
+				/>
+				<Route
+					path="settings/opening-hours"
+					element={<BarberOpeningHoursPage />}
 				/>
 				<Route
 					path="settings/change-password"

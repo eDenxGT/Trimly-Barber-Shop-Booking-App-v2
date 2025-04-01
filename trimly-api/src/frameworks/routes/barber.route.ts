@@ -54,6 +54,7 @@ export class BarberRoutes extends BaseRoute {
 					serviceController.addService(req, res);
 				}
 			);
+
 		this.router
 			.route("/barber/services/:serviceId")
 			.put(
@@ -72,6 +73,7 @@ export class BarberRoutes extends BaseRoute {
 					serviceController.deleteServiceById(req, res);
 				}
 			);
+
 		this.router.put(
 			"/barber/update-password",
 			verifyAuth,

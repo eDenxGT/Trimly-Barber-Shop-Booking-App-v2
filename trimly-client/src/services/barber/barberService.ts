@@ -1,21 +1,25 @@
 import { barberAxiosInstance } from "@/api/barber.axios";
 import {
 	IAxiosResponse,
+	IBarberHoursResponse,
 	IBarberResponse,
 	IServiceResponse,
 } from "@/types/Response";
 import { IService } from "@/types/Service";
 import { IBarber, UpdatePasswordData } from "@/types/User";
 
-export type IUpdateBarberData = Pick<
-	IBarber,
-	| "shopName"
-	| "email"
-	| "phoneNumber"
-	| "avatar"
-	| "description"
-	| "banner"
-	| "location"
+export type IUpdateBarberData = Partial<
+	Pick<
+		IBarber,
+		| "shopName"
+		| "email"
+		| "phoneNumber"
+		| "avatar"
+		| "description"
+		| "banner"
+		| "location"
+		| "openingHours"
+	>
 >;
 
 export const updateBarberPassword = async ({
@@ -76,10 +80,19 @@ export const getBarberServices = async (): Promise<IServiceResponse> => {
 	const response = await barberAxiosInstance.get<IServiceResponse>(
 		"/barber/services"
 	);
-	console.log("barberdata", response.data);
 	return response.data;
 };
 
+// * Services OpeningHours
+export const updateOpeningHours = async (
+	data: IBarber["openingHours"]
+): Promise<IBarberHoursResponse> => {
+	const response = await barberAxiosInstance.put<IBarberHoursResponse>(
+		`/barber/opening-hours`,
+		data
+	);
+	return response.data;
+};
 // export const getAllActiveShops = async ({
 // 	forType = "active",
 // 	page = 1,
