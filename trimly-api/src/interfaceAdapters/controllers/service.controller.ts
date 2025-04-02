@@ -52,7 +52,7 @@ export class ServiceController implements IServiceController {
 				message: SUCCESS_MESSAGES.ADDED,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 
@@ -77,7 +77,7 @@ export class ServiceController implements IServiceController {
 				services,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 
@@ -107,7 +107,7 @@ export class ServiceController implements IServiceController {
 				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 
@@ -131,7 +131,7 @@ export class ServiceController implements IServiceController {
 				message: SUCCESS_MESSAGES.DELETE_SUCCESS,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 }

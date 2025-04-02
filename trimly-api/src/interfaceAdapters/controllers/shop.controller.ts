@@ -45,7 +45,7 @@ export class ShopController implements IShopController {
 				currentPage: pageNumber,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 
@@ -74,7 +74,7 @@ export class ShopController implements IShopController {
 				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 }

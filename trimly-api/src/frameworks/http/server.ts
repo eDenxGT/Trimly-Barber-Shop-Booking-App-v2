@@ -16,7 +16,7 @@ import { errorHandler } from "../../interfaceAdapters/middlewares/error.middlewa
 //* ====== Route Imports ====== *//
 import { AuthRoutes } from "../routes/auth.route.js";
 import { PrivateRoutes } from "../routes/private/private.route.js";
-import morganLogger from "../../interfaceAdapters/middlewares/logger.js";
+import morganLogger from "../../shared/utils/morgan.logger.js";
 
 //* ====== Express App ====== *//
 export class Server {

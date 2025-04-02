@@ -1,10 +1,15 @@
 import { ZodError } from "zod";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../constants.js";
 import { CustomError } from "../../entities/utils/custom.error.js";
 import chalk from "chalk";
+import logger from "./error.logger.js";
 
-export const handleErrorResponse = (res: Response, error: unknown) => {
+export const handleErrorResponse = (
+	req: Request,
+	res: Response,
+	error: unknown
+) => {
 	if (error instanceof ZodError) {
 		console.error(
 			chalk.bgRedBright(error.name),
@@ -45,6 +50,12 @@ export const handleErrorResponse = (res: Response, error: unknown) => {
 			chalk.redBright(error)
 		);
 	}
+	logger.error(`[${req.method}] ${req.url} - ${(error as Error).message}`, {
+		ip: req.ip,
+		userAgent: req.headers["user-agent"],
+		stack: (error as Error).stack,
+	});
+
 	return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
 		success: false,
 		message: ERROR_MESSAGES.SERVER_ERROR,

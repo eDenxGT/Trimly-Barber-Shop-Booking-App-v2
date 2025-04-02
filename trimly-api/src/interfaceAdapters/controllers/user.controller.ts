@@ -54,7 +54,7 @@ export class UserController implements IUserController {
 				currentPage: pageNumber,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 
@@ -75,7 +75,7 @@ export class UserController implements IUserController {
 				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 
@@ -98,7 +98,7 @@ export class UserController implements IUserController {
 				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 
@@ -127,7 +127,7 @@ export class UserController implements IUserController {
 				user: userWithoutPassword,
 			});
 		} catch (error) {
-			handleErrorResponse(res, error);
+			handleErrorResponse(req, res, error);
 		}
 	}
 }
