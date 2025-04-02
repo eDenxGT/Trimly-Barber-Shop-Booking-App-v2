@@ -22,9 +22,9 @@ export class UpdateShopStatusUseCase implements IUpdateShopStatusUseCase {
 		message?: string
 	): Promise<void> {
 		const barberShop = await this._barberRepository.findOne({ userId: id });
-		console.log("barbe", status, barberShop);
 		if (status === "blocked") {
-			await this._sendEmailUseCase.execute(
+			await this._barberRepository.delete({ userId: id });
+			this._sendEmailUseCase.execute(
 				barberShop?.email as string,
 				"Trimly - Application rejected",
 				SHOP_REJECTION_WITH_MESSAGE_MAIL(
@@ -34,7 +34,7 @@ export class UpdateShopStatusUseCase implements IUpdateShopStatusUseCase {
 			);
 		} else {
 			await this._barberRepository.update({ userId: id }, { status });
-			await this._sendEmailUseCase.execute(
+			this._sendEmailUseCase.execute(
 				barberShop?.email as string,
 				"Trimly - Application approved",
 				SHOP_APPROVED_MAIL_CONTENT(barberShop?.shopName as string)

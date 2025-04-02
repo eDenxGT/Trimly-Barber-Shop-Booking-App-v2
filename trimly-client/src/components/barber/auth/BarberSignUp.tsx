@@ -157,7 +157,7 @@ export const BarberSignUp = ({
 						className="max-w-md mx-auto w-full space-y-8">
 						<div className="text-center mb-8">
 							<h2 className="text-3xl font-bold tracking-tight">
-								Create your barber account
+								Apply for a barber account
 							</h2>
 							<p className="text-muted-foreground mt-2">
 								Enter your details to get started
@@ -335,11 +335,11 @@ export const BarberSignUp = ({
 									isVerifyOtpPending
 								}
 								fullWidth>
-								Create Barber Account
+								Apply Now!
 							</MuiButton>
 							{/* Social SignUp */}
 							<div className="text-center my-4 text-muted-foreground text-xs">
-								OR
+								OR SIGNIN
 							</div>
 							<GoogleAuthButton
 								handleGoogleSuccess={handleGoogleAuth}

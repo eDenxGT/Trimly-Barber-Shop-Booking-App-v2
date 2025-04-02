@@ -2,6 +2,7 @@ import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
 import { ClientLayout } from "@/components/layouts/ClientLayout";
 import { ClientAuth } from "@/pages/client/ClientAuth";
+import { ClientHomePage } from "@/pages/client/ClientHomePage";
 import { ClientChangePasswordPage } from "@/pages/client/settings/ClientChangePasswordPage";
 import { ClientProfileEditPage } from "@/pages/client/settings/ClientProfileEditPage";
 import { ClientSettingsPage } from "@/pages/client/settings/ClientSettingsPage";
@@ -21,8 +22,8 @@ export const ClientRoutes = () => {
 						element={<ClientLayout />}
 					/>
 				}>
-				{/* <Route path="home" element={<ClientHomePage />} />
-				*/}
+				<Route path="home" element={<ClientHomePage />} />
+
 				<Route path="settings" element={<ClientSettingsPage />} />
 				<Route
 					path="settings/change-password"

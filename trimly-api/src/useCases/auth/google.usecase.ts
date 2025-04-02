@@ -78,6 +78,12 @@ export class GoogleUseCase implements IGoogleUseCase {
 
 		if (existingUser) {
 			if (existingUser.status !== "active") {
+				if (existingUser.status === "pending") {
+					throw new CustomError(
+						ERROR_MESSAGES.ACCOUNT_UNDER_VERIFICATION,
+						HTTP_STATUS.FORBIDDEN
+					);
+				}
 				throw new CustomError(
 					ERROR_MESSAGES.BLOCKED,
 					HTTP_STATUS.FORBIDDEN

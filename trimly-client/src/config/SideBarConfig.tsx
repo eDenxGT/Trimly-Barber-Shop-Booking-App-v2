@@ -57,11 +57,11 @@ const navItems = {
 			icon: LayoutDashboard,
 			path: "/barber/dashboard",
 		},
-		{
-			title: "Shop",
-			icon: LucideScissors,
-			path: "/barber/shop",
-		},
+		// {
+		// 	title: "Shop",
+		// 	icon: LucideScissors,
+		// 	path: "/barber/shop",
+		// },
 		// {
 		// 	title: "My Courses",
 		// 	icon: <BookOpen className="h-5 w-5" />,
@@ -109,11 +109,7 @@ const navItems = {
 			icon: Users,
 			path: "/admin/clients",
 		},
-		{
-			title: "Manage Barbers",
-			icon: Users,
-			path: "/admin/barbers",
-		},
+
 		// {
 		// 	title: "Manage Tutors",
 		// 	icon: <Users className="h-5 w-5" />,

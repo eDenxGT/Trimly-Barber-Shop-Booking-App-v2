@@ -54,7 +54,6 @@ export function Settings({
 	//   onMarketingEmails = () => {},
 	onLogout = () => {},
 	onDeleteAccount = () => {},
-	onBack = () => {},
 }: SettingsProps) {
 	const navigate = useNavigate();
 	const [emailNotifications, setEmailNotifications] = useState(
@@ -102,14 +101,6 @@ export function Settings({
 		}, 500);
 	};
 
-	const handleBack = () => {
-		if (onBack) {
-			onBack();
-		} else {
-			navigate(-1);
-		}
-	};
-
 	return (
 		<div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 space-y-8 mt-8">
 			{/* Header with back button */}
@@ -117,8 +108,8 @@ export function Settings({
 				<Button
 					variant="ghost"
 					size="icon"
-					className="h-8 w-8"
-					onClick={handleBack}>
+					className="h-8 hover:bg-gray-200 w-8 cursor-pointer"
+					onClick={() => navigate(-1)}>
 					<ArrowLeft className="h-4 w-4" />
 					<span className="sr-only">Go back</span>
 				</Button>

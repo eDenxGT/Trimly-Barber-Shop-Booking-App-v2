@@ -50,7 +50,7 @@ export const BarberLayout = () => {
 				handleLogout={handleLogout}
 			/>
 			{/* Main content */}
-			<Outlet />
+			<Outlet context={user}/>
 		</div>
 	);
 };

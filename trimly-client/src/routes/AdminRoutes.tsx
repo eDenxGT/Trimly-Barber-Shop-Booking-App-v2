@@ -2,6 +2,7 @@ import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
 import { AdminLayout } from "@/components/layouts/AdminLayout";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
+import { AdminDashBoardPage } from "@/pages/admin/AdminDashboardPage";
 import { AdminBarberShopApplicationPage } from "@/pages/admin/applications/AdminBarberApplicationPage";
 import { AdminBarberManagementPage } from "@/pages/admin/managementPages/AdminBarberShopManagementPage";
 import { AdminClientManagementPage } from "@/pages/admin/managementPages/AdminClientManagementPage";
@@ -24,7 +25,8 @@ export const AdminRoutes = () => {
 						element={<AdminLayout />}
 					/>
 				}>
-				{/* <Route path="dashboard" element={<AdminDashboard />} />
+				<Route path="dashboard" element={<AdminDashBoardPage />} />
+				{/* 
 				<Route path="clients" element={<AdminClientManagement />} />
 				<Route path="barbers" element={<AdminBarberManagement />} />
 				*/}
