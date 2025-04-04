@@ -8,9 +8,18 @@ import { ImageUploadField } from "./../../common/fields/ImageUploadField";
 import MuiAnimatedButton from "@/components/common/buttons/AnimatedButton";
 import { getValidationSchema } from "@/utils/validations/profile-edit.validator";
 import { uploadImageToCloudinary } from "@/services/cloudinary/cloudinary";
-import { IconButton, Typography } from "@mui/material";
-import { ArrowLeftCircleIcon } from "lucide-react";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	Checkbox,
+	IconButton,
+	Typography,
+} from "@mui/material";
+import { ArrowLeftCircleIcon, ParkingCircle, Wifi } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { CardDescription, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 interface ILocation {
 	name: string;
@@ -29,6 +38,10 @@ type FormValues = {
 	shopName?: string;
 	banner?: string;
 	description?: string;
+	amenities?: {
+		wifi: boolean;
+		parking: boolean;
+	};
 };
 
 const getInitialValues = (
@@ -71,11 +84,16 @@ const getInitialValues = (
 	}
 
 	if (role === "barber") {
+		console.log("initialData", initialData);
 		return {
 			...commonFields,
 			...locationFields,
 			shopName: (initialData as IBarber)?.shopName || "",
 			banner: (initialData as IBarber)?.banner || "",
+			amenities: {
+				wifi: (initialData as IBarber)?.amenities?.wifi || false,
+				parking: (initialData as IBarber)?.amenities?.parking || false,
+			},
 			description: (initialData as IBarber)?.description || "",
 		};
 	}
@@ -300,6 +318,54 @@ export default function ProfileEditForm({
 							placeholder="Enter a description of your shop"
 							disabled={isProcessing}
 						/>
+					</div>
+				)}
+
+				{role === "barber" && (
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div className="flex items-center space-x-2">
+							<Checkbox
+								id="wifi"
+								checked={formik.values.amenities?.wifi }
+								onChange={(event) =>
+									formik.setFieldValue(
+										"amenities.wifi",
+										event.target.checked
+									)
+								}
+								className="border-amber-400 text-amber-600"
+							/>
+							{/* <div className="grid gap-1.5 leading-none"> */}
+							<Label
+								htmlFor="wifi"
+								className="flex items-center gap-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-700">
+								<Wifi className="h-4 w-4 text-amber-500" /> Free
+								WiFi
+							</Label>
+							{/* </div> */}
+						</div>
+
+						<div className="flex items-center space-x-2">
+							<Checkbox
+								id="parking"
+								checked={formik.values.amenities?.parking}
+								onChange={(event) =>
+									formik.setFieldValue(
+										"amenities.parking",
+										event.target.checked
+									)
+								}
+								className="border-amber-400 text-amber-600"
+							/>
+							<div className="grid gap-1.5 leading-none">
+								<Label
+									htmlFor="parking"
+									className="flex items-center gap-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-700">
+									<ParkingCircle className="h-4 w-4 text-amber-500" />{" "}
+									Parking Available
+								</Label>
+							</div>
+						</div>
 					</div>
 				)}
 

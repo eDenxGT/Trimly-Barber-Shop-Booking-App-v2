@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
 import { IClient } from "@/types/User";
 
@@ -99,11 +99,20 @@ export const ClientManagementComponent: React.FC<ClientManagementProps> = ({
 										<TableCell>
 											<div className="flex items-center gap-3">
 												<Avatar className="h-10 w-10 bg-gray-200">
-													<AvatarFallback>
-														{getInitials(
-															client.fullName
-														)}
-													</AvatarFallback>
+													{client.avatar ? (
+														<AvatarImage
+															src={client.avatar}
+															alt={
+																client.fullName
+															}
+														/>
+													) : (
+														<AvatarFallback>
+															{getInitials(
+																client.fullName as string
+															)}
+														</AvatarFallback>
+													)}
 												</Avatar>
 												<div>
 													<p className="font-medium">{`${client.fullName}`}</p>

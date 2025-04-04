@@ -13,6 +13,10 @@ export interface IBarberEntity extends Omit<IUserEntity, "fullName"> {
 			close?: string;
 		} | null;
 	};
+	amenities: {
+		wifi: boolean;
+		parking: boolean;
+	};
 	rejectionReason?: string;
 	location?: {
 		name?: string;

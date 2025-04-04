@@ -18,8 +18,9 @@ export const barberSchema = new Schema<IBarberModel>(
 		},
 		rejectionReason: {
 			type: String,
-			default: "Complete your full profile by adding your shop details, at least one service, and setting your opening hours. For any queries, contact support at contact@trimly.in",
-		},	
+			default:
+				"Complete your full profile by adding your shop details, at least one service, and setting your opening hours. For any queries, contact support at contact@trimly.in",
+		},
 		description: { type: String },
 		googleId: { type: String },
 		openingHours: {
@@ -30,6 +31,10 @@ export const barberSchema = new Schema<IBarberModel>(
 			friday: { type: Object, default: null },
 			saturday: { type: Object, default: null },
 			sunday: { type: Object, default: null },
+		},
+		amenities: {
+			wifi: { type: Boolean },
+			parking: { type: Boolean },
 		},
 		location: {
 			name: { type: String },

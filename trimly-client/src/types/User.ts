@@ -52,6 +52,10 @@ export interface IBarber extends Omit<User, "fullName"> {
 			close?: string;
 		} | null;
 	};
+	amenities?: {
+		wifi: boolean;
+		parking: boolean;
+	};
 	rejectionReason?: string;
 	location?: {
 		name?: string;

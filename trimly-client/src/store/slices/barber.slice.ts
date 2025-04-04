@@ -28,6 +28,7 @@ export const refreshBarberSessionThunk = createAsyncThunk<
 			rejectionReason: (user as IBarber).rejectionReason ?? "",
 			location: (user as IBarber).location ?? {},
 			openingHours: (user as IBarber).openingHours ?? {},
+			amenities: (user as IBarber).amenities,
 			createdAt: user.createdAt,
 			updatedAt: user.updatedAt,
 		};
@@ -52,6 +53,7 @@ const barberSlice = createSlice({
 	extraReducers: (builder) => {
 		builder
 			.addCase(refreshBarberSessionThunk.fulfilled, (state, action) => {
+				console.log(action.payload.user);
 				state.barber = action.payload.user;
 			})
 			.addCase(refreshBarberSessionThunk.rejected, (_, action) => {
