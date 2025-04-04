@@ -2,12 +2,15 @@ import { inject, injectable } from "tsyringe";
 import { IBarberRepository } from "../../entities/repositoryInterfaces/users/barber-repository.interface.js";
 import { IPaginatedShops } from "../../entities/models/paginated/paginated-shops.entity.js";
 import { IGetAllShopsUseCase } from "../../entities/useCaseInterfaces/shop/get-all-shops-usecase.interface.js";
+import { IGetAllServicesUseCase } from "../../entities/useCaseInterfaces/shop/service/get-all-services-usecase.interface.js";
 
 @injectable()
 export class GetAllShopsUseCase implements IGetAllShopsUseCase {
 	constructor(
 		@inject("IBarberRepository")
-		private _barberRepository: IBarberRepository
+		private _barberRepository: IBarberRepository,
+		@inject("IGetAllServicesUseCase")
+		private _getAllServicesUseCase: IGetAllServicesUseCase
 	) {}
 	async execute(
 		forType: string,
@@ -18,8 +21,7 @@ export class GetAllShopsUseCase implements IGetAllShopsUseCase {
 		let filter: any = {};
 		if (searchTerm) {
 			filter.$or = [
-				{ firstName: { $regex: searchTerm, $options: "i" } },
-				{ lastName: { $regex: searchTerm, $options: "i" } },
+				{ shopName: { $regex: searchTerm, $options: "i" } },
 				{ email: { $regex: searchTerm, $options: "i" } },
 			];
 		}
@@ -36,14 +38,28 @@ export class GetAllShopsUseCase implements IGetAllShopsUseCase {
 						? { $eq: "pending" }
 						: forType === "not-active"
 						? { $eq: "not-active" }
+						: forType === "not-pending"
+						? { $ne: "pending" }
 						: "active",
 			},
 			skip,
 			limit
 		);
 
+		const shopsWithServices = await Promise.all(
+			items.map(async (shop) => {
+				const services = await this._getAllServicesUseCase.execute({
+					barberId: shop.userId,
+				});
+				return {
+					...shop,
+					services: services || [],
+				};
+			})
+		);
+
 		const response: IPaginatedShops = {
-			shops: items,
+			shops: shopsWithServices,
 			total: Math.ceil(total / validPageSize),
 		};
 

@@ -114,7 +114,7 @@ export const BarberShopApplicationComponent = ({
 		setIsRejectionModalOpen(false);
 		setRejectionMessage("");
 		setSelectedShop(null);
-		setIsDetailsModalOpen(false);     
+		setIsDetailsModalOpen(false);
 	};
 	const getStatusBadge = (status: string) => {
 		switch (status) {
@@ -147,26 +147,16 @@ export const BarberShopApplicationComponent = ({
 
 	return (
 		<div
-			className={`p-6 ${
+			className={`p-6 mt-16 ${
 				isDarkMode
 					? "bg-gray-900 text-white"
 					: "bg-gray-100 text-gray-900"
 			} min-h-screen`}>
 			<div className="max-w-7xl mx-auto">
 				<div className="flex justify-between items-center mb-6">
-					<h1 className="text-2xl font-bold text-orange-500">
-						Pending Barber Shop Applications
+					<h1 className="text-2xl font-bold text-black">
+						Barber Shop Applications
 					</h1>
-					<Button
-						onClick={() => setIsDarkMode(!isDarkMode)}
-						variant="outline"
-						className={
-							isDarkMode
-								? "border-gray-700 text-white"
-								: "border-gray-300 text-gray-800"
-						}>
-						Toggle {isDarkMode ? "Light" : "Dark"} Mode
-					</Button>
 				</div>
 
 				{/* Search and Filter */}
@@ -177,7 +167,7 @@ export const BarberShopApplicationComponent = ({
 							size={18}
 						/>
 						<Input
-							placeholder="Search by name, ID, or email..."
+							placeholder="Search by shop name, or email..."
 							className={`pl-10 ${
 								isDarkMode
 									? "bg-gray-800 border-gray-700 text-white"
@@ -356,7 +346,6 @@ export const BarberShopApplicationComponent = ({
 					isOpen={isDetailsModalOpen}
 					onOpenChange={setIsDetailsModalOpen}
 					selectedShop={selectedShop}
-					isDarkMode={isDarkMode}
 					handleConfirmationModal={handleConfirmationModal}
 				/>
 

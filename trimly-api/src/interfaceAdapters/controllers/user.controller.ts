@@ -16,6 +16,7 @@ import { IChangeUserPasswordUseCase } from "../../entities/useCaseInterfaces/use
 import { IGetAllUsersUseCase } from "../../entities/useCaseInterfaces/users/get-all-users-usecase.interface.js";
 import { IUpdateUserStatusUseCase } from "../../entities/useCaseInterfaces/users/update-user-status-usecase.interface.js";
 import { IGetUserDetailsUseCase } from "../../entities/useCaseInterfaces/users/get-user-details-usecase.interface.js";
+import { IGetAllShopsUseCase } from "../../entities/useCaseInterfaces/shop/get-all-shops-usecase.interface.js";
 
 @injectable()
 export class UserController implements IUserController {
@@ -29,7 +30,9 @@ export class UserController implements IUserController {
 		@inject("IUpdateUserDetailsUseCase")
 		private _updateUserDetailsUseCase: IUpdateUserDetailsUseCase,
 		@inject("IGetUserDetailsUseCase")
-		private _getUserDetailsUseCase: IGetUserDetailsUseCase
+		private _getUserDetailsUseCase: IGetUserDetailsUseCase,
+		@inject("IGetAllShopsUseCase")
+		private _getAllShopsUseCase: IGetAllShopsUseCase
 	) {}
 
 	//* ─────────────────────────────────────────────────────────────
@@ -69,6 +72,22 @@ export class UserController implements IUserController {
 			const userTypeString =
 				typeof userType === "string" ? userType : "client";
 			const searchTermString = typeof search === "string" ? search : "";
+
+			if (userType === "barber") {
+				const { shops, total } = await this._getAllShopsUseCase.execute(
+					"not-pending",
+					pageNumber,
+					pageSize,
+					searchTermString
+				);
+				res.status(HTTP_STATUS.OK).json({
+					success: true,
+					users: shops,
+					totalPages: total,
+					currentPage: pageNumber,
+				});
+				return;
+			}
 
 			const { users, total } = await this._getAllUsersUseCase.execute(
 				userTypeString,

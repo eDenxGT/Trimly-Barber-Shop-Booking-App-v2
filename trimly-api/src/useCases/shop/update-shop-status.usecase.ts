@@ -36,7 +36,7 @@ export class UpdateShopStatusUseCase implements IUpdateShopStatusUseCase {
 				)
 			);
 		} else {
-			await this._barberRepository.update({ userId: id }, { status });
+			await this._barberRepository.update({ userId: id }, { status, rejectionReason: "" });
 			this._sendEmailUseCase.execute(
 				barberShop?.email as string,
 				"Trimly - Application approved",

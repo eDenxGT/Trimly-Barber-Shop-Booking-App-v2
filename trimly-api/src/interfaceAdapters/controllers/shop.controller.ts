@@ -37,7 +37,6 @@ export class ShopController implements IShopController {
 				pageSize,
 				searchTermString
 			);
-			console.log(shops, total);
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
 				shops,

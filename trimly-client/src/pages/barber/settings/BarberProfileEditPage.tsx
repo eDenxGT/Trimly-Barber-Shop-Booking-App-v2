@@ -54,7 +54,6 @@ export const BarberProfileEditPage = () => {
 					type="warning"
 				/>
 			)}
-
 			<ProfileEditForm
 				isLoading={!isError && isPending}
 				role="barber"

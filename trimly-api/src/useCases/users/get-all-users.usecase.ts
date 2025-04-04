@@ -27,8 +27,7 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
 
 		if (searchTerm) {
 			filter.$or = [
-				{ firstName: { $regex: searchTerm, $options: "i" } },
-				{ lastName: { $regex: searchTerm, $options: "i" } },
+				{ fullName: { $regex: searchTerm, $options: "i" } },
 				{ email: { $regex: searchTerm, $options: "i" } },
 			];
 		}

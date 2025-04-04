@@ -8,11 +8,13 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { NotepadText, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
 import { IBarber } from "@/types/User";
+import { BarberShopDetailsModal } from "@/components/modals/BarberShopDetailsModal";
+import { useState } from "react";
 
 interface BarberShopManagementProps {
 	barbers: IBarber[];
@@ -39,15 +41,24 @@ export const BarberShopManagementComponent: React.FC<
 	onPageChange,
 	onStatusUpdate,
 }) => {
+	const [isDetailsModalOpen, setIsDetailsModalOpen] =
+		useState<boolean>(false);
+	const [selectedShop, setSelectedShop] = useState<IBarber | null>(null);
+
 	const getInitials = (firstName: string) => {
 		return `${firstName.charAt(0)}`.toUpperCase();
+	};
+
+	const handleViewShopDetails = (shop: IBarber) => {
+		setSelectedShop(shop);
+		setIsDetailsModalOpen(true);
 	};
 
 	return (
 		<div className="min-h-screen mt-14 bg-gray-200">
 			<div className="container mx-auto px-4 py-8">
 				<h1 className="text-3xl font-bold mb-6 text-gray-800">
-					Client Management
+					Barber Shop Management
 				</h1>
 
 				{/* Search Input */}
@@ -84,10 +95,11 @@ export const BarberShopManagementComponent: React.FC<
 							<TableHeader className="bg-gray-50">
 								<TableRow>
 									<TableHead className="w-12">No.</TableHead>
-									<TableHead>Client</TableHead>
+									<TableHead>Shop Name</TableHead>
 									<TableHead>Email</TableHead>
 									<TableHead>Phone</TableHead>
 									<TableHead>Status</TableHead>
+									<TableHead>More Details</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -101,12 +113,22 @@ export const BarberShopManagementComponent: React.FC<
 										<TableCell>
 											<div className="flex items-center gap-3">
 												<Avatar className="h-10 w-10 bg-gray-200">
-													<AvatarFallback>
-														{getInitials(
-															barber.shopName as string
-														)}
-													</AvatarFallback>
+													{barber.avatar ? (
+														<AvatarImage
+															src={barber.avatar}
+															alt={
+																barber.shopName
+															}
+														/>
+													) : (
+														<AvatarFallback>
+															{getInitials(
+																barber.shopName as string
+															)}
+														</AvatarFallback>
+													)}
 												</Avatar>
+
 												<div>
 													<p className="font-medium">{`${barber.shopName}`}</p>
 													{barber.userId && (
@@ -146,6 +168,21 @@ export const BarberShopManagementComponent: React.FC<
 													: "Blocked"}
 											</Button>
 										</TableCell>
+										<TableCell>
+											<Button
+												variant={"outline"}
+												size="sm"
+												className={
+													"bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer border-gray-200"
+												}
+												onClick={() =>
+													handleViewShopDetails(
+														barber
+													)
+												}>
+												<NotepadText />
+											</Button>
+										</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
@@ -162,6 +199,14 @@ export const BarberShopManagementComponent: React.FC<
 						onPagePrev={() => onPageChange(currentPage - 1)}
 					/>
 				</div>
+
+				{/* Modals */}
+				<BarberShopDetailsModal
+					isOpen={isDetailsModalOpen}
+					onOpenChange={setIsDetailsModalOpen}
+					selectedShop={selectedShop}
+					forType="management"
+				/>
 			</div>
 		</div>
 	);

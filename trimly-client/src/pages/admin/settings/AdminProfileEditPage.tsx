@@ -44,7 +44,7 @@ export const AdminProfileEditPage = () => {
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: -20 }}
 			transition={{ duration: 0.5 }}
-			className="p-4">
+			className="p-4 mt-16">
 			<ProfileEditForm
 				isLoading={!isError && isPending}
 				role="admin"
