@@ -16,6 +16,10 @@ export const barberSchema = new Schema<IBarberModel>(
 			enum: ["active", "blocked", "pending"],
 			default: "pending",
 		},
+		rejectionReason: {
+			type: String,
+			default: "Complete your full profile by adding your shop details, at least one service, and setting your opening hours. For any queries, contact support at contact@trimly.in",
+		},	
 		description: { type: String },
 		googleId: { type: String },
 		openingHours: {

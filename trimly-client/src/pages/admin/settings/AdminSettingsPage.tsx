@@ -3,13 +3,13 @@ import { useLogout } from "@/hooks/auth/useLogout";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { logoutAdmin } from "@/services/auth/authService";
 import { adminLogout } from "@/store/slices/admin.slice";
+import { useAppDispatch } from "@/store/store";
 import { motion } from "framer-motion";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export const AdminSettingsPage = () => {
 	const { mutate: logoutReq } = useLogout(logoutAdmin);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const { successToast, errorToast } = useToaster();
 

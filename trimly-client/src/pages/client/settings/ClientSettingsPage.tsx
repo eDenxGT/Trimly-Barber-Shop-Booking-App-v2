@@ -2,14 +2,18 @@ import { Settings } from "@/components/common/components/Settings";
 import { useLogout } from "@/hooks/auth/useLogout";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { logoutClient } from "@/services/auth/authService";
-import { clientLogout } from "@/store/slices/client.slice";
+import {
+	clientLogout,
+	refreshClientSessionThunk,
+} from "@/store/slices/client.slice";
+import { useAppDispatch } from "@/store/store";
 import { motion } from "framer-motion";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const ClientSettingsPage = () => {
 	const { mutate: logoutReq } = useLogout(logoutClient);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const { successToast, errorToast } = useToaster();
 
@@ -25,6 +29,7 @@ export const ClientSettingsPage = () => {
 			},
 		});
 	};
+	useEffect(() => dispatch(refreshClientSessionThunk()), []);
 	return (
 		<motion.div
 			key={"client-settings"}

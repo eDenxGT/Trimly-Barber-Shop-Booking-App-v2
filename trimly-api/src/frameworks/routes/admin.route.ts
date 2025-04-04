@@ -84,6 +84,16 @@ export class AdminRoutes extends BaseRoute {
 			}
 		);
 
+		this.router.get(
+			"/admin/refresh-session",
+			verifyAuth,
+			authorizeRole(["admin"]),
+			blockStatusMiddleware.checkStatus as RequestHandler,
+			(req: Request, res: Response) => {
+				userController.refreshSession(req, res);
+			}
+		);
+
 		// logout
 		this.router.post(
 			"/admin/logout",

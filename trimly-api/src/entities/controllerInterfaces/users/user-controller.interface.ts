@@ -5,4 +5,5 @@ export interface IUserController {
 	updateUserStatus(req: Request, res: Response): Promise<void>;
 	changeUserPassword(req: Request, res: Response): Promise<void>;
 	updateUserDetails(req: Request, res: Response): Promise<void>;
+	refreshSession(req: Request, res: Response): Promise<void>;
 }

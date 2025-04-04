@@ -115,7 +115,6 @@ export class GoogleUseCase implements IGoogleUseCase {
 
 		const newUser = await this._registerUserUseCase.execute(
 			userData,
-			"google"
 		);
 
 		if (!newUser) {

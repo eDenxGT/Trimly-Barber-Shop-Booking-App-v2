@@ -3,13 +3,13 @@ import { useLogout } from "@/hooks/auth/useLogout";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { logoutBarber } from "@/services/auth/authService";
 import { barberLogout } from "@/store/slices/barber.slice";
+import { useAppDispatch } from "@/store/store";
 import { motion } from "framer-motion";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export const BarberSettingsPage = () => {
 	const { mutate: logoutReq } = useLogout(logoutBarber);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const { successToast, errorToast } = useToaster();
 

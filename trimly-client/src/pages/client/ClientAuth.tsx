@@ -5,16 +5,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import SignIn from "@/components/auth/SignIn";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { useLoginMutation } from "@/hooks/auth/useLogin";
-import { useDispatch } from "react-redux";
 import { clientLogin } from "@/store/slices/client.slice";
 import { useNavigate } from "react-router-dom";
 import { useGoogleMutation } from "@/hooks/auth/useGoogle";
 import { CredentialResponse } from "@react-oauth/google";
 import ClientSignUp from "@/components/client/auth/ClientSignUp";
+import { useAppDispatch } from "@/store/store";
 
 export const ClientAuth = () => {
 	const [isLogin, setIsLogin] = useState(true);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 
 	const { mutate: loginClient, isPending: isLoginPending } =

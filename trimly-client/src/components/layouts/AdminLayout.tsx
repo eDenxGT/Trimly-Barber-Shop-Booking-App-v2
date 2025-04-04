@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useLogout } from "@/hooks/auth/useLogout";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useToaster } from "@/hooks/ui/useToaster";
-import { RootState } from "@/store/store";
+import { RootState, useAppDispatch } from "@/store/store";
 import { logoutAdmin } from "@/services/auth/authService";
-import { adminLogout } from "@/store/slices/admin.slice";
+import { adminLogout, refreshAdminSessionThunk } from "@/store/slices/admin.slice";
 import { PrivateHeader } from "../mainComponents/PrivateHeader";
 import { Sidebar } from "../mainComponents/SideBar";
 
@@ -13,7 +13,7 @@ export const AdminLayout = () => {
 	const [isSideBarVisible, setIsSideBarVisible] = useState(false);
 	const [notifications] = useState(2);
 	const { successToast, errorToast } = useToaster();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const user = useSelector((state: RootState) => state.admin.admin);
 	const { mutate: logoutReq } = useLogout(logoutAdmin);
@@ -30,6 +30,18 @@ export const AdminLayout = () => {
 			},
 		});
 	};
+
+	useEffect(() => {
+		const handleFocus = () => {
+			dispatch(refreshAdminSessionThunk());
+		};
+
+		window.addEventListener("focus", handleFocus);
+
+		return () => {
+			window.removeEventListener("focus", handleFocus);
+		};
+	}, [dispatch]);
 
 	return (
 		<div className="flex flex-col min-h-screen bg-gray-100">
@@ -50,7 +62,7 @@ export const AdminLayout = () => {
 				handleLogout={handleLogout}
 			/>
 			{/* Main content */}
-			<Outlet />
+			<Outlet context={user}/>
 		</div>
 	);
 };

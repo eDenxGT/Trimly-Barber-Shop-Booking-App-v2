@@ -55,6 +55,8 @@ export const SUCCESS_MESSAGES = {
 	EMAIL_SENT_SUCCESSFULLY: "Email sent",
 	REQUEST_SUBMITTED: "Request submitted waiting for admin approval",
 	APPLICATION_SUBMITTED: "Application submitted waiting for admin approval",
+	LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
+	COMPLETE_YOUR_PROFILE_TO_GET_APPROVED: "Complete your profile to get approved!",
 	REQUEST_APPROVED: "Request approved",
 	REQUEST_REJECTED: "Request rejected",
 	ACCOUNT_ACTIVATED: "Your account is now active",

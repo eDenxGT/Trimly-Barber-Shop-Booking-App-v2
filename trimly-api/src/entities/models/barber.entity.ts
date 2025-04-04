@@ -13,6 +13,7 @@ export interface IBarberEntity extends Omit<IUserEntity, "fullName"> {
 			close?: string;
 		} | null;
 	};
+	rejectionReason?: string;
 	location?: {
 		name?: string;
 		displayName?: string;

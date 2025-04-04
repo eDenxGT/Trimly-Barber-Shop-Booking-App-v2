@@ -61,6 +61,8 @@ import { IGetAllUsersUseCase } from "../../entities/useCaseInterfaces/users/get-
 import { GetAllUsersUseCase } from "../../useCases/users/get-all-users.usecase.js";
 import { IUpdateUserStatusUseCase } from "../../entities/useCaseInterfaces/users/update-user-status-usecase.interface.js";
 import { UpdateUserStatusUseCase } from "../../useCases/users/update-user-status.usecase.js";
+import { IGetUserDetailsUseCase } from "../../entities/useCaseInterfaces/users/get-user-details-usecase.interface.js";
+import { GetUserDetailsUseCase } from "../../useCases/users/get-user-details.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -167,6 +169,10 @@ export class UseCaseRegistry {
 				useClass: UpdateUserStatusUseCase,
 			}
 		);
+
+		container.register<IGetUserDetailsUseCase>("IGetUserDetailsUseCase", {
+			useClass: GetUserDetailsUseCase,
+		});
 
 		//* ====== Register Bcrypts ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {

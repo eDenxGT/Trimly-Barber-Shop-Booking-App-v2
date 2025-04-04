@@ -52,6 +52,7 @@ export interface IBarber extends Omit<User, "fullName"> {
 			close?: string;
 		} | null;
 	};
+	rejectionReason?: string;
 	location?: {
 		name?: string;
 		displayName?: string;

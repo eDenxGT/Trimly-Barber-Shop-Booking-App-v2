@@ -4,6 +4,7 @@ import { FetchShopsParams } from "@/hooks/barber/useAllBarberShops";
 import {
 	IAdminResponse,
 	IAllBarberShopsResponse,
+	IAuthResponse,
 	IAxiosResponse,
 } from "@/types/Response";
 import { IAdmin, IBarber, IClient, UpdatePasswordData } from "@/types/User";
@@ -12,6 +13,13 @@ export type IUpdateAdminData = Pick<
 	IAdmin,
 	"fullName" | "email" | "phoneNumber" | "avatar"
 >;
+
+export const refreshAdminSession = async (): Promise<IAuthResponse> => {
+	const response = await adminAxiosInstance.get<IAuthResponse>(
+		"/admin/refresh-session"
+	);
+	return response.data;
+};
 
 export const getAllUsers = async <T extends IClient | IBarber>({
 	userType,

@@ -1,5 +1,6 @@
 import { barberAxiosInstance } from "@/api/barber.axios";
 import {
+	IAuthResponse,
 	IAxiosResponse,
 	IBarberHoursResponse,
 	IBarberResponse,
@@ -21,6 +22,13 @@ export type IUpdateBarberData = Partial<
 		| "openingHours"
 	>
 >;
+
+export const refreshBarberSession = async (): Promise<IAuthResponse> => {
+	const response = await barberAxiosInstance.get<IAuthResponse>(
+		"/barber/refresh-session"
+	);
+	return response.data;
+};
 
 export const updateBarberPassword = async ({
 	oldPassword,

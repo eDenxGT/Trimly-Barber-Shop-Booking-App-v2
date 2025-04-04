@@ -4,13 +4,13 @@ import SignIn from "@/components/auth/SignIn";
 import { useLoginMutation } from "@/hooks/auth/useLogin";
 import { IAdmin, ILoginData } from "@/types/User";
 import { useToaster } from "@/hooks/ui/useToaster";
-import { useDispatch } from "react-redux";
 import { adminLogin } from "@/store/slices/admin.slice";
+import { useAppDispatch } from "@/store/store";
 
 export const AdminAuth = () => {
 	const { mutate: loginAdmin, isPending } = useLoginMutation();
 	const { errorToast, successToast } = useToaster();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const handleLoginSubmit = (data: Omit<ILoginData, "role">) => {
 		loginAdmin(

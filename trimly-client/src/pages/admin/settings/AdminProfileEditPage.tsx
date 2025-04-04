@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
 import ProfileEditForm from "@/components/common/forms/ProfileEditForm";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useToaster } from "@/hooks/ui/useToaster";
-import { RootState } from "@/store/store";
+import { RootState, useAppDispatch } from "@/store/store";
 import { adminLogin } from "@/store/slices/admin.slice";
 import { IAdmin } from "@/types/User";
 import { useAdminProfileMutation } from "@/hooks/admin/useAdminProfile";
+import useRefreshSession from "@/hooks/common/useRefreshSession";
 
 export const AdminProfileEditPage = () => {
+	useRefreshSession("admin");
 	const admin = useSelector((state: RootState) => state.admin.admin);
 	const {
 		mutate: updateProfile,
@@ -16,7 +18,7 @@ export const AdminProfileEditPage = () => {
 	} = useAdminProfileMutation();
 	const { successToast, errorToast } = useToaster();
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const handleAdminProfileUpdate = (data) => {
 		updateProfile(

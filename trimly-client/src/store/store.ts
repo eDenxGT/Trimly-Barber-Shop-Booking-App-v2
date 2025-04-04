@@ -5,6 +5,7 @@ import persistReducer from "redux-persist/es/persistReducer";
 import clientReducer from "./slices/client.slice";
 import barberReducer from "./slices/barber.slice";
 import adminReducer from "./slices/admin.slice";
+import { useDispatch } from "react-redux";
 
 // const clientPersistConfig = {
 // 	key: "client",
@@ -42,3 +43,5 @@ export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const useAppDispatch = () => useDispatch<AppDispatch>();

@@ -7,6 +7,7 @@ import {
 	ERROR_MESSAGES,
 	HTTP_STATUS,
 	SUCCESS_MESSAGES,
+	TRole,
 } from "../../shared/constants.js";
 import { CustomError } from "../../entities/utils/custom.error.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
@@ -14,6 +15,7 @@ import { IUpdateUserDetailsUseCase } from "../../entities/useCaseInterfaces/user
 import { IChangeUserPasswordUseCase } from "../../entities/useCaseInterfaces/users/change-user-password-usecase.interface.js";
 import { IGetAllUsersUseCase } from "../../entities/useCaseInterfaces/users/get-all-users-usecase.interface.js";
 import { IUpdateUserStatusUseCase } from "../../entities/useCaseInterfaces/users/update-user-status-usecase.interface.js";
+import { IGetUserDetailsUseCase } from "../../entities/useCaseInterfaces/users/get-user-details-usecase.interface.js";
 
 @injectable()
 export class UserController implements IUserController {
@@ -25,8 +27,36 @@ export class UserController implements IUserController {
 		@inject("IChangeUserPasswordUseCase")
 		private _changePasswordUseCase: IChangeUserPasswordUseCase,
 		@inject("IUpdateUserDetailsUseCase")
-		private _updateUserDetailsUseCase: IUpdateUserDetailsUseCase
+		private _updateUserDetailsUseCase: IUpdateUserDetailsUseCase,
+		@inject("IGetUserDetailsUseCase")
+		private _getUserDetailsUseCase: IGetUserDetailsUseCase
 	) {}
+
+	//* ─────────────────────────────────────────────────────────────
+	//*                     🛠️ Refresh Session
+	//* ─────────────────────────────────────────────────────────────
+	async refreshSession(req: Request, res: Response): Promise<void> {
+		try {
+			const { userId, role } = (req as CustomRequest).user;
+			if (!userId || !role) {
+				res.status(HTTP_STATUS.UNAUTHORIZED).json({
+					success: false,
+					message: ERROR_MESSAGES.INVALID_TOKEN,
+				});
+				return;
+			}
+			const user = await this._getUserDetailsUseCase.execute(
+				userId,
+				role as TRole
+			);
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				user: user,
+			});
+		} catch (error) {
+			handleErrorResponse(req, res, error);
+		}
+	}
 
 	//* ─────────────────────────────────────────────────────────────
 	//*               🛠️ Get All Users (Role Based)

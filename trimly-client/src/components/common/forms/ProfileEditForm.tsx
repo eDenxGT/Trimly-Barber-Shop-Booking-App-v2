@@ -339,7 +339,7 @@ export default function ProfileEditForm({
 	};
 
 	return (
-		<div className="max-w-6xl mx-auto p-6 mt-16">
+		<div className="max-w-6xl mx-auto p-6">
 			<div className="flex items-center mb-4 space-x-6">
 				<IconButton
 					sx={{

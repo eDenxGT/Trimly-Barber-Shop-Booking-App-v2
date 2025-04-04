@@ -1,13 +1,16 @@
+import { AlertMessage } from "@/components/common/alerts/AlertMessage";
 import ProfileEditForm from "@/components/common/forms/ProfileEditForm";
 import { useBarberProfileMutation } from "@/hooks/barber/useBarberProfile";
+import useRefreshSession from "@/hooks/common/useRefreshSession";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { barberLogin } from "@/store/slices/barber.slice";
-import { RootState } from "@/store/store";
+import { RootState, useAppDispatch } from "@/store/store";
 import { IBarber } from "@/types/User";
 import { motion } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export const BarberProfileEditPage = () => {
+	useRefreshSession("barber");
 	const barber = useSelector((state: RootState) => state.barber.barber);
 	const {
 		mutate: updateProfile,
@@ -16,7 +19,7 @@ export const BarberProfileEditPage = () => {
 	} = useBarberProfileMutation();
 	const { successToast, errorToast } = useToaster();
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const handleBarberProfileUpdate = (data) => {
 		updateProfile(
@@ -43,7 +46,15 @@ export const BarberProfileEditPage = () => {
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: -20 }}
 			transition={{ duration: 0.5 }}
-			className="p-4">
+			className="p-4 mt-16">
+			{barber?.status === "pending" && (
+				<AlertMessage
+					message={barber.rejectionReason as string}
+					title="Message from admin"
+					type="warning"
+				/>
+			)}
+
 			<ProfileEditForm
 				isLoading={!isError && isPending}
 				role="barber"

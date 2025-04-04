@@ -1,11 +1,18 @@
 import { clientAxiosInstance } from "@/api/client.axios";
-import { IAxiosResponse, IClientResponse } from "@/types/Response";
+import { IAuthResponse, IAxiosResponse, IClientResponse } from "@/types/Response";
 import { IClient, UpdatePasswordData } from "@/types/User";
 
 export type IUpdateClientData = Pick<
 	IClient,
 	"fullName" | "email" | "phoneNumber" | "avatar" | "location"
 >;
+
+export const refreshClientSession = async (): Promise<IAuthResponse> => {
+	const response = await clientAxiosInstance.get<IAuthResponse>(
+		"/client/refresh-session"
+	);
+	return response.data;
+};
 
 export const updateClientPassword = async ({
 	oldPassword,

@@ -1,19 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useToaster } from "@/hooks/ui/useToaster";
-import { RootState } from "@/store/store";
+import { RootState, useAppDispatch } from "@/store/store";
 import { PrivateHeader } from "./../mainComponents/PrivateHeader";
 import { Sidebar } from "../mainComponents/SideBar";
 import { useLogout } from "@/hooks/auth/useLogout";
 import { logoutBarber } from "@/services/auth/authService";
-import { barberLogout } from "@/store/slices/barber.slice";
+import {
+	barberLogout,
+	refreshBarberSessionThunk,
+} from "@/store/slices/barber.slice";
 
 export const BarberLayout = () => {
 	const [isSideBarVisible, setIsSideBarVisible] = useState(false);
 	const [notifications] = useState(2);
 	const { successToast, errorToast } = useToaster();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const user = useSelector((state: RootState) => state.barber.barber);
 	const { mutate: logoutReq } = useLogout(logoutBarber);
@@ -30,6 +33,18 @@ export const BarberLayout = () => {
 			},
 		});
 	};
+
+	useEffect(() => {
+		const handleFocus = () => {
+			dispatch(refreshBarberSessionThunk());
+		};
+
+		window.addEventListener("focus", handleFocus);
+
+		return () => {
+			window.removeEventListener("focus", handleFocus);
+		};
+	}, [dispatch]);
 
 	return (
 		<div className="flex flex-col min-h-screen">
@@ -50,7 +65,7 @@ export const BarberLayout = () => {
 				handleLogout={handleLogout}
 			/>
 			{/* Main content */}
-			<Outlet context={user}/>
+			<Outlet context={user} />
 		</div>
 	);
 };

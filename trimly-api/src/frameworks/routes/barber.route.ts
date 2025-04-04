@@ -84,6 +84,16 @@ export class BarberRoutes extends BaseRoute {
 			}
 		);
 
+		this.router.get(
+			"/barber/refresh-session",
+			verifyAuth,
+			authorizeRole(["barber"]),
+			blockStatusMiddleware.checkStatus as RequestHandler,
+			(req: Request, res: Response) => {
+				userController.refreshSession(req, res);
+			}
+		);
+		
 		// logout
 		this.router.post(
 			"/barber/logout",

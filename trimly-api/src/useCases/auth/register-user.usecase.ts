@@ -28,7 +28,6 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 
 	async execute(
 		user: UserDTO,
-		authType: "google" | "normal" = "normal"
 	): Promise<IBarberEntity | IClientEntity | null> {
 		const { role, email, password } = user;
 

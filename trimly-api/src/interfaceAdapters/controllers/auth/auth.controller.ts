@@ -7,6 +7,7 @@ import {
 	ERROR_MESSAGES,
 	HTTP_STATUS,
 	SUCCESS_MESSAGES,
+	TRole,
 } from "../../../shared/constants.js";
 import { handleErrorResponse } from "../../../shared/utils/error.handler.js";
 import { IVerifyOtpUseCase } from "../../../entities/useCaseInterfaces/auth/verify-otp-usecase.interface.js";
@@ -30,6 +31,7 @@ import { IForgotPasswordUseCase } from "../../../entities/useCaseInterfaces/auth
 import { forgotPasswordValidationSchema } from "./validations/forgot-password.validation.schema.js";
 import { resetPasswordValidationSchema } from "./validations/reset-password.validation.schema.js";
 import { IGoogleUseCase } from "../../../entities/useCaseInterfaces/auth/google-usecase.js";
+import { IGetUserDetailsUseCase } from "../../../entities/useCaseInterfaces/users/get-user-details-usecase.interface.js";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -53,8 +55,8 @@ export class AuthController implements IAuthController {
 		@inject("IForgotPasswordUseCase")
 		private _forgotPasswordUseCase: IForgotPasswordUseCase,
 		@inject("IGoogleUseCase") private _googleUseCase: IGoogleUseCase,
-		@inject("IResetPasswordUseCase") 
-		private _resetPasswordUseCase: IResetPasswordUseCase
+		@inject("IResetPasswordUseCase")
+		private _resetPasswordUseCase: IResetPasswordUseCase,
 	) {}
 
 	//* ─────────────────────────────────────────────────────────────
@@ -72,11 +74,11 @@ export class AuthController implements IAuthController {
 				return;
 			}
 			const validatedData = schema.parse(req.body);
-			await this._registerUserUseCase.execute(validatedData, "normal");
+			await this._registerUserUseCase.execute(validatedData);
 			if (role === "barber") {
 				res.status(HTTP_STATUS.CREATED).json({
 					success: true,
-					message: SUCCESS_MESSAGES.APPLICATION_SUBMITTED,
+					message: SUCCESS_MESSAGES.LOGIN_AND_COMPLETE_YOUR_PROFILE,
 				});
 				return;
 			}
@@ -126,6 +128,21 @@ export class AuthController implements IAuthController {
 			);
 
 			const { password, ...userWithoutPassword } = user;
+
+			if (
+				userWithoutPassword.status === "pending" &&
+				userWithoutPassword.role === "barber"
+			) {
+				res.status(HTTP_STATUS.OK).json({
+					success: true,
+					message:
+						SUCCESS_MESSAGES.COMPLETE_YOUR_PROFILE_TO_GET_APPROVED,
+					user: {
+						...userWithoutPassword,
+					},
+				});
+				return;
+			}
 
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
