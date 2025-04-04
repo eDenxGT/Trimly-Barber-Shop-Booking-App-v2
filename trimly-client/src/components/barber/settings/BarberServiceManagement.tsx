@@ -10,10 +10,10 @@ import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
 
 interface BarberServiceManageFormProps {
 	services: IService[];
-	onUpdateService: (newService: IService) => void;
-	onAddService: (newService: IService) => void;
-	onDeleteService: (serviceId: string) => void;
-	onUpdateStatus: (serviceId: string, status: "blocked" | "active") => void;
+	onUpdateService: (newService: IService) => Promise<boolean>;
+	onAddService: (newService: IService) => Promise<boolean>;
+	onDeleteService: (serviceId: string) => Promise<boolean>;
+	onUpdateStatus: (serviceId: string, status: "blocked" | "active") => Promise<boolean>;
 	isUpdating: boolean;
 }
 
@@ -30,13 +30,11 @@ export const BarberServiceManageForm = ({
 	const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 	const [serviceToDelete, setServiceToDelete] = useState<string | null>(null);
 
-
 	const formik = useFormik<IService>({
 		initialValues: {
 			serviceId: "",
 			name: "",
 			price: 0,
-			duration: "",
 			genderType: "unisex",
 			description: "",
 		},
@@ -46,7 +44,6 @@ export const BarberServiceManageForm = ({
 			price: Yup.number()
 				.min(50, "Price must be at least ₹50")
 				.required("Price is required"),
-			duration: Yup.string().required("Duration is required"),
 			genderType: Yup.string().oneOf(
 				["male", "female", "unisex"],
 				"Invalid gender type"
@@ -57,12 +54,15 @@ export const BarberServiceManageForm = ({
 			const existingServiceIndex = services.findIndex(
 				(service) => service.serviceId === values.serviceId
 			);
+			let success;
 			if (editMode && existingServiceIndex !== -1) {
-				await onUpdateService(values);
+				success = await onUpdateService(values);
 			} else {
-				await onAddService(values);
+				success = await onAddService(values);
 			}
-			setShowModal(false);
+			if(success) {
+				onCloseModal()
+			} 
 		},
 	});
 
@@ -76,6 +76,7 @@ export const BarberServiceManageForm = ({
 			setShowModal(true);
 		}
 	};
+
 	const handleDeleteClick = (serviceId: string) => {
 		setServiceToDelete(serviceId);
 		setShowDeleteConfirmation(true);
@@ -83,7 +84,7 @@ export const BarberServiceManageForm = ({
 
 	const confirmDelete = async () => {
 		if (serviceToDelete) {
-			await onDeleteService(serviceToDelete);
+			onDeleteService(serviceToDelete);
 			setServiceToDelete(null);
 		}
 	};
@@ -121,9 +122,7 @@ export const BarberServiceManageForm = ({
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
 								Price
 							</th>
-							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-								Duration
-							</th>
+
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
 								Gender Type
 							</th>
@@ -149,9 +148,6 @@ export const BarberServiceManageForm = ({
 									</td>
 									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 										${service.price}
-									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-										{service.duration}
 									</td>
 									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">
 										{service.genderType}

@@ -7,6 +7,7 @@ import {
 	useGetBarberServices,
 } from "@/hooks/barber/useBarberServices";
 import { IService } from "@/types/Service";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 export const BarberServiceManagementPage = () => {
 	const {
@@ -14,12 +15,13 @@ export const BarberServiceManagementPage = () => {
 		isLoading,
 		isError,
 		error,
-		refetch,
 	} = useGetBarberServices();
 
 	const { mutate: addService } = useBarberServiceAddMutation();
 
 	const { mutate: deleteService } = useBarberServiceDeleteMutation();
+
+	const { successToast, errorToast } = useToaster();
 
 	const {
 		mutate: updateService,
@@ -27,43 +29,73 @@ export const BarberServiceManagementPage = () => {
 		isError: isUpdatingError,
 	} = useBarberServiceUpdateMutation();
 
-	const handleAddService = async (service: IService) => {
-		try {
-			await addService(service);
-			refetch();
-		} catch (err) {
-			console.error("Error adding service:", err);
-		}
+	const handleAddService = async (service: IService): Promise<boolean> => {
+		return new Promise((resolve) => {
+			addService(service, {
+				onSuccess: (data) => {
+					successToast(data.message);
+					resolve(true);
+				},
+				onError: (error: any) => {
+					errorToast(error.response.data.message);
+					resolve(false);
+				},
+			});
+		});
 	};
 
-	const handleDeleteService = async (serviceId: string) => {
-		try {
-			await deleteService({ serviceId });
-			refetch();
-		} catch (err) {
-			console.error("Error deleting service:", err);
-		}
+	const handleDeleteService = async (serviceId: string): Promise<boolean> => {
+		return new Promise((resolve) => {
+			deleteService(
+				{ serviceId },
+				{
+					onSuccess: (data) => {
+						successToast(data.message);
+						resolve(true);
+					},
+					onError: (error: any) => {
+						errorToast(error.response.data.message);
+						resolve(false);
+					},
+				}
+			);
+		});
 	};
 
-	const handleUpdateService = async (service: IService) => {
-		try {
-			await updateService(service);
-			refetch();
-		} catch (err) {
-			console.error("Error updating service:", err);
-		}
+	const handleUpdateService = async (service: IService): Promise<boolean> => {
+		return new Promise((resolve) => {
+			updateService(service, {
+				onSuccess: (data) => {
+					successToast(data.message);
+					resolve(true);
+				},
+				onError: (error: any) => {
+					errorToast(error.response.data.message);
+					resolve(false);
+				},
+			});
+		});
 	};
 
 	const handleUpdateStatus = async (
 		serviceId: string,
 		status: "active" | "blocked"
-	) => {
-		try {
-			await updateService({ serviceId, status });
-			refetch();
-		} catch (err) {
-			console.error("Error updating service:", err);
-		}
+	): Promise<boolean> => {
+		return new Promise((resolve) => {
+			updateService(
+				{ serviceId, status },
+				{
+					onSuccess: (data) => {
+						successToast(data.message);
+						resolve(true);
+					},
+					onError: (error: any) => {
+						errorToast(error.response.data.message);
+						resolve(false);
+					},
+				}
+			);
+		});
 	};
 
 	if (isLoading) return <p>Loading...</p>;

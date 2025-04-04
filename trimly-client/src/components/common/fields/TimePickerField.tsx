@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { formatTo12Hour, formatTo24Hour } from "@/utils/helpers/timeFormatter";
+import { formatTo12Hour } from "@/utils/helpers/timeFormatter";
 
 interface TimePickerProps {
 	value: string;
@@ -26,12 +26,12 @@ export function TimePicker({
 	disabled = false,
 	className,
 }: TimePickerProps) {
-	const time24h = React.useMemo(() => formatTo24Hour(value), [value]);
+	const [selectedTime, setSelectedTime] = React.useState<string>(value || "");
 
 	const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const timeValue = e.target.value;
-		const time12h = formatTo12Hour(timeValue);
-		onChange(time12h);
+		const time24hValue = e.target.value;
+		setSelectedTime(time24hValue);
+		onChange(time24hValue);
 	};
 
 	return (
@@ -47,7 +47,7 @@ export function TimePicker({
 						className
 					)}>
 					<Clock className="mr-2 h-4 w-4" />
-					{value || "Select time"}
+					{formatTo12Hour(selectedTime) || "Select time"}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-auto bg-gray-100 p-4">
@@ -56,9 +56,9 @@ export function TimePicker({
 					<Input
 						id="time-picker"
 						type="time"
-						value={time24h}
+						value={selectedTime}
 						onChange={handleTimeChange}
-						className="w-full bg-gray-400 text-white font-semibold"
+						className="w-full cursor-pointer bg-gray-400 text-white font-semibold"
 					/>
 				</div>
 			</PopoverContent>

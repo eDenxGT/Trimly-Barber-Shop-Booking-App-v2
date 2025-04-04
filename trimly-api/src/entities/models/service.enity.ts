@@ -4,7 +4,6 @@ export interface IServiceEntity {
 	name: string;
 	price: number;
 	status: "active" | "blocked";
-	duration: string;
 	genderType: "male" | "female" | "unisex";
 	description?: string;
 }

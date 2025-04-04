@@ -48,14 +48,14 @@ export class LoginUserUseCase implements ILoginUserUseCase {
 			);
 		}
 
-		if (userData.status === "pending") {
-			throw new CustomError(
-				ERROR_MESSAGES.ACCOUNT_UNDER_VERIFICATION,
-				HTTP_STATUS.FORBIDDEN
-			);
-		}
+		// if (userData.status === "pending") {
+		// 	throw new CustomError(
+		// 		ERROR_MESSAGES.ACCOUNT_UNDER_VERIFICATION,
+		// 		HTTP_STATUS.FORBIDDEN
+		// 	);
+		// }
       
-		if (userData.status !== "active") {
+		if (userData.status === "blocked") {
 			throw new CustomError(
 				ERROR_MESSAGES.BLOCKED,
 				HTTP_STATUS.FORBIDDEN

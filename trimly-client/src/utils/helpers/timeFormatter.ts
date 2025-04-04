@@ -1,28 +1,67 @@
-export const formatTo24Hour = (time12: string): string => {
-	if (!time12) return "";
+/**
+ * Converts a time string from 24-hour format to 12-hour format
+ * @param time24h Time in 24-hour format (HH:MM)
+ * @returns Time in 12-hour format with AM/PM (hh:MM AM/PM)
+ */
+export function formatTo12Hour(time24h: string): string {
+	if (!time24h) return "";
 
-	const [timePart, period] = time12.split(" ");
-	const [hours, minutes] = timePart.split(":").map(Number);
+	try {
+		const [hours, minutes] = time24h
+			.split(":")
+			.map((part) => parseInt(part, 10));
 
-	let hours24 = hours;
-	if (period === "PM" && hours !== 12) hours24 += 12;
-	if (period === "AM" && hours === 12) hours24 = 0;
+		if (isNaN(hours) || isNaN(minutes)) return "";
 
-	return `${hours24.toString().padStart(2, "0")}:${minutes
-		.toString()
-		.padStart(2, "0")}`;
-};
+		const period = hours >= 12 ? "PM" : "AM";
+		const hours12 = hours % 12 || 12;
 
-export const formatTo12Hour = (time24: string): string => {
-	if (!time24) return "";
+		return `${hours12}:${minutes.toString().padStart(2, "0")} ${period}`;
+	} catch (error) {
+		console.error("Error converting time to 12-hour format:", error);
+		return "";
+	}
+}
 
-	const [hours, minutes] = time24.split(":").map(Number);
-	const period = hours >= 12 ? "PM" : "AM";
-	const hours12 = hours % 12 || 12;
-	const formattedMinutes = minutes.toString().padStart(2, "0");
+/**
+ * Converts a time string from 12-hour format to 24-hour format
+ * @param time12h Time in 12-hour format (hh:MM AM/PM)
+ * @returns Time in 24-hour format (HH:MM)
+ */
+export function formatTo24Hour(time12h: string): string {
+	if (!time12h) return "";
 
-	return `${hours12}:${formattedMinutes} ${period}`;
-};
+	try {
+		if (!time12h.includes("AM") && !time12h.includes("PM")) {
+			if (time12h.includes(":")) return time12h;
+			return "";
+		}
+
+		const trimmedTime = time12h.trim();
+
+		const isPM = trimmedTime.toUpperCase().includes("PM");
+		const timeWithoutPeriod = trimmedTime.replace(/\s?(AM|PM)\s?/i, "");
+
+		const [hoursStr, minutesStr] = timeWithoutPeriod.split(":");
+		let hours = parseInt(hoursStr, 10);
+		const minutes = parseInt(minutesStr, 10);
+
+		if (isNaN(hours) || isNaN(minutes)) return "";
+
+		if (isPM && hours < 12) {
+			hours += 12;
+		} else if (!isPM && hours === 12) {
+			hours = 0;
+		}
+
+		return `${hours.toString().padStart(2, "0")}:${minutes
+			.toString()
+			.padStart(2, "0")}`;
+	} catch (error) {
+		console.error("Error converting time to 24-hour format:", error);
+		return "";
+	}
+}
 
 export const formatDate = (dateString: string) => {
 	const date = new Date(dateString);

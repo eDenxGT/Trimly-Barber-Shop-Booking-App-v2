@@ -72,7 +72,7 @@ export class BlockStatusMiddleware {
 				});
 			}
 
-			if (status !== "active") {
+			if (status === "blocked") {
 				await Promise.all([
 					this._blacklistTokenUseCase.execute(access_token),
 					this._revokeRefreshTokenUseCase.execute(refresh_token),

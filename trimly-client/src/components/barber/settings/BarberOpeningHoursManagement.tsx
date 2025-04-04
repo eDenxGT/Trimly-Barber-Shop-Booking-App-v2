@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TimePicker } from "@/components/common/fields/TimePickerField";
-import { useToaster } from "@/hooks/ui/useToaster";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { useNavigate } from "react-router-dom";
 
@@ -68,7 +67,7 @@ export default function BarberOpeningHoursForm({
 		if (isOpen) {
 			setHours((prev) => ({
 				...prev,
-				[day]: { open: "9:00 AM", close: "6:00 PM" },
+				[day]: { open: "", close: "" },
 			}));
 		} else {
 			setHours((prev) => ({

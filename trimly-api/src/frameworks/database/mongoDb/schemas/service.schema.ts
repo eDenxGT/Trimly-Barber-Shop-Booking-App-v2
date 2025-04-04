@@ -7,7 +7,6 @@ export const serviceSchema = new Schema<IServiceModel>(
 		barberId: { type: String, required: true },
 		name: { type: String, required: true },
 		price: { type: Number, required: true },
-		duration: { type: String, required: true },
 		status: {
 			type: String,
 			enum: ["active", "blocked"],

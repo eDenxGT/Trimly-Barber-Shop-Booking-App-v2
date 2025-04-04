@@ -10,6 +10,12 @@ export const handleErrorResponse = (
 	res: Response,
 	error: unknown
 ) => {
+	logger.error(`[${req.method}] ${req.url} - ${(error as Error).message}`, {
+		ip: req.ip,
+		userAgent: req.headers["user-agent"],
+		stack: (error as Error).stack,
+	});
+
 	if (error instanceof ZodError) {
 		console.error(
 			chalk.bgRedBright(error.name),
@@ -50,11 +56,6 @@ export const handleErrorResponse = (
 			chalk.redBright(error)
 		);
 	}
-	logger.error(`[${req.method}] ${req.url} - ${(error as Error).message}`, {
-		ip: req.ip,
-		userAgent: req.headers["user-agent"],
-		stack: (error as Error).stack,
-	});
 
 	return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
 		success: false,

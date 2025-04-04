@@ -15,7 +15,7 @@ interface ServiceModalProps {
 	formik: ReturnType<typeof useFormik<IService>>;
 	editMode: boolean;
 	onCloseModal: () => void;
-	open: boolean; 
+	open: boolean;
 }
 
 const ServiceModal: React.FC<ServiceModalProps> = ({
@@ -75,28 +75,6 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
 							}
 						/>
 					</div>
-
-					<div className="mb-4">
-						<MuiTextField
-							id="duration"
-							name="duration"
-							label="Duration"
-							placeholder="e.g. 30 min"
-							value={formik.values.duration}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							error={
-								formik.touched.duration &&
-								Boolean(formik.errors.duration)
-							}
-							helperText={
-								formik.touched.duration
-									? formik.errors.duration
-									: ""
-							}
-						/>
-					</div>
-
 					<div className="mb-4">
 						<label
 							className="block text-gray-700 text-sm font-bold mb-2"
