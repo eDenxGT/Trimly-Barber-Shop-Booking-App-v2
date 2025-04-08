@@ -15,6 +15,7 @@ import { BaseRoute } from "./base.route.js";
 import {
 	authController,
 	blockStatusMiddleware,
+	bookingController,
 	serviceController,
 	userController,
 } from "../di/resolver.js";
@@ -56,6 +57,25 @@ export class BarberRoutes extends BaseRoute {
 			);
 
 		this.router
+			.route("/barber/booking")
+			.get(
+				verifyAuth,
+				authorizeRole(["barber"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					bookingController.getAllBookings(req, res);
+				}
+			)
+			.patch(
+				verifyAuth,
+				authorizeRole(["barber"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					bookingController.updateBookingComplete(req, res);
+				}
+			);
+
+		this.router
 			.route("/barber/services/:serviceId")
 			.put(
 				verifyAuth,
@@ -93,7 +113,7 @@ export class BarberRoutes extends BaseRoute {
 				userController.refreshSession(req, res);
 			}
 		);
-		
+
 		// logout
 		this.router.post(
 			"/barber/logout",

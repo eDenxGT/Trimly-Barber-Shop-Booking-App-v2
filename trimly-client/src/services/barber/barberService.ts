@@ -4,6 +4,7 @@ import {
 	IAxiosResponse,
 	IBarberHoursResponse,
 	IBarberResponse,
+	IBookingResponse,
 	IServiceResponse,
 } from "@/types/Response";
 import { IService } from "@/types/Service";
@@ -101,36 +102,19 @@ export const updateOpeningHours = async (
 	);
 	return response.data;
 };
-// export const getAllActiveShops = async ({
-// 	forType = "active",
-// 	page = 1,
-// 	limit = 10,
-// 	search = "",
-// }: FetchShopsParams): Promise<ShopsResponse> => {
-// 	const response = await barberAxiosInstance.get("/barber/shop", {
-// 		params: { forType, page, limit, search },
-// 	});
-// 	return {
-// 		shops: response.data.shops as IBarberShopData[],
-// 		totalPages: response.data.totalPages,
-// 		currentPage: response.data.currentPage,
-// 	};
-// };
 
-// export const getShopByIdForBarbers = async (
-// 	shopId: string
-// ): Promise<BarberShopResponse> => {
-// 	const response = await barberAxiosInstance.get(`/barber/shop/${shopId}`);
-// 	return response.data;
-// };
+export const getBookingsForBarber = async (): Promise<IBookingResponse> => {
+	const response = await barberAxiosInstance.get("/barber/booking", {
+		params: { type: "barber" },
+	});
 
-// export const updateBarberShopFromOwner = async (
-// 	data: IBarberShopWithBarbers
-// ): Promise<IAxiosResponse> => {
-// 	const { shopId } = data;
-// 	const response = await barberAxiosInstance.put<IAxiosResponse>(
-// 		`/barber/shop/${shopId}`,
-// 		data
-// 	);
-// 	return response.data;
-// };
+	return response.data;
+};
+
+export const handleBookingCompleteUpdate = async (bookingId: string) => {
+	const response = await barberAxiosInstance.patch("/barber/booking", {
+		bookingId,
+	});
+
+	return response.data;
+};

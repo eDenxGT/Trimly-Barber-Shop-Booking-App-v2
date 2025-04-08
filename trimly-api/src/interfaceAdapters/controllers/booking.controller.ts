@@ -36,7 +36,7 @@ export class BookingController implements IBookingController {
 			const { shopId, type } = req.query;
 			const { role, userId } = (req as CustomRequest).user;
 
-			if ((type && type === "clientId") || type === "barberId") {
+			if ((type && type === "client") || type === "barber") {
 				const bookings =
 					await this._getAllBookingsByUserUseCase.execute(
 						userId,
@@ -140,6 +140,24 @@ export class BookingController implements IBookingController {
 	//*                 🛠️  Handle Payment Failure
 	//* ─────────────────────────────────────────────────────────────
 	async cancelBooking(req: Request, res: Response): Promise<void> {
+		try {
+			const { bookingId } = req.body;
+
+			await this._cancelBookingUseCase.execute(String(bookingId));
+
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.CANCELLATION_SUCCESS,
+			});
+		} catch (error) {
+			handleErrorResponse(req, res, error);
+		}
+	}
+	
+	//* ─────────────────────────────────────────────────────────────
+	//*                 🛠️  Handle Payment Failure
+	//* ─────────────────────────────────────────────────────────────
+	async updateBookingComplete(req: Request, res: Response): Promise<void> {
 		try {
 			const { bookingId } = req.body;
 

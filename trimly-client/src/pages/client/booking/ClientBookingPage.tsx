@@ -16,11 +16,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { IService } from "@/types/Service";
 import {
 	getBarberShopDetailsById,
-	getBookingsByShopId,
 } from "@/services/client/clientService";
 import { useBarberShopById } from "@/hooks/barber/useBarberShopById";
 import { generateSlots } from "@/utils/helpers/generateTimeSlots";
-import { useGetBooking } from "@/hooks/booking/useGetBooking";
 import { IClient } from "@/types/User";
 import { RazorpayButton } from "@/services/payment/RazorPay";
 

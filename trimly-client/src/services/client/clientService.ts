@@ -101,7 +101,7 @@ export const getBookingsByShopId = async (
 
 export const getBookingsForClient = async (): Promise<IBookingResponse> => {
 	const response = await clientAxiosInstance.get("/client/booking", {
-		params: { type: "clientId" },
+		params: { type: "client" },
 	});
 
 	return response.data;

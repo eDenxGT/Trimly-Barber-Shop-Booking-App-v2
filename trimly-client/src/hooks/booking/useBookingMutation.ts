@@ -13,3 +13,16 @@ export const useBookingCancelMutation = (
 		},
 	});
 };
+
+export const useBookingCompleteMutation = (
+	mutationFunc: (bookingId: string) => Promise<IAxiosResponse>
+) => {
+	const queryClient = useQueryClient();
+
+	return useMutation<IAxiosResponse, Error, string>({
+		mutationFn: (bookingId) => mutationFunc(bookingId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["all-booking"] });
+		},
+	});
+};

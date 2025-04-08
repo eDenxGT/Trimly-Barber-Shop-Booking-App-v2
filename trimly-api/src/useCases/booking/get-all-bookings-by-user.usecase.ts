@@ -35,7 +35,7 @@ export class GetAllBookingsByUserUseCase
 					userId
 				);
 		}
-		console.log(bookings[0]);
+		console.log(bookings);
 		return bookings;
 	}
 }

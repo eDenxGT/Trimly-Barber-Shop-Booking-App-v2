@@ -15,7 +15,7 @@ export class BookingRepository extends BaseRepository<IBookingModel> {
 	async findBookingsWithDetailsForBarber(
 		userId: string
 	): Promise<IBookingEntity[]> {
-		const pipeline = [
+		const pipeline: PipelineStage[] = [
 			{
 				$match: { shopId: userId },
 			},
@@ -39,6 +39,41 @@ export class BookingRepository extends BaseRepository<IBookingModel> {
 				$unwind: {
 					path: "$clientDetails",
 					preserveNullAndEmptyArrays: true,
+				},
+			},
+			{
+				$sort: {
+					// date: -1,
+					// startTime: -1,
+					createdAt: -1,
+				},
+			},
+			{
+				$project: {
+					_id: 0,
+					bookingId: 1,
+					date: 1,
+					startTime: 1,
+					status: 1,
+					duration: 1,
+					total: 1,
+					servicesDetails: {
+						$map: {
+							input: "$servicesDetails",
+							as: "service",
+							in: {
+								serviceId: "$$service.serviceId",
+								name: "$$service.name",
+								price: "$$service.price",
+							},
+						},
+					},
+					clientDetails: {
+						fullName: "$clientDetails.fullName",
+						userId: "$clientDetails.userId",
+						avatar: "$clientDetails.avatar",
+						phoneNumber: "$clientDetails.phoneNumber",
+					},
 				},
 			},
 		];
