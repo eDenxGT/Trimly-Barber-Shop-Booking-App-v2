@@ -21,12 +21,20 @@ import {
 } from "@/components/ui/table";
 import { IBooking } from "@/types/Booking";
 import MuiButton from "@/components/common/buttons/MuiButton";
+import { useNavigate } from "react-router-dom";
 
-export function BookingHistory({ bookings = [] }: { bookings: IBooking[] }) {
+export function BookingHistory({
+	bookings = [],
+	handleCancel,
+}: {
+	bookings: IBooking[];
+	handleCancel: (bookingId: string) => void;
+}) {
 	const [activeTab, setActiveTab] = useState("all");
 	const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(
 		null
 	);
+	const navigate = useNavigate();
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 	// Format date for display
@@ -98,7 +106,7 @@ export function BookingHistory({ bookings = [] }: { bookings: IBooking[] }) {
 							</p>
 						</div>
 					) : (
-						<div className="overflow-x-auto ">
+						<div className="overflow-x-auto max-h-100">
 							<Table>
 								<TableHeader>
 									<TableRow className="bg-gray-50">
@@ -346,9 +354,12 @@ export function BookingHistory({ bookings = [] }: { bookings: IBooking[] }) {
 									</div>
 									<div className="space-y-2">
 										{selectedBooking?.servicesDetails?.map(
-											(service) => (
+											(service, index) => (
 												<div
-													key={service.serviceId}
+													key={
+														service.serviceId ||
+														index
+													}
 													className="flex justify-between">
 													<span>{service.name}</span>
 													<span className="font-medium">
@@ -387,10 +398,34 @@ export function BookingHistory({ bookings = [] }: { bookings: IBooking[] }) {
 									onClick={() => setIsDialogOpen(false)}>
 									Close
 								</Button>
-								{selectedBooking?.status === "completed" && (
-									<Button className="bg-indigo-600 text-white hover:bg-indigo-700">
-										Book Again
-									</Button>
+								{(selectedBooking?.status === "confirmed" ||
+									selectedBooking?.status === "pending") && (
+									<MuiButton
+										onClick={() =>
+											handleCancel(
+												selectedBooking?.bookingId || ""
+											)
+										}
+										variant="darkblue">
+										Cancel
+									</MuiButton>
+								)}
+								{(selectedBooking?.status === "completed" ||
+									selectedBooking?.status) ===
+									"cancelled" && (
+									<div className="flex gap-3">
+										<MuiButton variant="darkblue">
+											Rate It
+										</MuiButton>
+										<MuiButton
+											onClick={() =>
+												navigate(
+													`/shops/${selectedBooking?.shopDetails?.userId}/booking`
+												)
+											}>
+											Book Again
+										</MuiButton>
+									</div>
 								)}
 							</DialogFooter>
 						</div>

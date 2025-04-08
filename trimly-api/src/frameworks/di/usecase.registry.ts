@@ -77,6 +77,8 @@ import { GetAllBookingsByShopIdUseCase } from "../../useCases/booking/get-all-bo
 import { IGetAllBookingsByShopIdUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-shopid-usecase.interface.js";
 import { IGetAllBookingsByUserUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-user-usecase.interface.js";
 import { GetAllBookingsByUserUseCase } from "../../useCases/booking/get-all-bookings-by-user.usecase.js";
+import { ICancelBookingUseCase } from "../../entities/useCaseInterfaces/booking/cancel-booking-usecase.interface.js";
+import { CancelBookingUseCase } from "../../useCases/booking/cancel-booking.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -228,6 +230,10 @@ export class UseCaseRegistry {
 			"IGetAllBookingsByUserUseCase",
 			{ useClass: GetAllBookingsByUserUseCase }
 		);
+
+		container.register<ICancelBookingUseCase>("ICancelBookingUseCase", {
+			useClass: CancelBookingUseCase,
+		});
 
 		//* ====== Register Bcrypts ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {

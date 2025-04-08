@@ -38,6 +38,7 @@ export const HTTP_STATUS = {
 
 export const SUCCESS_MESSAGES = {
 	BOOKING_SUCCESS: "Booking completed",
+	CANCELLATION_SUCCESS: "Cancellation successful",
 	CREATED: "Successfully created",
 	ADDED: "Successfully Added",
 	LOGIN_SUCCESS: "Logged in",
@@ -112,6 +113,9 @@ export const ERROR_MESSAGES = {
 	REFUND_FAILED: "Refund process failed",
 	PAYMENT_ERROR: "Payment could not be processed",
 	BOOKING_EXISTS: "Booking already exists. Refresh your page.",
+	BOOKING_NOT_FOUND: "Booking not found.",
+	CANCEL_BOOKING_BEFORE_1_HOUR:
+		"Booking cannot be cancelled within 1 hour of the scheduled time.",
 	ACCOUNT_SUSPENDED: "Your account has been suspended",
 	ACCOUNT_BANNED: "Your account has been banned",
 	SESSION_EXPIRED: "Your session has expired please log in again",

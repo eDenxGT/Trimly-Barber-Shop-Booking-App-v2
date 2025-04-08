@@ -102,6 +102,7 @@ export class BookingRepository extends BaseRepository<IBookingModel> {
 					},
 					shopDetails: {
 						shopName: "$shopDetails.shopName",
+						userId: "$shopDetails.userId",
 						avatar: "$shopDetails.avatar",
 						location: "$shopDetails.location",
 					},

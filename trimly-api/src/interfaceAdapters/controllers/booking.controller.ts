@@ -9,6 +9,7 @@ import { IVerifyPaymentUseCase } from "../../entities/useCaseInterfaces/booking/
 import { IHandleFailurePaymentUseCase } from "../../entities/useCaseInterfaces/booking/handle-failure-payment-usecase.interface.js";
 import { IGetAllBookingsByShopIdUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-shopid-usecase.interface.js";
 import { IGetAllBookingsByUserUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-user-usecase.interface.js";
+import { ICancelBookingUseCase } from "../../entities/useCaseInterfaces/booking/cancel-booking-usecase.interface.js";
 
 @injectable()
 export class BookingController implements IBookingController {
@@ -22,7 +23,9 @@ export class BookingController implements IBookingController {
 		@inject("IHandleFailurePaymentUseCase")
 		private _handleFailurePaymentUseCase: IHandleFailurePaymentUseCase,
 		@inject("IGetAllBookingsByUserUseCase")
-		private _getAllBookingsByUserUseCase: IGetAllBookingsByUserUseCase
+		private _getAllBookingsByUserUseCase: IGetAllBookingsByUserUseCase,
+		@inject("ICancelBookingUseCase")
+		private _cancelBookingUseCase: ICancelBookingUseCase
 	) {}
 
 	//* ─────────────────────────────────────────────────────────────
@@ -127,6 +130,24 @@ export class BookingController implements IBookingController {
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
 				message: SUCCESS_MESSAGES.PAYMENT_FAILED,
+			});
+		} catch (error) {
+			handleErrorResponse(req, res, error);
+		}
+	}
+
+	//* ─────────────────────────────────────────────────────────────
+	//*                 🛠️  Handle Payment Failure
+	//* ─────────────────────────────────────────────────────────────
+	async cancelBooking(req: Request, res: Response): Promise<void> {
+		try {
+			const { bookingId } = req.body;
+
+			await this._cancelBookingUseCase.execute(String(bookingId));
+
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.CANCELLATION_SUCCESS,
 			});
 		} catch (error) {
 			handleErrorResponse(req, res, error);

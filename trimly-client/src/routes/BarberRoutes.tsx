@@ -11,6 +11,7 @@ import { BarberServiceManagementPage } from "@/pages/barber/settings/BarberServi
 import { BarberOpeningHoursPage } from "@/pages/barber/settings/BarberOpeningHoursPage";
 import { BarberSettingsPage } from "@/pages/barber/settings/BarberSettingsPage";
 import { BarberDashBoardPage } from "@/pages/barber/BarberDashboardPage";
+import { BarberBookingsPage } from "@/pages/barber/booking/BarberBookingsPage";
 
 export const BarberRoutes = () => {
 	return (
@@ -26,6 +27,7 @@ export const BarberRoutes = () => {
 				}>
 				<Route path="dashboard" element={<BarberDashBoardPage />} />
 
+				<Route path="bookings" element={<BarberBookingsPage />} />
 				<Route path="settings" element={<BarberSettingsPage />} />
 				<Route
 					path="settings/services"
@@ -43,7 +45,7 @@ export const BarberRoutes = () => {
 					path="settings/profile"
 					element={<BarberProfileEditPage />}
 				/>
-				{/* <Route path="shop" element={<BarberShopList />} />
+				{/* 
 				<Route path="shop/:shopId" element={<BarberShopDetails role="barber" />} />
 				<Route path="shop/:shopId/edit" element={<BarberShopEditPage />} />
 				<Route path="shop/create" element={<BarberShopRegister />} /> 

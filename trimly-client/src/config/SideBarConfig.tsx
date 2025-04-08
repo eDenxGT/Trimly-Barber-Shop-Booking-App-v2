@@ -1,8 +1,9 @@
 import {
 	Home,
 	LayoutDashboard,
-	ListIcon,
+	NotebookText,
 	NotepadText,
+	ScrollText,
 	Settings,
 	Store,
 	Users,
@@ -24,7 +25,7 @@ const navItems = {
 		},
 		{
 			title: "My Bookings",
-			icon: ListIcon,
+			icon: NotebookText,
 			path: "/my-bookings",
 		},
 		// {
@@ -59,11 +60,11 @@ const navItems = {
 			icon: LayoutDashboard,
 			path: "/barber/dashboard",
 		},
-		// {
-		// 	title: "Shop",
-		// 	icon: LucideScissors,
-		// 	path: "/barber/shop",
-		// },
+		{
+			title: "Bookings",
+			icon: ScrollText,
+			path: "/barber/bookings",
+		},
 		// {
 		// 	title: "My Courses",
 		// 	icon: <BookOpen className="h-5 w-5" />,

@@ -4,13 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { IBooking } from "./../../../types/Booking";
+import MuiButton from "@/components/common/buttons/MuiButton";
 
-export function BookingStatus({ bookingData }: { bookingData: IBooking }) {
-	const [currentStep, setCurrentStep] = useState("waiting");
+export function BookingStatus({
+	bookingData,
+	handleCancel,
+	isLoading,
+}: {
+	isLoading: boolean;
+	bookingData: IBooking;
+	handleCancel: (bookingId: string) => void;
+}) {
+	const [currentStep, setCurrentStep] = useState(
+		bookingData?.status === "completed"
+			? "finished"
+			: bookingData?.status === "confirmed" && "in-process"
+	);
 
 	const steps = [
 		{ id: "booked", label: "Booked", icon: "📋" },
-		{ id: "waiting", label: "Waiting", icon: "⏱️" },
 		{ id: "in-process", label: "In-Process", icon: "✂️" },
 		{ id: "finished", label: "Finished", icon: "✓" },
 	];
@@ -118,14 +130,27 @@ export function BookingStatus({ bookingData }: { bookingData: IBooking }) {
 								</div>
 
 								<div className="flex gap-2">
-									<Button
-										variant="outline"
-										className="bg-indigo-900 text-white hover:bg-indigo-800">
-										Cancel
-									</Button>
-									{/* <Button className="bg-orange-400 text-white hover:bg-orange-500">
-										Reschedule
-									</Button> */}
+									{bookingData?.status === "confirmed" ||
+									bookingData?.status === "pending" ? (
+										<MuiButton
+											loading={isLoading}
+											onClick={() =>
+												handleCancel(
+													bookingData.bookingId || ""
+												)
+											}
+											variant="darkblue"
+											className="h-10 text-white">
+											Cancel
+										</MuiButton>
+									) : (
+										<Button
+											onClick={() => console.log("Rate")}
+											variant="outline"
+											className="bg-indigo-900 text-white hover:bg-indigo-800">
+											Rate
+										</Button>
+									)}
 								</div>
 							</div>
 						</CardContent>

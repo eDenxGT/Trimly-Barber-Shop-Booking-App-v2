@@ -1,3 +1,4 @@
+import { setHours, setMinutes, parseISO } from "date-fns";
 import { inject, injectable } from "tsyringe";
 import { ICreateBookingUseCase } from "../../entities/useCaseInterfaces/booking/create-booking-usecase.interface.js";
 import { IBookingRepository } from "./../../entities/repositoryInterfaces/booking/booking-repository.interface.js";
@@ -37,9 +38,18 @@ export class CreateBookingUseCase implements ICreateBookingUseCase {
 		currency: string;
 		bookingId: string;
 	}> {
-		const bookingDateTime = new Date(date);
+		const bookingDateObj = parseISO(date);
 
-		if (bookingDateTime.getTime() < Date.now()) {
+		const [time, modifier] = startTime.split(" ");
+		let [hours, minutes] = time.split(":").map(Number);
+
+		if (modifier.toLowerCase() === "pm" && hours < 12) hours += 12;
+		if (modifier.toLowerCase() === "am" && hours === 12) hours = 0;
+		const bookingDateTime = setMinutes(
+			setHours(bookingDateObj, hours),
+			minutes
+		);
+		if (bookingDateTime.getTime() <= Date.now()) {
 			throw new CustomError(
 				ERROR_MESSAGES.YOU_CAN_ONLY_BOOK_FOR_FUTURE,
 				HTTP_STATUS.BAD_REQUEST

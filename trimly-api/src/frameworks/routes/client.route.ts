@@ -62,6 +62,15 @@ export class ClientRoutes extends BaseRoute {
 				(req: Request, res: Response) => {
 					bookingController.createBooking(req, res);
 				}
+			)
+			// handling booking cancellation
+			.patch(
+				verifyAuth,
+				authorizeRole(["client"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					bookingController.cancelBooking(req, res);
+				}
 			);
 
 		this.router

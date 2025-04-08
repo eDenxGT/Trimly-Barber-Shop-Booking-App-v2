@@ -106,3 +106,13 @@ export const getBookingsForClient = async (): Promise<IBookingResponse> => {
 
 	return response.data;
 };
+
+export const bookingCancel = async (
+	bookingId: string
+): Promise<IAxiosResponse> => {
+	const response = await clientAxiosInstance.patch("/client/booking", {
+		bookingId,
+	});
+
+	return response.data;
+};
