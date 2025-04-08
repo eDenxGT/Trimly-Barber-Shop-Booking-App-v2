@@ -42,7 +42,7 @@ export const BarberShopApplicationComponent = ({
 	onPageChange,
 	onUpdateStatus,
 }: BarberShopApplicationComponentProps) => {
-	const [isDarkMode, setIsDarkMode] = useState(false);
+	const [isDarkMode] = useState(false);
 	const [selectedShop, setSelectedShop] = useState<IBarber | null>(null);
 	const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] =

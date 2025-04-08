@@ -16,7 +16,7 @@ interface ImageUploadProps {
 }
 
 const getAspectRatioValue = (aspectRatio: "square" | "banner") => {
-	return aspectRatio === "square" ? 1 : 16 / 5;
+	return aspectRatio === "square" ? 1 : 16 / 9;
 };
 
 export const ImageUploadField: React.FC<ImageUploadProps> = ({
@@ -123,7 +123,7 @@ export const ImageUploadField: React.FC<ImageUploadProps> = ({
 
 			{preview ? (
 				<div className="relative">
-					<Card className={`overflow-hidden`}>
+					<Card className="overflow-hidden p-0">
 						<img
 							src={preview}
 							alt="Preview"

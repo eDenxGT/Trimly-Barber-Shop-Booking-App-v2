@@ -16,6 +16,8 @@ import { IRedisTokenRepository } from "../../entities/repositoryInterfaces/redis
 import { RedisTokenRepository } from "../../interfaceAdapters/repositories/redis/redis-token.repository.js";
 import { IServiceRepository } from "../../entities/repositoryInterfaces/service/service-repository.interface.js";
 import { ServiceRepository } from "../../interfaceAdapters/repositories/service/service.repository.js";
+import { IBookingRepository } from "../../entities/repositoryInterfaces/booking/booking-repository.interface.js";
+import { BookingRepository } from "../../interfaceAdapters/repositories/booking/booking.repository.js";
 
 export class RepositoryRegistry {
 	static registerRepositories(): void {
@@ -46,6 +48,10 @@ export class RepositoryRegistry {
 
 		container.register<IServiceRepository>("IServiceRepository", {
 			useClass: ServiceRepository,
+		});
+
+		container.register<IBookingRepository>("IBookingRepository", {
+			useClass: BookingRepository,
 		});
 	}
 }

@@ -37,6 +37,11 @@ export const config = {
 		REDIS_PORT: process.env.REDIS_PORT || "16807"
 	},
 
+	payment: {
+		RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
+		RAZORPAY_SECRET: process.env.RAZORPAY_SECRET,
+	},
+
 	OtpExpiry: process.env.OTP_EXPIRY_IN_MINUTES || "2",
 
 	loggerStatus: process.env.LOGGER_STATUS || "dev",

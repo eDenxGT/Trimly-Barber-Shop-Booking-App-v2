@@ -4,16 +4,21 @@ import * as Yup from "yup";
 import ServiceModal from "@/components/modals/ServiceModal";
 import { IService } from "@/types/Service";
 import MuiButton from "@/components/common/buttons/MuiButton";
-import { Eye, EyeOff, Pen, Trash2 } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Pen, Trash2 } from "lucide-react";
 import { CircularProgress } from "@mui/material";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface BarberServiceManageFormProps {
 	services: IService[];
 	onUpdateService: (newService: IService) => Promise<boolean>;
 	onAddService: (newService: IService) => Promise<boolean>;
 	onDeleteService: (serviceId: string) => Promise<boolean>;
-	onUpdateStatus: (serviceId: string, status: "blocked" | "active") => Promise<boolean>;
+	onUpdateStatus: (
+		serviceId: string,
+		status: "blocked" | "active"
+	) => Promise<boolean>;
 	isUpdating: boolean;
 }
 
@@ -29,6 +34,8 @@ export const BarberServiceManageForm = ({
 	const [editMode, setEditMode] = useState(false);
 	const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 	const [serviceToDelete, setServiceToDelete] = useState<string | null>(null);
+
+	const navigate = useNavigate();
 
 	const formik = useFormik<IService>({
 		initialValues: {
@@ -60,9 +67,9 @@ export const BarberServiceManageForm = ({
 			} else {
 				success = await onAddService(values);
 			}
-			if(success) {
-				onCloseModal()
-			} 
+			if (success) {
+				onCloseModal();
+			}
 		},
 	});
 
@@ -98,7 +105,17 @@ export const BarberServiceManageForm = ({
 	return (
 		<div className="p-6 max-w-6xl mt-16 mx-auto">
 			<div className="flex justify-between items-center mb-6">
-				<h1 className="text-2xl font-bold">Service Management</h1>
+				<div className="flex items-center gap-2">
+					<Button
+						variant="ghost"
+						size="icon"
+						onClick={() => navigate(-1)}
+						className="rounded-full hover:cursor-pointer hover:bg-yellow-100">
+						<ArrowLeft className="h-5 w-5 text-yellow-600" />
+					</Button>
+
+					<h1 className="text-2xl font-bold">Service Management</h1>
+				</div>
 				<MuiButton
 					onClick={() => {
 						setEditMode(false);

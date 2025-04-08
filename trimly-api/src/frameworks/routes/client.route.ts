@@ -13,6 +13,8 @@ import {
 import {
 	authController,
 	blockStatusMiddleware,
+	bookingController,
+	shopController,
 	userController,
 } from "../di/resolver.js";
 
@@ -41,6 +43,68 @@ export class ClientRoutes extends BaseRoute {
 				userController.changeUserPassword(req, res);
 			}
 		);
+
+		this.router
+			.route("/client/booking")
+			.get(
+				verifyAuth,
+				authorizeRole(["client"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					bookingController.getAllBookings(req, res);
+				}
+			)
+			// handling booking creation
+			.post(
+				verifyAuth,
+				authorizeRole(["client"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					bookingController.createBooking(req, res);
+				}
+			);
+
+		this.router
+			.route("/client/payment")
+			// handling payment verification
+			.post(
+				verifyAuth,
+				authorizeRole(["client"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					bookingController.verifyPayment(req, res);
+				}
+			)
+			// handling payment failure
+			.put(
+				verifyAuth,
+				authorizeRole(["client"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					bookingController.handlePaymentFailure(req, res);
+				}
+			);
+
+		this.router.get(
+			"/client/barber-shops",
+			verifyAuth,
+			authorizeRole(["client"]),
+			blockStatusMiddleware.checkStatus as RequestHandler,
+			(req: Request, res: Response) => {
+				shopController.getAllNearestShopsForClient(req, res);
+			}
+		);
+
+		this.router.get(
+			"/client/barber-shop/details",
+			verifyAuth,
+			authorizeRole(["client"]),
+			blockStatusMiddleware.checkStatus as RequestHandler,
+			(req: Request, res: Response) => {
+				shopController.getShopDetailsById(req, res);
+			}
+		);
+
 		this.router.get(
 			"/client/refresh-session",
 			verifyAuth,

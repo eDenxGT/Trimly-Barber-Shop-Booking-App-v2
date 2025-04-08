@@ -8,25 +8,16 @@ import { ImageUploadField } from "./../../common/fields/ImageUploadField";
 import MuiAnimatedButton from "@/components/common/buttons/AnimatedButton";
 import { getValidationSchema } from "@/utils/validations/profile-edit.validator";
 import { uploadImageToCloudinary } from "@/services/cloudinary/cloudinary";
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	Checkbox,
-	IconButton,
-	Typography,
-} from "@mui/material";
+import { Checkbox, IconButton, Typography } from "@mui/material";
 import { ArrowLeftCircleIcon, ParkingCircle, Wifi } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { CardDescription, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
 interface ILocation {
 	name: string;
 	displayName: string;
 	zipCode: string;
-	latitude: number | null;
-	longitude: number | null;
+	coordinates?: number[];
 }
 
 type FormValues = {
@@ -63,15 +54,14 @@ const getInitialValues = (
 
 	const locationFields = {
 		location: {
+			type: "Point",
 			name: (initialData as IBarber | IClient)?.location?.name || "",
 			displayName:
 				(initialData as IBarber | IClient)?.location?.displayName || "",
 			zipCode:
 				(initialData as IBarber | IClient)?.location?.zipCode || "",
-			latitude:
-				(initialData as IBarber | IClient)?.location?.latitude || null,
-			longitude:
-				(initialData as IBarber | IClient)?.location?.longitude || null,
+			coordinates: (initialData as IBarber | IClient)?.location
+				?.coordinates,
 		},
 	};
 
@@ -84,7 +74,6 @@ const getInitialValues = (
 	}
 
 	if (role === "barber") {
-		console.log("initialData", initialData);
 		return {
 			...commonFields,
 			...locationFields,
@@ -195,8 +184,20 @@ export default function ProfileEditForm({
 		[]
 	);
 
-	const handleLocationSelect = (location: ILocation) => {
-		formik.setFieldValue("location", location);
+	const handleLocationSelect = (location: {
+		name: string;
+		displayName: string;
+		zipCode: string;
+		latitude: number | null;
+		longitude: number | null;
+	}) => {
+		formik.setFieldValue("location", {
+			type: "Point",
+			name: location.name,
+			displayName: location.displayName,
+			zipCode: location.zipCode,
+			coordinates: [location.longitude, location.latitude],
+		});
 	};
 
 	const renderFields = () => {
@@ -326,7 +327,7 @@ export default function ProfileEditForm({
 						<div className="flex items-center space-x-2">
 							<Checkbox
 								id="wifi"
-								checked={formik.values.amenities?.wifi }
+								checked={formik.values.amenities?.wifi}
 								onChange={(event) =>
 									formik.setFieldValue(
 										"amenities.wifi",

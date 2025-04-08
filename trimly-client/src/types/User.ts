@@ -36,8 +36,7 @@ export interface IClient extends User {
 		name?: string;
 		displayName?: string;
 		zipCode?: string;
-		latitude?: number | null;
-		longitude?: number | null;
+		coordinates?: number[];
 	};
 }
 
@@ -46,10 +45,11 @@ export interface IBarber extends Omit<User, "fullName"> {
 	banner?: string;
 	description?: string;
 	googleId?: string;
+	distance?: number;
 	openingHours?: {
 		[day: string]: {
-			open?: string;
-			close?: string;
+			open?: string | null;
+			close?: string | null;
 		} | null;
 	};
 	amenities?: {
@@ -58,11 +58,11 @@ export interface IBarber extends Omit<User, "fullName"> {
 	};
 	rejectionReason?: string;
 	location?: {
+		type?: "Point";
 		name?: string;
 		displayName?: string;
 		zipCode?: string;
-		latitude?: number | null;
-		longitude?: number | null;
+		coordinates?: number[];
 	};
 	services?: IService[];
 }

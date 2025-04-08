@@ -162,6 +162,7 @@ export const ClientManagementComponent: React.FC<ClientManagementProps> = ({
 
 				{/* Pagination */}
 				<div className="mt-6 flex justify-center items-center">
+					
 					<Pagination1
 						currentPage={currentPage}
 						totalPages={totalPages}

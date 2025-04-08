@@ -19,10 +19,10 @@ export interface IBarberEntity extends Omit<IUserEntity, "fullName"> {
 	};
 	rejectionReason?: string;
 	location?: {
+		type?: "Point";
 		name?: string;
 		displayName?: string;
 		zipCode?: string;
-		latitude?: number | null;
-		longitude?: number | null;
+		coordinates?: number[]
 	};
 }

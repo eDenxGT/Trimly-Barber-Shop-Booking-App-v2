@@ -1,12 +1,14 @@
 import {
 	Home,
 	LayoutDashboard,
-	LucideScissors,
+	ListIcon,
 	NotepadText,
 	Settings,
 	Store,
 	Users,
 } from "lucide-react";
+
+import { AiTwotoneShop } from "react-icons/ai";
 
 const navItems = {
 	client: [
@@ -15,16 +17,16 @@ const navItems = {
 			icon: Home,
 			path: "/home",
 		},
-		// {
-		// 	title: "Courses",
-		// 	icon: <BookOpenText className="h-5 w-5" />,
-		// 	href: "/student/courses",
-		// },
-		// {
-		// 	title: "My Courses",
-		// 	icon: <BookCheck className="h-5 w-5" />,
-		// 	link: "/student/my-courses",
-		// },
+		{
+			title: "Shops",
+			icon: AiTwotoneShop,
+			path: "/shops",
+		},
+		{
+			title: "My Bookings",
+			icon: ListIcon,
+			path: "/my-bookings",
+		},
 		// {
 		// 	title: "Tutors",
 		// 	icon: <FaChalkboardTeacher className="h-5 w-5" />,

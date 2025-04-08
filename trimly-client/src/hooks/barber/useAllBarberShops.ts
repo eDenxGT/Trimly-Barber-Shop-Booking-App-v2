@@ -1,6 +1,5 @@
 import { updateBarberShopStatusById } from "@/services/admin/adminService";
 import { IAllBarberShopsResponse, IAxiosResponse } from "@/types/Response";
-import { IBarber } from "@/types/User";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export type ForType = "active" | "non-active" | "all" | "pending";

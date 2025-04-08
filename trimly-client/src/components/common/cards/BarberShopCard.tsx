@@ -1,152 +1,142 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { MapPin, Star, Wifi, Calendar, CarFront, Clock } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-	MapPin,
-	Clock,
-	Wifi,
-	ParkingCircle,
-	Phone,
-	Mail,
-	Calendar,
-	Pen,
-} from "lucide-react";
-
-import { UserRoles } from "@/types/UserRoles";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { IBarber } from "@/types/User";
+import { formatDistance } from "@/utils/helpers/distanceFormatter";
 import { useNavigate } from "react-router-dom";
 
-interface IBarberShopCardProps {
-	shop: IBarberShopData;
-	role?: UserRoles;
-	handleBookNow: (shopId: string) => void;
-	isOwner?: boolean;
-}
+export function BarberShopCard({ shop }: { shop: IBarber }) {
+	const { openingHours } = shop;
 
-export const BarberShopCard = ({
-	shop,
-	role,
-	handleBookNow,
-	isOwner = false,
-}: IBarberShopCardProps) => {
-	const navigate = useNavigate();
-	const handleVisitProfile = (shopId: string) => {
-		if (role === "barber") {
-			navigate(`/barber/shop/${shopId}`);
-		}
+	const getCurrentDayOpeningHours = () => {
+		const days = [
+			"sunday",
+			"monday",
+			"tuesday",
+			"wednesday",
+			"thursday",
+			"friday",
+			"saturday",
+		];
+		const today = days[new Date().getDay()];
+		return openingHours?.[today as keyof typeof openingHours];
 	};
-	return (
-		<Card className="w-full max-w-sm mx-auto overflow-hidden rounded-xl shadow-lg bg-gray-100 border-1 border-gray-100 p-0">
-			<div className="relative">
-				<img
-					src={shop.bannerImage as string}
-					alt="Shop Banner"
-					className="w-full h-48 object-cover"
-				/>
-				<Button
-					onClick={() => handleVisitProfile(shop.shopId as string)}
-					className="absolute left-0 bottom-0 rounded-b-none rounded-tl-none py-2 px-4 text-white font-medium hover:bg-[var(--darkblue-hover)] bg-[var(--darkblue)]">
-					Visit Profile
-				</Button>
 
-				{role === "client" && (
+	const navigate = useNavigate();
+
+	const todayHours = getCurrentDayOpeningHours();
+	const isOpen = todayHours?.open !== null;
+
+	return (
+		<Card className="w-full max-w-md overflow-hidden border-1 pt-0 rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl">
+			<div className="relative h-64 w-full overflow-hidden">
+				{/* Banner image or gradient background */}
+				<div className="absolute inset-0 bg-gradient-to-r  from-blue-500 to-purple-600">
+					{shop.banner && (
+						<img
+							src={shop.banner || "/placeholder.svg"}
+							alt="Barber shop banner"
+							className="object-cover h-full opacity-80"
+						/>
+					)}
+				</div>
+
+				{/* Overlay gradient for better text visibility */}
+				<div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+
+				{/* Action buttons */}
+				<div className="absolute bottom-0 left-0 right-0 flex justify-between p-4">
 					<Button
-						// onClick={() => handleBookNow(shop.shopId as string)}
-						className="absolute right-0 bottom-0 rounded-b-none  rounded-tr-none py-2 px-4 text-white font-medium flex items-center gap-1 hover:bg-[var(--yellow-hover)] bg-[var(--yellow)]">
-						Book Now <Calendar size={16} />
+						onClick={() => navigate(`/shops/${shop.userId}`)}
+						className="bg-[var(--darkblue)] cursor-pointer text-white hover:bg-[var(--darkblue-hover)] transition-all duration-300 shadow-md hover:shadow-lg">
+						Visit Profile
 					</Button>
-				)}
-				{role === "barber" && !isOwner && (
-					<Button
-						onClick={() => handleBookNow(shop.shopId as string)}
-						className="absolute right-0 bottom-0 rounded-b-none  rounded-tr-none py-2 px-4 text-white font-medium flex items-center gap-1 hover:bg-[var(--yellow-hover)] bg-[var(--yellow)]">
-						Join Now <Calendar size={16} />
+					<Button className="bg-[var(--yellow)] cursor-pointer text-white hover:bg-[var(--yellow-hover)] transition-all duration-300 shadow-md hover:shadow-lg flex items-center">
+						Book Now <Calendar className="ml-2 h-4 w-4" />
 					</Button>
-				)}
-				{role === "barber" && isOwner && (
-					<Button
-						onClick={() => handleBookNow(shop.shopId as string)}
-						className="absolute right-0 bottom-0 rounded-b-none  rounded-tr-none py-2 px-4 text-white font-medium flex items-center gap-1 hover:bg-[var(--yellow-hover)] bg-[var(--yellow)]">
-						Edit Shop <Pen size={16} />
-					</Button>
-				)}
+				</div>
 			</div>
 
-			<CardContent className="pt-1 pb-4 px-6">
-				<div className="flex items-center gap-4 mb-3">
-					<img
-						src={shop.logoImage as string}
-						alt="Shop Logo"
-						className="w-12 h-12 rounded-full border-2 border-white shadow-md object-cover flex-shrink-0"
-					/>
-					<div className="flex-1 min-w-0">
-						<div className="flex justify-between items-center">
-							<CardTitle className="text-xl font-bold text-black truncate">
-								{shop.name}
-							</CardTitle>
+			<CardContent className="pt-1">
+				<div className="flex items-start gap-4">
+					{/* Avatar positioned to the left of shop name */}
+					<Avatar className="h-12 w-12 border-2 border-white shadow-md">
+						<AvatarImage src={shop.avatar} alt={shop.shopName} />
+						<AvatarFallback className="font-semibold">
+							{shop.shopName?.substring(0, 2).toUpperCase()}
+						</AvatarFallback>
+					</Avatar>
+
+					<div className="flex-1">
+						<div className="flex items-center justify-between">
+							<h2 className="text-2xl font-bold text-gray-800">
+								{shop.shopName}
+							</h2>
+							<Badge
+								variant={isOpen ? "default" : "outline"}
+								className={cn(
+									"flex items-center gap-1",
+									isOpen
+										? "bg-green-100 text-green-800 hover:bg-green-100"
+										: "bg-red-100 text-red-800 hover:bg-red-100"
+								)}>
+								<Clock className="h-3 w-3" />
+								{isOpen ? "Open Now" : "Closed"}
+							</Badge>
 						</div>
-						<p className="text-sm text-gray-500 font-semibold mt-1 truncate">
-							<Person className="h-1 w-1" />
-							{shop.ownerName}
-						</p>
+
+						<p className="text-gray-600">{shop.description}</p>
 					</div>
 				</div>
 
-				<p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-2">
-					{shop.description}
-				</p>
+				<div className="mt-4 flex flex-wrap items-center gap-4">
+					<div className="flex items-center gap-1 text-gray-600">
+						<MapPin className="h-4 w-4 text-gray-500" />
+						<span>
+							{shop.location?.name} (
+							{formatDistance(shop.distance)})
+						</span>
+					</div>
 
-				<div className="grid grid-cols-2 gap-2 mb-3 bg-white rounded-lg p-2 shadow-sm">
-					<div className="flex items-center text-sm text-gray-600">
-						<MapPin
-							size={16}
-							className="mr-2 text-indigo-400 flex-shrink-0"
-						/>
-						<span className="truncate">
-							{shop.address.city}, {shop.address.state}
-						</span>
-					</div>
-					<div className="flex items-center text-sm text-gray-600">
-						<Clock
-							size={16}
-							className="mr-2 text-indigo-400 flex-shrink-0"
-						/>
-						<span className="truncate">
-							{shop.openingTime} - {shop.closingTime}
-						</span>
-					</div>
-					<div className="flex items-center text-sm text-gray-600">
-						<Mail
-							size={16}
-							className="mr-2 text-indigo-400 flex-shrink-0"
-						/>
-						<span className="truncate">{shop.email}</span>
-					</div>
-					<div className="flex items-center text-sm text-gray-600">
-						<Phone
-							size={16}
-							className="mr-2 text-indigo-400 flex-shrink-0"
-						/>
-						<span className="truncate">{shop.contactNumber}</span>
+					<div className="flex items-center gap-1">
+						<Star className="h-4 w-4 text-yellow-500" />
+						<span className="font-medium">5.0</span>
 					</div>
 				</div>
 
-				<div className="flex flex-wrap gap-2 mb-4">
-					{shop.amenities.wifi && (
+				<div className="mt-4 flex flex-wrap gap-2">
+					{shop.amenities?.wifi && (
 						<Badge
-							variant="outline"
-							className="bg-indigo-100 text-indigo-700 border-indigo-200">
-							<Wifi size={14} className="mr-1" /> WiFi
+							variant="default"
+							className={cn(
+								"flex items-center gap-1",
+								shop.amenities?.wifi
+									? "bg-blue-100 text-blue-800 hover:bg-blue-100"
+									: "text-gray-500"
+							)}>
+							<Wifi className="h-3 w-3" /> WiFi
 						</Badge>
 					)}
-					{shop.amenities.parking && (
+
+					{shop.amenities?.parking && (
 						<Badge
-							variant="outline"
-							className="bg-indigo-100 text-indigo-700 border-indigo-200">
-							<ParkingCircle size={14} className="mr-1" /> Parking
+							variant={
+								shop.amenities.parking ? "default" : "outline"
+							}
+							className={cn(
+								"flex items-center gap-1",
+								shop.amenities.parking
+									? "bg-blue-100 text-blue-800 hover:bg-blue-100"
+									: "text-gray-500"
+							)}>
+							<CarFront className="h-3 w-3" /> Parking
 						</Badge>
 					)}
 				</div>
 			</CardContent>
 		</Card>
 	);
-};
+}

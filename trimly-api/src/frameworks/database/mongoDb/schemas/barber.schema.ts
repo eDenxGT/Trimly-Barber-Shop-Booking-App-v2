@@ -37,12 +37,21 @@ export const barberSchema = new Schema<IBarberModel>(
 			parking: { type: Boolean },
 		},
 		location: {
+			type: {
+				type: String,
+				enum: ["Point"],
+				default: "Point",
+			},
+			coordinates: {
+				type: [Number], // [longitude, latitude]
+				required: true,
+			},
 			name: { type: String },
 			displayName: { type: String },
 			zipCode: { type: String },
-			latitude: { type: Number, default: null },
-			longitude: { type: Number, default: null },
 		},
 	},
 	{ timestamps: true }
 );
+
+barberSchema.index({ location: "2dsphere" });

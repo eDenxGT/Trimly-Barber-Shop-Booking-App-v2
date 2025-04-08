@@ -1,3 +1,4 @@
+import { IBooking } from "./Booking";
 import { IService } from "./Service";
 import { IAdmin, IBarber, IClient, UserDTO } from "./User";
 
@@ -39,6 +40,13 @@ export type IServiceResponse = {
 	message: string;
 	services: IService[];
 };
+
+export type IBookingResponse = {
+	success: boolean;
+	message: string;
+	bookings: IBooking[];
+};
+
 
 export interface IBarberHoursResponse extends IAxiosResponse {
 	openingHours?: {

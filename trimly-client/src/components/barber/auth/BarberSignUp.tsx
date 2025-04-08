@@ -87,7 +87,9 @@ export const BarberSignUp = ({
 		);
 	};
 
-	const formik = useFormik({
+	const formik = useFormik<
+		IBarber & { password: string; confirmPassword: string }
+	>({
 		initialValues: {
 			shopName: "",
 			email: "",
@@ -95,11 +97,11 @@ export const BarberSignUp = ({
 			password: "",
 			confirmPassword: "",
 			location: {
+				type: "Point",
 				name: "",
 				displayName: "",
 				zipCode: "",
-				latitude: null,
-				longitude: null,
+				coordinates: [],
 			},
 		},
 		validationSchema: barberSignupSchema,
@@ -119,11 +121,11 @@ export const BarberSignUp = ({
 		longitude: number | null;
 	}) => {
 		formik.setFieldValue("location", {
+			type: "Point",
 			name: location.name,
 			displayName: location.displayName,
 			zipCode: location.zipCode,
-			latitude: location.latitude,
-			longitude: location.longitude,
+			coordinates: [location.longitude, location.latitude],
 		});
 	};
 
@@ -181,7 +183,7 @@ export const BarberSignUp = ({
 											? formik.errors.shopName
 											: ""
 									}
-									value={formik.values.shopName}
+									value={formik.values.shopName as string}
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									label="Shop Name"
@@ -279,7 +281,7 @@ export const BarberSignUp = ({
 									<LocationInputField
 										onSelect={handleLocationSelect}
 										initialValue={
-											formik.values.location.name
+											formik.values?.location?.name
 										}
 										placeholder="Search for your shop location"
 										disabled={isLoading}

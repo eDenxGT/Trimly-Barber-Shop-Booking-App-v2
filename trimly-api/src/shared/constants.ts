@@ -56,7 +56,8 @@ export const SUCCESS_MESSAGES = {
 	REQUEST_SUBMITTED: "Request submitted waiting for admin approval",
 	APPLICATION_SUBMITTED: "Application submitted waiting for admin approval",
 	LOGIN_AND_COMPLETE_YOUR_PROFILE: "Login and complete your profile!",
-	COMPLETE_YOUR_PROFILE_TO_GET_APPROVED: "Complete your profile to get approved!",
+	COMPLETE_YOUR_PROFILE_TO_GET_APPROVED:
+		"Complete your profile to get approved!",
 	REQUEST_APPROVED: "Request approved",
 	REQUEST_REJECTED: "Request rejected",
 	ACCOUNT_ACTIVATED: "Your account is now active",
@@ -108,6 +109,7 @@ export const ERROR_MESSAGES = {
 	TRANSACTION_FAILED: "Transaction failed try again",
 	REFUND_FAILED: "Refund process failed",
 	PAYMENT_ERROR: "Payment could not be processed",
+	BOOKING_EXISTS: "Booking already exists. Refresh your page.",
 	ACCOUNT_SUSPENDED: "Your account has been suspended",
 	ACCOUNT_BANNED: "Your account has been banned",
 	SESSION_EXPIRED: "Your session has expired please log in again",

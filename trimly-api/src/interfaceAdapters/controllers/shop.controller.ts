@@ -9,14 +9,20 @@ import {
 import { handleErrorResponse } from "../../shared/utils/error.handler.js";
 import { IGetAllShopsUseCase } from "../../entities/useCaseInterfaces/shop/get-all-shops-usecase.interface.js";
 import { IUpdateShopStatusUseCase } from "../../entities/useCaseInterfaces/shop/update-shop-status-usecase.interface.js";
+import { IGetAllNearestShopsUseCase } from "../../entities/useCaseInterfaces/shop/get-all-nearest-shops-usecase.interface.js";
+import { IGetShopDetailsByShopIdUseCase } from "../../entities/useCaseInterfaces/shop/get-shop-details-by-shopid-usecase.interface.js";
 
 @injectable()
 export class ShopController implements IShopController {
 	constructor(
 		@inject("IGetAllShopsUseCase")
 		private _getAllShopsUseCase: IGetAllShopsUseCase,
+		@inject("IGetShopDetailsByShopIdUseCase")
+		private _getShopDetailsByShopIdUseCase: IGetShopDetailsByShopIdUseCase,
 		@inject("IUpdateShopStatusUseCase")
-		private _updateShopStatusUseCase: IUpdateShopStatusUseCase
+		private _updateShopStatusUseCase: IUpdateShopStatusUseCase,
+		@inject("IGetAllNearestShopsUseCase")
+		private _getAllNearestShopsUseCase: IGetAllNearestShopsUseCase
 	) {}
 
 	//* ─────────────────────────────────────────────────────────────
@@ -42,6 +48,67 @@ export class ShopController implements IShopController {
 				shops,
 				totalPages: total,
 				currentPage: pageNumber,
+			});
+		} catch (error) {
+			handleErrorResponse(req, res, error);
+		}
+	}
+
+	//* ─────────────────────────────────────────────────────────────
+	//*             🛠️ Get All Nearest Shops For Client
+	//* ─────────────────────────────────────────────────────────────
+	async getAllNearestShopsForClient(
+		req: Request,
+		res: Response
+	): Promise<void> {
+		try {
+			const {
+				search,
+				amenities,
+				userLocation,
+				sortBy,
+				sortOrder,
+				page,
+				limit,
+			} = req.query;
+
+			const shops = await this._getAllNearestShopsUseCase.execute(
+				search as string,
+				amenities as string,
+				Array.isArray(userLocation)
+					? userLocation.map((loc) => Number(loc))
+					: [],
+				sortBy as "rating",
+				sortOrder as "asc" | "desc",
+				page ? Number(page) : 1,
+				limit ? Number(limit) : 9
+			);
+			// console.log(shops);
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				shops,
+			});
+		} catch (error) {
+			handleErrorResponse(req, res, error);
+		}
+	}
+	
+
+	//* ─────────────────────────────────────────────────────────────
+	//*                🛠️ Get Shop Details By Id
+	//* ─────────────────────────────────────────────────────────────
+	async getShopDetailsById(req: Request, res: Response): Promise<void> {
+		try {
+			const { shopId, forType } = req.query;
+			const shop = await this._getShopDetailsByShopIdUseCase.execute(
+				String(shopId),
+				String(forType)
+			);
+
+			console.log(shop);
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				user: shop,
 			});
 		} catch (error) {
 			handleErrorResponse(req, res, error);

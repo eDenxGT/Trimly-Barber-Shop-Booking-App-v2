@@ -25,8 +25,10 @@ export const refreshBarberSessionThunk = createAsyncThunk<
 			role: user.role,
 			status: user.status,
 			avatar: user.avatar ?? "",
+			banner: (user as IBarber).banner ?? "",
 			rejectionReason: (user as IBarber).rejectionReason ?? "",
 			location: (user as IBarber).location ?? {},
+			description: (user as IBarber).description ?? "",
 			openingHours: (user as IBarber).openingHours ?? {},
 			amenities: (user as IBarber).amenities,
 			createdAt: user.createdAt,
@@ -52,8 +54,7 @@ const barberSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(refreshBarberSessionThunk.fulfilled, (state, action) => {
-				console.log(action.payload.user);
+			.addCase(refreshBarberSessionThunk.fulfilled, (state, action) => {	
 				state.barber = action.payload.user;
 			})
 			.addCase(refreshBarberSessionThunk.rejected, (_, action) => {

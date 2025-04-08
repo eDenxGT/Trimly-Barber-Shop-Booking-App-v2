@@ -27,8 +27,15 @@ const barberSchema = z.object({
 		name: z.string(),
 		displayName: z.string(),
 		zipCode: z.string(),
-		latitude: z.number(),
-		longitude: z.number(),
+		coordinates: z
+			.tuple([
+				z.number().min(-180).max(180), // longitude
+				z.number().min(-90).max(90), // latitude
+			])
+			.refine(
+				(coords) => coords.length === 2,
+				"Coordinates must be [longitude, latitude]"
+			),
 	}),
 	status: z.enum(["pending", "active", "blocked"]),
 	role: z.literal("barber"),

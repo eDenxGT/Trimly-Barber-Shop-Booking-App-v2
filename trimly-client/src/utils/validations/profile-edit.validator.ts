@@ -22,8 +22,10 @@ export const getValidationSchema = (role: UserRoles) => {
 					zipCode: Yup.string().required(
 						"Zip code is required. Choose another location"
 					),
-					latitude: Yup.number().nullable(),
-					longitude: Yup.number().nullable(),
+					coordinates: Yup.array()
+						.of(Yup.number().required("Coordinate is required"))
+						.length(2, "Coordinates must be [longitude, latitude]")
+						.required("Coordinates are required"),
 				}),
 			}),
 		});
@@ -36,8 +38,10 @@ export const getValidationSchema = (role: UserRoles) => {
 				zipCode: Yup.string().required(
 					"Zip code is required. Choose another location"
 				),
-				latitude: Yup.number().nullable(),
-				longitude: Yup.number().nullable(),
+				coordinates: Yup.array()
+					.of(Yup.number().required("Coordinate is required"))
+					.length(2, "Coordinates must be [longitude, latitude]")
+					.required("Coordinates are required"),
 			}),
 		});
 	}

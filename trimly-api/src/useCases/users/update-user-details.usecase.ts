@@ -37,6 +37,7 @@ export class UpdateUserDetailsUseCase implements IUpdateUserDetailsUseCase {
 				HTTP_STATUS.BAD_REQUEST
 			);
 		}
+
 		const user = await repository.update({ userId }, userDetails);
 
 		if (!user) {

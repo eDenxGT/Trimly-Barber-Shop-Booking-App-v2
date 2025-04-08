@@ -1,6 +1,14 @@
 import { clientAxiosInstance } from "@/api/client.axios";
-import { IAuthResponse, IAxiosResponse, IClientResponse } from "@/types/Response";
-import { IClient, UpdatePasswordData } from "@/types/User";
+import { ForType } from "@/hooks/barber/useAllBarberShops";
+import { FetchNearestShopsParams } from "@/hooks/client/useNearestBarberShops";
+import {
+	IAuthResponse,
+	IAxiosResponse,
+	IBarberResponse,
+	IBookingResponse,
+	IClientResponse,
+} from "@/types/Response";
+import { IBarber, IClient, UpdatePasswordData } from "@/types/User";
 
 export type IUpdateClientData = Pick<
 	IClient,
@@ -35,5 +43,66 @@ export const updateClientProfile = async (
 		"/client/details",
 		data
 	);
+	return response.data;
+};
+
+export const getAllNearestBarberShops = async ({
+	search = "",
+	amenities = [],
+	userLocation = [],
+	sortBy = "rating",
+	sortOrder = "asc",
+	page = 1,
+	limit = 9,
+}: FetchNearestShopsParams): Promise<IBarber[]> => {
+	const response = await clientAxiosInstance.get("/client/barber-shops", {
+		params: {
+			search,
+			amenities: amenities.join(","),
+			userLocation,
+			sortBy,
+			sortOrder,
+			page,
+			limit,
+		},
+	});
+
+	return response.data.shops;
+};
+
+export const getBarberShopDetailsById = async ({
+	shopId,
+	forType,
+}: {
+	shopId: string;
+	forType: ForType;
+}): Promise<IBarberResponse> => {
+	const response = await clientAxiosInstance.get(
+		"/client/barber-shop/details",
+		{
+			params: {
+				shopId,
+				forType,
+			},
+		}
+	);
+	return response.data;
+};
+
+export const getBookingsByShopId = async (
+	shopId: string
+): Promise<IBookingResponse> => {
+	const response = await clientAxiosInstance.get("/client/booking", {
+		params: { shopId },
+	});
+
+	return response.data;
+};
+
+export const getBookingsForClient = async (): Promise<IBookingResponse> => {
+	const response = await clientAxiosInstance.get("/client/booking", {
+		params: { type: "clientId" },
+	});
+
 	return response.data;
 };

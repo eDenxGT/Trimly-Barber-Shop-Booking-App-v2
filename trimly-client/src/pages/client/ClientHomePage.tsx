@@ -3,6 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 
 export const ClientHomePage = () => {
+	
 	return (
 		<>
 			<AnimatePresence mode="wait">

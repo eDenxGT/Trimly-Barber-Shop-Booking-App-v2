@@ -11,6 +11,8 @@ import { IServiceController } from "../../entities/controllerInterfaces/service/
 import { ServiceController } from "../../interfaceAdapters/controllers/service.controller.js";
 import { ShopController } from "../../interfaceAdapters/controllers/shop.controller.js";
 import { IShopController } from "../../entities/controllerInterfaces/shop/shop-controller.interface.js";
+import { IBookingController } from "../../entities/controllerInterfaces/booking/booking-controller.interface.js";
+import { BookingController } from "../../interfaceAdapters/controllers/booking.controller.js";
 
 //* ====== Middleware Imports ====== *//
 
@@ -36,3 +38,6 @@ export const serviceController =
 
 export const shopController =
 	container.resolve<IShopController>(ShopController);
+
+export const bookingController =
+	container.resolve<IBookingController>(BookingController);

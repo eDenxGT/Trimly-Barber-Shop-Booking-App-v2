@@ -8,7 +8,6 @@ import {
 } from "@/store/slices/client.slice";
 import { useAppDispatch } from "@/store/store";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const ClientSettingsPage = () => {
@@ -29,7 +28,6 @@ export const ClientSettingsPage = () => {
 			},
 		});
 	};
-	useEffect(() => dispatch(refreshClientSessionThunk()), []);
 	return (
 		<motion.div
 			key={"client-settings"}
