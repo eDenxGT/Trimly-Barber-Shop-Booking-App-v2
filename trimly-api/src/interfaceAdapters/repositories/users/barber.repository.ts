@@ -6,6 +6,9 @@ import {
 import { BaseRepository } from "../base.repository.js";
 import { IBarberEntity } from "../../../entities/models/barber.entity.js";
 import { IBarberRepository } from "../../../entities/repositoryInterfaces/users/barber-repository.interface.js";
+import { IBookingEntity } from "../../../entities/models/booking.entity.js";
+import { IServiceEntity } from "../../../entities/models/service.enity.js";
+import { FilterQuery, PipelineStage } from "mongoose";
 
 @injectable()
 export class BarberRepository
@@ -82,5 +85,119 @@ export class BarberRepository
 
 		const shops = await BarberModel.aggregate(pipeline);
 		return shops;
+	}
+
+	async getBarberShopWithAllDetails(filter: any): Promise<
+		IBarberEntity & {
+			services: IServiceEntity[];
+			bookings: IBookingEntity[];
+		}
+	> {
+		console.log(filter);
+
+		const pipeline: PipelineStage[] = [
+			{ $match: filter },
+
+			// Get services offered by this shop
+			{
+				$lookup: {
+					from: "services",
+					let: { barberUserId: "$userId" },
+					pipeline: [
+						{
+							$match: {
+								$expr: {
+									$eq: ["$barberId", "$$barberUserId"],
+								},
+							},
+						},
+						// Apply active filter if needed
+						...(filter.status === "active"
+							? [
+									{
+										$match: {
+											status: "active",
+										},
+									},
+							  ]
+							: []),
+					],
+					as: "services",
+				},
+			},
+		];
+		// --- Conditionally add the Bookings lookup ---
+		if (filter.status === "active") {
+			pipeline.push({
+				$lookup: {
+					from: "bookings",
+					let: { shopUserId: "$userId" },
+					pipeline: [
+						{
+							$match: {
+								$expr: {
+									$and: [
+										{ $eq: ["$shopId", "$$shopUserId"] },
+										{ $eq: ["$status", "confirmed"] },
+									],
+								},
+							},
+						},
+					],
+					as: "bookings",
+				},
+			});
+		} else {
+			// No filter on bookings, get them all
+			pipeline.push({
+				$lookup: {
+					from: "bookings",
+					localField: "userId",
+					foreignField: "shopId",
+					as: "bookings",
+				},
+			});
+		}
+
+		// --- Client population + unwind ---
+		pipeline.push(
+			{
+				$unwind: {
+					path: "$bookings",
+					preserveNullAndEmptyArrays: true,
+				},
+			},
+			{
+				$lookup: {
+					from: "clients",
+					localField: "bookings.clientId",
+					foreignField: "userId",
+					as: "bookings.client",
+				},
+			},
+			{
+				$unwind: {
+					path: "$bookings.client",
+					preserveNullAndEmptyArrays: true,
+				},
+			},
+			// --- Group back ---
+			{
+				$group: {
+					_id: "$_id",
+					shopData: { $first: "$$ROOT" },
+					bookings: { $push: "$bookings" },
+				},
+			},
+			{
+				$replaceRoot: {
+					newRoot: {
+						$mergeObjects: ["$shopData", { bookings: "$bookings" }],
+					},
+				},
+			}
+		);
+		const data = await BarberModel.aggregate(pipeline).exec();
+		return data[0];
 	}
 }

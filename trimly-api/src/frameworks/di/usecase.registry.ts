@@ -67,14 +67,16 @@ import { IGetAllNearestShopsUseCase } from "../../entities/useCaseInterfaces/sho
 import { GetAllNearestShopsUseCase } from "../../useCases/shop/get-all-nearest-shops.usecase.js";
 import { IGetShopDetailsByShopIdUseCase } from "../../entities/useCaseInterfaces/shop/get-shop-details-by-shopid-usecase.interface.js";
 import { GetShopDetailsByShopIdUseCase } from "../../useCases/shop/get-shop-details-by-shopid.usecase.js";
-import { IGetAllBookingsUseCase } from "../../entities/useCaseInterfaces/booking/get-all-booking-usecase.interface.js";
-import { GetAllBookingsUseCase } from "../../useCases/booking/get-all-bookings.usecase.js";
 import { ICreateBookingUseCase } from "../../entities/useCaseInterfaces/booking/create-booking-usecase.interface.js";
 import { CreateBookingUseCase } from "../../useCases/booking/create-booking.usecase.js";
 import { IVerifyPaymentUseCase } from "../../entities/useCaseInterfaces/booking/verify-payment-usecase.interface.js";
 import { VerifyPaymentUseCase } from "../../useCases/booking/verify-payment.usecase.js";
 import { IHandleFailurePaymentUseCase } from "../../entities/useCaseInterfaces/booking/handle-failure-payment-usecase.interface.js";
 import { HandleFailurePaymentUseCase } from "../../useCases/booking/handle-failure-payment.usecase.js";
+import { GetAllBookingsByShopIdUseCase } from "../../useCases/booking/get-all-bookings-by-shopid.usecase.js";
+import { IGetAllBookingsByShopIdUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-shopid-usecase.interface.js";
+import { IGetAllBookingsByUserUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-user-usecase.interface.js";
+import { GetAllBookingsByUserUseCase } from "../../useCases/booking/get-all-bookings-by-user.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -200,9 +202,12 @@ export class UseCaseRegistry {
 			}
 		);
 
-		container.register<IGetAllBookingsUseCase>("IGetAllBookingsUseCase", {
-			useClass: GetAllBookingsUseCase,
-		});
+		container.register<IGetAllBookingsByShopIdUseCase>(
+			"IGetAllBookingsByShopIdUseCase",
+			{
+				useClass: GetAllBookingsByShopIdUseCase,
+			}
+		);
 
 		container.register<ICreateBookingUseCase>("ICreateBookingUseCase", {
 			useClass: CreateBookingUseCase,
@@ -217,6 +222,11 @@ export class UseCaseRegistry {
 			{
 				useClass: HandleFailurePaymentUseCase,
 			}
+		);
+
+		container.register<IGetAllBookingsByUserUseCase>(
+			"IGetAllBookingsByUserUseCase",
+			{ useClass: GetAllBookingsByUserUseCase }
 		);
 
 		//* ====== Register Bcrypts ====== *//

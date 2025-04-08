@@ -68,11 +68,7 @@ export function ClientBookingPage() {
 	);
 	const shopData = data?.user;
 
-	const { data: bookingsData } = useGetBooking(
-		getBookingsByShopId,
-		shopId as string
-	);
-	const existingBookings = bookingsData?.bookings;
+	const existingBookings = shopData?.bookings;
 	const minBookingDate = startOfDay(new Date());
 
 	const isDateAvailable = (date: Date): boolean => {
@@ -283,7 +279,7 @@ export function ClientBookingPage() {
 	const totals = calculateTotal();
 
 	const handlePaymentSuccess = () => {
-		navigate("/client/booking");
+		navigate("/my-bookings");
 	};
 
 	if (isLoading) {
@@ -521,8 +517,8 @@ export function ClientBookingPage() {
 												clientId={user.userId as string}
 												total={totals.total}
 												className="w-full"
-												handleSuccess={() =>
-													console.log("Successful")
+												handleSuccess={
+													handlePaymentSuccess
 												}
 												shopId={shopId as string}
 												services={selectedServices.map(

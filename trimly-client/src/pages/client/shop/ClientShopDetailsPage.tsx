@@ -32,12 +32,12 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
 	const { shopId } = useParams();
 	const barber = useOutletContext();
 	const [isFavorite, setIsFavorite] = useState(false);
-		const { data, isLoading, error } = useBarberShopById(
-			getBarberShopDetailsById,
-			shopId || "",
-			"active"
-		);
-		const shop = data?.user;
+	const { data, isLoading, error } = useBarberShopById(
+		getBarberShopDetailsById,
+		shopId || "",
+		"active"
+	);
+	const shop = data?.user;
 	const navigate = useNavigate();
 	console.log(shop);
 	// Sample appointments data for the schedule tab
@@ -242,7 +242,7 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
 							className="flex flex-col items-center p-2 h-auto text-gray-600 transition-colors hover:text-[var(--yellow-hover)]"
 							onClick={() =>
 								window.open(
-									`https://www.google.com/maps?q=${shop.location?.coordinates[1]},${shop.location?.coordinates[0]}`,
+									`https://www.google.com/maps?q=${shop.location?.coordinates?.[1]},${shop.location?.coordinates?.[0]}`,
 									"_blank"
 								)
 							}>

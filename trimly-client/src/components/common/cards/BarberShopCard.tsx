@@ -54,7 +54,11 @@ export function BarberShopCard({ shop }: { shop: IBarber }) {
 						className="bg-[var(--darkblue)] cursor-pointer text-white hover:bg-[var(--darkblue-hover)] transition-all duration-300 shadow-md hover:shadow-lg">
 						Visit Profile
 					</Button>
-					<Button className="bg-[var(--yellow)] cursor-pointer text-white hover:bg-[var(--yellow-hover)] transition-all duration-300 shadow-md hover:shadow-lg flex items-center">
+					<Button
+						onClick={() =>
+							navigate(`/shops/${shop.userId}/booking`)
+						}
+						className="bg-[var(--yellow)] cursor-pointer text-white hover:bg-[var(--yellow-hover)] transition-all duration-300 shadow-md hover:shadow-lg flex items-center">
 						Book Now <Calendar className="ml-2 h-4 w-4" />
 					</Button>
 				</div>

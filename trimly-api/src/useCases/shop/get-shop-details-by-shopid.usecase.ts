@@ -10,14 +10,12 @@ export class GetShopDetailsByShopIdUseCase
 {
 	constructor(
 		@inject("IBarberRepository")
-		private _barberRepository: IBarberRepository,
-		@inject("IGetAllServicesUseCase")
-		private _getAllServicesUseCase: IGetAllServicesUseCase
+		private _barberRepository: IBarberRepository
 	) {}
 	async execute(
 		shopId: string,
 		forType: string
-	): Promise<(IBarberEntity & { services: any[] }) | null> {
+	): Promise<IBarberEntity | null> {
 		const status =
 			forType === "non-active"
 				? "blocked"
@@ -27,20 +25,13 @@ export class GetShopDetailsByShopIdUseCase
 				? undefined
 				: "active";
 
-		const shop = await this._barberRepository.findOne({
+		const shop = await this._barberRepository.getBarberShopWithAllDetails({
 			userId: shopId,
 			...(status ? { status } : {}),
 		});
 
 		if (!shop) return null;
 
-		const services = await this._getAllServicesUseCase.execute({
-			barberId: shop.userId,
-		});
-
-		return {
-			...shop,
-			services: services || [],
-		};
+		return shop;
 	}
 }

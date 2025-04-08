@@ -106,6 +106,8 @@ export const ERROR_MESSAGES = {
 	SAME_CURR_NEW_PASSWORD:
 		"New password must be different from current password",
 	INSUFFICIENT_FUNDS: "Not enough balance",
+	YOU_CAN_ONLY_BOOK_FOR_FUTURE:
+		"You can only book for a future date and time.",
 	TRANSACTION_FAILED: "Transaction failed try again",
 	REFUND_FAILED: "Refund process failed",
 	PAYMENT_ERROR: "Payment could not be processed",

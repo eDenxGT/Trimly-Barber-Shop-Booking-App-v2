@@ -37,7 +37,14 @@ export class CreateBookingUseCase implements ICreateBookingUseCase {
 		currency: string;
 		bookingId: string;
 	}> {
-		const formattedDate = new Date(date);
+		const bookingDateTime = new Date(date);
+
+		if (bookingDateTime.getTime() < Date.now()) {
+			throw new CustomError(
+				ERROR_MESSAGES.YOU_CAN_ONLY_BOOK_FOR_FUTURE,
+				HTTP_STATUS.BAD_REQUEST
+			);
+		}
 
 		const existingBooking = await this._bookingRepository.findOne({
 			shopId,
@@ -72,7 +79,7 @@ export class CreateBookingUseCase implements ICreateBookingUseCase {
 			bookingId,
 			clientId,
 			orderId: order.id,
-			date: formattedDate,
+			date: bookingDateTime,
 			duration,
 			services,
 			shopId,

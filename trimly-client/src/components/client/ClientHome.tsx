@@ -40,18 +40,20 @@ export default function ClientHome() {
       </div>
     </section>
 
+    <h1 className="text-center font-extrabold font-young mt-5">WELCOME TO CLIENT HOME PAGE✨</h1>
+
 
       {/* Popular Barbers Section */}
-      <section className="w-full py-8 sm:py-12 bg-white">
+      {/* <section className="w-full py-8 sm:py-12 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl sm:text-2xl font-semibold mb-6 sm:mb-8 text-center">Popular Barbers Near You !</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6">
             {[1, 2, 3].map((barber) => (
-              <BarberShopCard  key={barber} />
+              <BarberShopCard shop={}  key={barber} />
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
  
     </main>

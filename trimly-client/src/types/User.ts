@@ -1,3 +1,4 @@
+import { IBooking } from "./Booking";
 import { IService } from "./Service";
 import { UserRoles } from "./UserRoles";
 
@@ -65,6 +66,7 @@ export interface IBarber extends Omit<User, "fullName"> {
 		coordinates?: number[];
 	};
 	services?: IService[];
+	bookings?: IBooking[];
 }
 
 export type UserDTO = IAdmin | IClient | IBarber;

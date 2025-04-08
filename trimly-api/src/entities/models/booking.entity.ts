@@ -1,3 +1,7 @@
+import { IBarberEntity } from "./barber.entity.js";
+import { IClientEntity } from "./client.entity.js";
+import { IServiceEntity } from "./service.enity.js";
+
 export interface IBookingEntity {
 	bookingId?: string;
 	shopId: string;
@@ -12,4 +16,7 @@ export interface IBookingEntity {
 	status?: "pending" | "completed" | "cancelled" | "confirmed";
 	createdAt?: Date;
 	updatedAt?: Date;
+	servicesDetails?: IServiceEntity[];
+	shopDetails?: IBarberEntity | null;
+	clientDetails?: IClientEntity | null;
 }

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { clientAxiosInstance } from "@/api/client.axios";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { useNavigate } from "react-router-dom";
 
 export interface RazorpayButtonProps {
 	clientId: string;
@@ -32,6 +33,7 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
 }) => {
 	const { Razorpay } = useRazorpay();
 	const { errorToast, successToast } = useToaster();
+	const navigate = useNavigate();
 	const isPaymentFailedRef = useRef(false);
 
 	const handlePayment = async () => {
@@ -80,6 +82,7 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
 						if (result.data.success) {
 							successToast(result.data.message);
 							handleSuccess();
+							navigate("/my-bookings");
 						} else {
 							console.error("Verification failed");
 						}
@@ -145,6 +148,7 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
 								"An unexpected error occurred during payment."
 						);
 					}
+					navigate(`/shops/${shopId}`);
 				}
 			);
 

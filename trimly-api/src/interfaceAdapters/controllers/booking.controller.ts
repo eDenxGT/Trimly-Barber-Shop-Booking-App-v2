@@ -3,23 +3,26 @@ import { Request, Response } from "express";
 import { IBookingController } from "../../entities/controllerInterfaces/booking/booking-controller.interface.js";
 import { handleErrorResponse } from "../../shared/utils/error.handler.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
-import { IGetAllBookingsUseCase } from "../../entities/useCaseInterfaces/booking/get-all-booking-usecase.interface.js";
 import { HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants.js";
 import { ICreateBookingUseCase } from "../../entities/useCaseInterfaces/booking/create-booking-usecase.interface.js";
 import { IVerifyPaymentUseCase } from "../../entities/useCaseInterfaces/booking/verify-payment-usecase.interface.js";
 import { IHandleFailurePaymentUseCase } from "../../entities/useCaseInterfaces/booking/handle-failure-payment-usecase.interface.js";
+import { IGetAllBookingsByShopIdUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-shopid-usecase.interface.js";
+import { IGetAllBookingsByUserUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-user-usecase.interface.js";
 
 @injectable()
 export class BookingController implements IBookingController {
 	constructor(
-		@inject("IGetAllBookingsUseCase")
-		private _getAllBookingsUseCase: IGetAllBookingsUseCase,
+		@inject("IGetAllBookingsByShopIdUseCase")
+		private _getAllBookingsByIdUseCase: IGetAllBookingsByShopIdUseCase,
 		@inject("ICreateBookingUseCase")
 		private _createBookingUseCase: ICreateBookingUseCase,
 		@inject("IVerifyPaymentUseCase")
 		private _verifyPaymentUseCase: IVerifyPaymentUseCase,
 		@inject("IHandleFailurePaymentUseCase")
-		private _handleFailurePaymentUseCase: IHandleFailurePaymentUseCase
+		private _handleFailurePaymentUseCase: IHandleFailurePaymentUseCase,
+		@inject("IGetAllBookingsByUserUseCase")
+		private _getAllBookingsByUserUseCase: IGetAllBookingsByUserUseCase
 	) {}
 
 	//* ─────────────────────────────────────────────────────────────
@@ -27,10 +30,21 @@ export class BookingController implements IBookingController {
 	//* ─────────────────────────────────────────────────────────────
 	async getAllBookings(req: Request, res: Response): Promise<void> {
 		try {
-			const { shopId } = req.query;
-			const { role } = (req as CustomRequest).user;
+			const { shopId, type } = req.query;
+			const { role, userId } = (req as CustomRequest).user;
 
-			const bookings = await this._getAllBookingsUseCase.execute(
+			if ((type && type === "clientId") || type === "barberId") {
+				const bookings =
+					await this._getAllBookingsByUserUseCase.execute(
+						userId,
+						role
+					);
+				// console.log(bookings);
+				res.status(HTTP_STATUS.OK).json({ success: true, bookings });
+				return;
+			}
+
+			const bookings = await this._getAllBookingsByIdUseCase.execute(
 				String(shopId),
 				role
 			);
@@ -41,7 +55,7 @@ export class BookingController implements IBookingController {
 	}
 
 	//* ─────────────────────────────────────────────────────────────
-	//*               🛠️ Get All Bookings By ShopId
+	//*                    🛠️ Create Booking
 	//* ─────────────────────────────────────────────────────────────
 	async createBooking(req: Request, res: Response): Promise<void> {
 		try {
