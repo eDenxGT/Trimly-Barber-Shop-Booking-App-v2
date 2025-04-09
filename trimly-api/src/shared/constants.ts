@@ -36,7 +36,7 @@ export const HTTP_STATUS = {
 	GATEWAY_TIMEOUT: 504, // Upstream server timed out (e.g., long API response time)
 } as const;
 
-export const SUCCESS_MESSAGES = {
+export const   SUCCESS_MESSAGES = {
 	BOOKING_SUCCESS: "Booking completed",
 	CANCELLATION_SUCCESS: "Cancellation successful",
 	CREATED: "Successfully created",
@@ -114,6 +114,8 @@ export const ERROR_MESSAGES = {
 	PAYMENT_ERROR: "Payment could not be processed",
 	BOOKING_EXISTS: "Booking already exists. Refresh your page.",
 	BOOKING_NOT_FOUND: "Booking not found.",
+	BOOKING_CANNOT_COMPLETE_BEFORE_TIME_ENDS:
+		"Booking cannot be marked as completed before it ends.",
 	CANCEL_BOOKING_BEFORE_1_HOUR:
 		"Booking cannot be cancelled within 1 hour of the scheduled time.",
 	ACCOUNT_SUSPENDED: "Your account has been suspended",

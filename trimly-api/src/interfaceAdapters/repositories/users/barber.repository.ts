@@ -18,6 +18,16 @@ export class BarberRepository
 	constructor() {
 		super(BarberModel);
 	}
+
+	async updateRevenue(shopId: string, revenue: number): Promise<void> {
+		if (!revenue || isNaN(revenue)) return;
+
+		await BarberModel.updateOne(
+			{ userId: shopId },
+			{ $inc: { totalRevenue: revenue, walletBalance: revenue } }
+		);
+	}
+
 	async findAllNearbyShopsWithFilters(
 		filters: {
 			search?: string;
@@ -93,12 +103,9 @@ export class BarberRepository
 			bookings: IBookingEntity[];
 		}
 	> {
-		console.log(filter);
-
 		const pipeline: PipelineStage[] = [
 			{ $match: filter },
 
-			// Get services offered by this shop
 			{
 				$lookup: {
 					from: "services",
@@ -111,7 +118,6 @@ export class BarberRepository
 								},
 							},
 						},
-						// Apply active filter if needed
 						...(filter.status === "active"
 							? [
 									{
@@ -126,7 +132,6 @@ export class BarberRepository
 				},
 			},
 		];
-		// --- Conditionally add the Bookings lookup ---
 		if (filter.status === "active") {
 			pipeline.push({
 				$lookup: {
@@ -148,7 +153,6 @@ export class BarberRepository
 				},
 			});
 		} else {
-			// No filter on bookings, get them all
 			pipeline.push({
 				$lookup: {
 					from: "bookings",
@@ -159,7 +163,6 @@ export class BarberRepository
 			});
 		}
 
-		// --- Client population + unwind ---
 		pipeline.push(
 			{
 				$unwind: {
@@ -181,7 +184,6 @@ export class BarberRepository
 					preserveNullAndEmptyArrays: true,
 				},
 			},
-			// --- Group back ---
 			{
 				$group: {
 					_id: "$_id",

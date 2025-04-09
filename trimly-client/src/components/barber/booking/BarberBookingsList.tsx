@@ -2,49 +2,26 @@ import { useState, useEffect } from "react";
 import { format, isSameDay } from "date-fns";
 import {
 	CalendarIcon,
-	Clock,
-	Phone,
 	Check,
-	Scissors,
 	Calendar as CalendarFull,
 	List,
 	Grid,
 	Info,
-	Clock3,
-	MapPin,
-	MessageSquare,
 	RefreshCw,
 	ArrowLeft,
 } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { useToaster } from "@/hooks/ui/useToaster";
 import {
 	Table,
@@ -56,6 +33,10 @@ import {
 } from "@/components/ui/table";
 import { IBooking } from "@/types/Booking";
 import { useNavigate } from "react-router-dom";
+import { LoadingState } from "@/components/common/skeletons/BarberBookingsSkeleton";
+import { EmptyState } from "./EmptyState";
+import { BookingCard } from "@/components/common/cards/BookingCard";
+import { BookingDetailsDialog } from "@/components/modals/BookingDetailsModal";
 
 const statusConfig = {
 	confirmed: {
@@ -101,7 +82,7 @@ export function BarberBookingsList({
 		"grid"
 	);
 	const [statusFilter, setStatusFilter] = useState<StatusFilter>("confirmed");
-	const { successToast, infoToast } = useToaster();
+	const { infoToast } = useToaster();
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -177,7 +158,7 @@ export function BarberBookingsList({
 											"w-full sm:w-auto justify-start text-left font-normal border-indigo-200 hover:bg-indigo-50 hover:text-indigo-900",
 											!date && "text-slate-500"
 										)}>
-										<CalendarIcon className="mr-2 h-4 w-4 text-indigo-600" />
+										<CalendarIcon className="mr-2 h-4 w-4 text-[var(--yellow)]" />
 										{date ? (
 											format(date, "EEEE, MMMM d, yyyy")
 										) : (
@@ -205,7 +186,7 @@ export function BarberBookingsList({
 								size="icon"
 								onClick={refreshData}
 								disabled={isLoading}
-								className="text-slate-600 hover:text-indigo-600 hover:bg-indigo-50">
+								className="text-slate-600 hover:text-[var(--yellow)] hover:bg-indigo-50">
 								<RefreshCw
 									className={cn(
 										"h-5 w-5",
@@ -222,7 +203,7 @@ export function BarberBookingsList({
 											onClick={() => setViewMode("grid")}
 											className={cn(
 												viewMode === "grid" &&
-													"bg-white shadow-sm"
+													"bg-white shadow-sm text-[var(--yellow)]"
 											)}>
 											<Grid className="h-4 w-4" />
 										</TabsTrigger>
@@ -231,7 +212,7 @@ export function BarberBookingsList({
 											onClick={() => setViewMode("list")}
 											className={cn(
 												viewMode === "list" &&
-													"bg-white shadow-sm"
+													"bg-white shadow-sm text-[var(--yellow)]"
 											)}>
 											<List className="h-4 w-4" />
 										</TabsTrigger>
@@ -242,7 +223,7 @@ export function BarberBookingsList({
 											}
 											className={cn(
 												viewMode === "timeline" &&
-													"bg-white shadow-sm"
+													"bg-white shadow-sm text-[var(--yellow)]"
 											)}>
 											<CalendarFull className="h-4 w-4" />
 										</TabsTrigger>
@@ -360,6 +341,7 @@ export function BarberBookingsList({
 										{filteredBookings.map((booking) => (
 											<BookingCard
 												key={booking.bookingId}
+												statusConfig={statusConfig}
 												booking={booking}
 												markAsFinished={markAsFinished}
 												messageClient={messageClient}
@@ -508,6 +490,9 @@ export function BarberBookingsList({
 																</TableCell>
 																<TableCell className="text-right space-x-2 whitespace-nowrap">
 																	<BookingDetailsDialog
+																		statusConfig={
+																			statusConfig
+																		}
 																		booking={
 																			booking
 																		}
@@ -640,6 +625,9 @@ export function BarberBookingsList({
 																	</div>
 																	<div className="mt-3 flex items-center gap-3">
 																		<BookingDetailsDialog
+																			statusConfig={
+																				statusConfig
+																			}
 																			booking={
 																				booking
 																			}
@@ -681,392 +669,5 @@ export function BarberBookingsList({
 				)}
 			</div>
 		</div>
-	);
-}
-
-// Loading state component based on view mode
-function LoadingState({ viewMode }: { viewMode: string }) {
-	// ... keep existing code (loading state component)
-	if (viewMode === "grid") {
-		return (
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-				{Array.from({ length: 8 }).map((_, index) => (
-					<Card
-						key={index}
-						className="overflow-hidden border-slate-200 shadow-sm">
-						<CardContent className="p-4">
-							<div className="space-y-3">
-								<div className="flex justify-between items-center">
-									<Skeleton className="h-4 w-16" />
-									<Skeleton className="h-5 w-20 rounded-full" />
-								</div>
-								<Skeleton className="h-5 w-full" />
-								<div className="flex items-center">
-									<Skeleton className="h-8 w-8 mr-2 rounded-full" />
-									<div className="space-y-1 flex-1">
-										<Skeleton className="h-4 w-28" />
-										<Skeleton className="h-3 w-24" />
-									</div>
-								</div>
-								<div className="flex items-center gap-2">
-									<Skeleton className="h-4 w-4 rounded-full" />
-									<Skeleton className="h-4 flex-1" />
-								</div>
-							</div>
-						</CardContent>
-						<CardFooter className="p-4 pt-0 flex justify-between">
-							<Skeleton className="h-8 w-24" />
-							<Skeleton className="h-8 w-24" />
-						</CardFooter>
-					</Card>
-				))}
-			</div>
-		);
-	}
-
-	if (viewMode === "list") {
-		return (
-			<div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
-				<div className="p-6 space-y-4">
-					{Array.from({ length: 6 }).map((_, index) => (
-						<div
-							key={index}
-							className="flex flex-wrap gap-4 pb-4 border-b border-slate-200 last:border-0 last:pb-0">
-							<Skeleton className="h-12 w-20" />
-							<div className="space-y-1 flex-1">
-								<Skeleton className="h-5 w-48" />
-								<Skeleton className="h-4 w-32" />
-							</div>
-							<Skeleton className="h-8 w-24 rounded-full" />
-							<Skeleton className="h-9 w-24" />
-						</div>
-					))}
-				</div>
-			</div>
-		);
-	}
-
-	return (
-		<div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
-			<div className="space-y-8">
-				{Array.from({ length: 5 }).map((_, index) => (
-					<div key={index} className="flex gap-4">
-						<Skeleton className="h-5 w-16" />
-						<div className="flex-1">
-							<div className="ml-4 h-24 rounded-lg border border-slate-200 p-4">
-								<div className="space-y-2">
-									<div className="flex justify-between">
-										<Skeleton className="h-5 w-1/3" />
-										<Skeleton className="h-5 w-16 rounded-full" />
-									</div>
-									<Skeleton className="h-4 w-1/4" />
-									<div className="flex justify-end gap-2 pt-2">
-										<Skeleton className="h-8 w-24" />
-										<Skeleton className="h-8 w-24" />
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				))}
-			</div>
-		</div>
-	);
-}
-
-// Empty state component
-function EmptyState({
-	date,
-	setDate,
-}: {
-	date: Date;
-	setDate: (date: Date) => void;
-}) {
-	return (
-		<div className="flex flex-col items-center justify-center py-12 px-4 text-center bg-white rounded-lg border border-slate-200 shadow-sm">
-			<div className="rounded-full bg-indigo-50 p-3 mb-4">
-				<CalendarIcon className="h-6 w-6 text-indigo-600" />
-			</div>
-			<h3 className="text-lg font-medium text-slate-800">
-				No bookings for this day
-			</h3>
-			<p className="text-slate-500 mt-1 mb-4 max-w-md">
-				There are no appointments scheduled for{" "}
-				{format(date, "MMMM d, yyyy")}.
-			</p>
-			<Button
-				onClick={() => setDate(new Date())}
-				className="bg-indigo-600 text-white hover:bg-indigo-700">
-				Check today's bookings
-			</Button>
-		</div>
-	);
-}
-
-// Booking card component
-function BookingCard({
-	booking,
-	markAsFinished,
-	messageClient,
-}: {
-	booking: IBooking;
-	markAsFinished: (id: string) => void;
-	messageClient: (clientName: string) => void;
-}) {
-	return (
-		<Card className="overflow-hidden border-slate-200 shadow-sm hover:shadow transition-shadow">
-			<CardHeader className="p-4 pb-0 flex justify-between items-start">
-				<div>
-					<div className="flex items-center text-slate-500 text-sm font-medium">
-						<Clock className="h-3.5 w-3.5 mr-1.5 text-indigo-500" />
-						{booking.startTime}
-						<span className="mx-1.5 text-slate-300">•</span>
-						<Clock3 className="h-3.5 w-3.5 mr-1.5 text-indigo-500" />
-						{booking.duration} min
-					</div>
-					<h3 className="font-medium text-slate-800 mt-1.5">
-						{booking?.servicesDetails
-							?.map((s) => s.name)
-							.join(", ")}
-					</h3>
-					<div className="text-slate-500 text-sm mt-0.5">
-						${booking.total}
-					</div>
-				</div>
-				<Badge
-					variant="outline"
-					className={cn(
-						"capitalize text-xs px-2 py-0.5",
-						statusConfig[booking?.status || "pending"].className
-					)}>
-					{statusConfig[booking?.status || "pending"].icon}
-					{booking.status}
-				</Badge>
-			</CardHeader>
-
-			<CardContent className="p-4">
-				<div className="flex items-center mb-3">
-					<Avatar className="h-9 w-9 mr-2.5 border border-slate-200">
-						{booking?.clientDetails?.avatar ? (
-							<AvatarImage
-								src={booking?.clientDetails?.avatar}
-								alt={booking?.clientDetails?.fullName}
-							/>
-						) : null}
-						<AvatarFallback className="bg-indigo-100 text-indigo-600">
-							{booking?.clientDetails?.fullName.charAt(0)}
-						</AvatarFallback>
-					</Avatar>
-					<div>
-						<div className="font-medium text-slate-800 line-clamp-1">
-							{booking?.clientDetails?.fullName}
-						</div>
-						<div className="text-slate-500 text-sm">
-							{booking?.clientDetails?.phoneNumber}
-						</div>
-					</div>
-				</div>
-
-				<div className="text-sm bg-slate-50 rounded p-2 mb-3 text-slate-600">
-					<span className="font-medium text-slate-700">
-						Services:
-					</span>{" "}
-					{booking?.servicesDetails?.map((service, idx) => (
-						<div key={idx} className="flex justify-between mt-1">
-							<span>{service.name}</span>
-							<span className="font-medium">
-								${service.price}
-							</span>
-						</div>
-					))}
-				</div>
-			</CardContent>
-
-			<CardFooter className="p-4 pt-0 flex justify-between">
-				<BookingDetailsDialog
-					booking={booking}
-					messageClient={messageClient}
-				/>
-
-				{booking.status !== "completed" &&
-					booking.status !== "cancelled" && (
-						<Button
-							size="sm"
-							onClick={() =>
-								markAsFinished(booking.bookingId || "")
-							}
-							className="bg-emerald-600 hover:bg-emerald-700 text-white">
-							<Check className="h-4 w-4 mr-1" />
-							Complete
-						</Button>
-					)}
-			</CardFooter>
-		</Card>
-	);
-}
-
-// Booking details dialog component
-function BookingDetailsDialog({
-	booking,
-	messageClient,
-	useIconButton = false,
-}: {
-	booking: IBooking;
-	messageClient: (clientName: string) => void;
-	useIconButton?: boolean;
-}) {
-	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				{useIconButton ? (
-					<Button
-						size="sm"
-						variant="outline"
-						className="text-slate-600 hover:text-indigo-600 h-8">
-						<Info className="h-4 w-4" />
-					</Button>
-				) : (
-					<Button
-						size="sm"
-						variant="outline"
-						className="text-indigo-700 border-indigo-200 hover:bg-indigo-50">
-						<Info className="h-4 w-4 mr-1" />
-						Details
-					</Button>
-				)}
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-md">
-				<DialogHeader>
-					<DialogTitle>Appointment Details</DialogTitle>
-					<DialogDescription>
-						Complete information about this booking
-					</DialogDescription>
-				</DialogHeader>
-
-				<div className="space-y-4 py-4">
-					{/* Client Info */}
-					<div className="flex items-center">
-						<Avatar className="h-10 w-10 mr-3 border border-slate-200">
-							{booking?.clientDetails?.avatar ? (
-								<AvatarImage
-									src={booking?.clientDetails.avatar}
-									alt={booking.clientDetails.fullName}
-								/>
-							) : null}
-							<AvatarFallback className="bg-indigo-100 text-indigo-600">
-								{booking?.clientDetails?.fullName.charAt(0)}
-							</AvatarFallback>
-						</Avatar>
-						<div>
-							<div className="font-medium text-slate-800">
-								{booking?.clientDetails?.fullName}
-							</div>
-							<div className="flex items-center text-slate-500 text-sm">
-								<Phone className="h-3.5 w-3.5 mr-1" />
-								{booking?.clientDetails?.phoneNumber}
-							</div>
-						</div>
-					</div>
-
-					<Separator />
-
-					{/* Appointment Details */}
-					<div className="grid grid-cols-2 gap-3">
-						<div className="space-y-1">
-							<div className="text-sm text-slate-500">Date</div>
-							<div className="font-medium">
-								{booking.date instanceof Date
-									? format(booking.date, "MMMM d, yyyy")
-									: format(
-											new Date(booking.date),
-											"MMMM d, yyyy"
-									  )}
-							</div>
-						</div>
-						<div className="space-y-1">
-							<div className="text-sm text-slate-500">Time</div>
-							<div className="font-medium">
-								{booking.startTime} ({booking.duration} min)
-							</div>
-						</div>
-						<div className="space-y-1">
-							<div className="text-sm text-slate-500">Total</div>
-							<div className="font-medium">${booking.total}</div>
-						</div>
-						<div className="space-y-1">
-							<div className="text-sm text-slate-500">Status</div>
-							<Badge
-								variant="outline"
-								className={cn(
-									"capitalize text-xs",
-									statusConfig[booking?.status || "pending"]
-										.className
-								)}>
-								{
-									statusConfig[booking?.status || "pending"]
-										.icon
-								}
-								{booking.status}
-							</Badge>
-						</div>
-					</div>
-
-					<Separator />
-
-					{/* Services Details */}
-					<div className="space-y-2">
-						<div className="text-sm text-slate-500">Services</div>
-						<div className="bg-slate-50 rounded-md p-3 space-y-2">
-							{booking?.servicesDetails?.map((service, idx) => (
-								<div
-									key={idx}
-									className="flex justify-between items-center">
-									<div>
-										<div className="font-medium text-slate-800">
-											{service.name}
-										</div>
-									</div>
-									<div className="font-medium">
-										${service.price}
-									</div>
-								</div>
-							))}
-							<Separator className="my-2" />
-							<div className="flex justify-between items-center font-semibold">
-								<div>Total</div>
-								<div>${booking.total}</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<DialogFooter className="sm:justify-between">
-					<Button
-						size="sm"
-						onClick={() =>
-							messageClient(
-								booking?.clientDetails?.fullName || ""
-							)
-						}
-						className="text-white bg-indigo-600 hover:bg-indigo-700">
-						<MessageSquare className="h-4 w-4 mr-1.5" />
-						Message Client
-					</Button>
-
-					{booking.status !== "completed" &&
-						booking.status !== "cancelled" && (
-							<Button
-								size="sm"
-								// onClick={() =>
-								// 	// markAsFinished(booking.bookingId || "")
-								// }
-								className="bg-emerald-600 hover:bg-emerald-700 text-white">
-								<Check className="h-4 w-4 mr-1.5" />
-								Mark Complete
-							</Button>
-						)}
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
 	);
 }

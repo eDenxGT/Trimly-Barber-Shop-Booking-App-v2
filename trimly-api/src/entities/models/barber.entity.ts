@@ -17,12 +17,22 @@ export interface IBarberEntity extends Omit<IUserEntity, "fullName"> {
 		wifi: boolean;
 		parking: boolean;
 	};
+	card_details?: {
+		card_number: string;
+		owner_name: string;
+		expiry_date: string;
+		cvv: string;
+		type: string;
+	};
+	totalRevenue?: string;
+	walletBalance?: number;
+	withdrawnAmount?: string;
 	rejectionReason?: string;
 	location?: {
 		type?: "Point";
 		name?: string;
 		displayName?: string;
 		zipCode?: string;
-		coordinates?: number[]
+		coordinates?: number[];
 	};
 }

@@ -10,6 +10,7 @@ import { IHandleFailurePaymentUseCase } from "../../entities/useCaseInterfaces/b
 import { IGetAllBookingsByShopIdUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-shopid-usecase.interface.js";
 import { IGetAllBookingsByUserUseCase } from "../../entities/useCaseInterfaces/booking/get-all-bookings-by-user-usecase.interface.js";
 import { ICancelBookingUseCase } from "../../entities/useCaseInterfaces/booking/cancel-booking-usecase.interface.js";
+import { ICompleteBookingUseCase } from "../../entities/useCaseInterfaces/booking/update-booking-status-usecase.interface.js";
 
 @injectable()
 export class BookingController implements IBookingController {
@@ -25,7 +26,9 @@ export class BookingController implements IBookingController {
 		@inject("IGetAllBookingsByUserUseCase")
 		private _getAllBookingsByUserUseCase: IGetAllBookingsByUserUseCase,
 		@inject("ICancelBookingUseCase")
-		private _cancelBookingUseCase: ICancelBookingUseCase
+		private _cancelBookingUseCase: ICancelBookingUseCase,
+		@inject("ICompleteBookingUseCase")
+		private _completeBookingUseCase: ICompleteBookingUseCase
 	) {}
 
 	//* ─────────────────────────────────────────────────────────────
@@ -153,7 +156,7 @@ export class BookingController implements IBookingController {
 			handleErrorResponse(req, res, error);
 		}
 	}
-	
+
 	//* ─────────────────────────────────────────────────────────────
 	//*                 🛠️  Handle Payment Failure
 	//* ─────────────────────────────────────────────────────────────
@@ -161,11 +164,11 @@ export class BookingController implements IBookingController {
 		try {
 			const { bookingId } = req.body;
 
-			await this._cancelBookingUseCase.execute(String(bookingId));
+			await this._completeBookingUseCase.execute(String(bookingId));
 
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
-				message: SUCCESS_MESSAGES.CANCELLATION_SUCCESS,
+				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
 			});
 		} catch (error) {
 			handleErrorResponse(req, res, error);

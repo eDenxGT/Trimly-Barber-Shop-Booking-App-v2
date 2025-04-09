@@ -10,6 +10,7 @@ export const clientSchema = new Schema<IClientModel>(
 		password: { type: String, required: true },
 		avatar: { type: String },
 		phoneNumber: { type: String },
+		walletBalance: { type: Number, default: 0 },
 		status: {
 			type: String,
 			enum: ["active", "blocked", "pending"],

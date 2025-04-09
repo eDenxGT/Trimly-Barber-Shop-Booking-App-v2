@@ -4,6 +4,7 @@ import { IServiceEntity } from "../../models/service.enity.js";
 import { IBaseRepository } from "../base-repository.interface.js";
 
 export interface IBarberRepository extends IBaseRepository<IBarberEntity> {
+	updateRevenue(shopId: string, revenue: number): Promise<void>;
 	findAllNearbyShopsWithFilters(
 		filters: {
 			search?: string;

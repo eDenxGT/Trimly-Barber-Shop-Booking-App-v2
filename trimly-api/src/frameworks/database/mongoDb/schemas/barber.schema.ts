@@ -36,6 +36,32 @@ export const barberSchema = new Schema<IBarberModel>(
 			wifi: { type: Boolean },
 			parking: { type: Boolean },
 		},
+		card_details: {
+			card_number: {
+				type: String,
+			},
+			owner_name: {
+				type: String,
+			},
+			expiry_date: {
+				type: String,
+			},
+			cvv: {
+				type: String,
+			},
+			type: {
+				type: String,
+			},
+		},
+		walletBalance: { type: Number, default: 0 },
+		totalRevenue: {
+			type: Number,
+			default: 0,
+		},
+		withdrawnAmount: {
+			type: Number,
+			default: 0,
+		},
 		location: {
 			type: {
 				type: String,

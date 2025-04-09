@@ -79,10 +79,10 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
 							verificationData
 						);
 
+						navigate("/my-bookings");
 						if (result.data.success) {
 							successToast(result.data.message);
 							handleSuccess();
-							navigate("/my-bookings");
 						} else {
 							console.error("Verification failed");
 						}

@@ -9,4 +9,5 @@ export interface IClientEntity extends IUserEntity {
 		zipCode?: string;
 		coordinates?: number[];
 	};
+	walletBalance?: number;
 }

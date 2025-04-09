@@ -39,6 +39,7 @@ export interface IClient extends User {
 		zipCode?: string;
 		coordinates?: number[];
 	};
+	walletBalance?: number;
 }
 
 export interface IBarber extends Omit<User, "fullName"> {
@@ -56,6 +57,16 @@ export interface IBarber extends Omit<User, "fullName"> {
 	amenities?: {
 		wifi: boolean;
 		parking: boolean;
+	};
+	walletBalance?: number;
+	totalRevenue?: string;
+	withdrawnAmount?: string;
+	card_details?: {
+		card_number: string;
+		owner_name: string;
+		expiry_date: string;
+		cvv: string;
+		type: string;
 	};
 	rejectionReason?: string;
 	location?: {

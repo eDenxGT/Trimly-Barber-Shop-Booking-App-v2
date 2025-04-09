@@ -79,6 +79,8 @@ import { IGetAllBookingsByUserUseCase } from "../../entities/useCaseInterfaces/b
 import { GetAllBookingsByUserUseCase } from "../../useCases/booking/get-all-bookings-by-user.usecase.js";
 import { ICancelBookingUseCase } from "../../entities/useCaseInterfaces/booking/cancel-booking-usecase.interface.js";
 import { CancelBookingUseCase } from "../../useCases/booking/cancel-booking.usecase.js";
+import { ICompleteBookingUseCase } from "../../entities/useCaseInterfaces/booking/update-booking-status-usecase.interface.js";
+import { CompleteBookingUseCase } from "../../useCases/booking/update-booking-status.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -233,6 +235,10 @@ export class UseCaseRegistry {
 
 		container.register<ICancelBookingUseCase>("ICancelBookingUseCase", {
 			useClass: CancelBookingUseCase,
+		});
+
+		container.register<ICompleteBookingUseCase>("ICompleteBookingUseCase", {
+			useClass: CompleteBookingUseCase,
 		});
 
 		//* ====== Register Bcrypts ====== *//
