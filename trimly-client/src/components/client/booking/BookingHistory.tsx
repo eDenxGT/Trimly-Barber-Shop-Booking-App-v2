@@ -212,7 +212,7 @@ export function BookingHistory({
 												</Badge>
 											</TableCell>
 											<TableCell className="font-medium text-gray-800">
-												${booking?.total?.toFixed(2)}
+												₹{booking?.total?.toFixed(2)}
 											</TableCell>
 											<TableCell className="text-right">
 												<Button
@@ -363,7 +363,7 @@ export function BookingHistory({
 													className="flex justify-between">
 													<span>{service.name}</span>
 													<span className="font-medium">
-														$
+														₹
 														{service?.price?.toFixed(
 															2
 														)}
@@ -374,7 +374,7 @@ export function BookingHistory({
 										<div className="flex justify-between">
 											<span>Service Fee</span>
 											<span className="font-medium">
-												$5
+												₹5
 											</span>
 										</div>
 										<div className="flex justify-between pt-2 border-t mt-2">
@@ -382,7 +382,7 @@ export function BookingHistory({
 												Total
 											</span>
 											<span className="font-bold">
-												$
+												₹
 												{selectedBooking?.total.toFixed(
 													2
 												)}

@@ -84,7 +84,6 @@ export function ClientBookingPage() {
 		if (isBefore(date, minBookingDate)) {
 			return true;
 		}
-
 		return !isDateAvailable(date);
 	};
 
@@ -193,7 +192,6 @@ export function ClientBookingPage() {
 		setAvailableTimes(updatedTimes);
 	}, [selectedDate, allTimeSlots, selectedServices]);
 
-	// Update booked time slots whenever time selection changes
 	useEffect(() => {
 		if (!selectedDate || !selectedTime || selectedServices.length === 0) {
 			setBookedTimeSlots([]);
@@ -453,7 +451,7 @@ export function ClientBookingPage() {
 										</div>
 										<div className="flex items-center gap-2">
 											<span className="text-sm font-medium">
-												${service.price}
+												₹{service.price}
 											</span>
 											{isSelected && (
 												<Badge
@@ -481,7 +479,7 @@ export function ClientBookingPage() {
 											key={item.serviceId}
 											className="flex justify-between py-1.5 text-sm">
 											<span>{item.name}</span>
-											<span>${item.price}</span>
+											<span>₹{item.price}</span>
 										</div>
 									))}
 
@@ -491,7 +489,7 @@ export function ClientBookingPage() {
 										<span className="text-muted-foreground">
 											Service fee
 										</span>
-										<span>${totals.serviceFee}</span>
+										<span>₹{totals.serviceFee}</span>
 									</div>
 
 									<div className="flex justify-between py-1.5 text-sm">
@@ -505,7 +503,7 @@ export function ClientBookingPage() {
 
 									<div className="flex justify-between py-1.5 font-medium">
 										<span>Total</span>
-										<span>${totals.total}</span>
+										<span>₹{totals.total}</span>
 									</div>
 
 									{selectedDate &&

@@ -68,6 +68,19 @@ export class CreateBookingUseCase implements ICreateBookingUseCase {
 				HTTP_STATUS.CONFLICT
 			);
 		}
+
+		const cancelledBookings = await this._bookingRepository.find({
+			clientId,
+			status: "cancelled",
+		});
+
+		if (cancelledBookings.length > 5) {
+			throw new CustomError(
+				ERROR_MESSAGES.MORE_THAN_5_CANCELLED_BOOKING,
+				HTTP_STATUS.BAD_REQUEST
+			);
+		}
+
 		const bookingId = generateUniqueId("booking");
 
 		const razorpay = new Razorpay({

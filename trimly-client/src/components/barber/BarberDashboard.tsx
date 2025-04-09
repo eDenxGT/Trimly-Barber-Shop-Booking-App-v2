@@ -44,7 +44,7 @@ export const BarberDashboard = () => {
           />
           <StatCard 
             title="USD Total Earning" 
-            value="$10,461,767" 
+            value="₹10,461,767" 
             icon={<DollarSign className="h-6 w-6 text-gray-500" />}
             iconBg="bg-gray-100"
           />
@@ -75,7 +75,7 @@ export const BarberDashboard = () => {
               </div>
               <EarningsChart />
               <div className="mt-4">
-                <h3 className="text-2xl font-bold">$7,443</h3>
+                <h3 className="text-2xl font-bold">₹7,443</h3>
                 <p className="text-sm text-gray-500">USD Dollar you earned.</p>
               </div>
             </CardContent>

@@ -41,7 +41,7 @@ export function BookingCard({
 							.join(", ")}
 					</h3>
 					<div className="text-slate-500 text-sm mt-0.5">
-						${booking.total}
+						₹{booking.total}
 					</div>
 				</div>
 				<Badge
@@ -88,7 +88,7 @@ export function BookingCard({
 								<div key={idx} className="flex justify-between mt-1 py-1">
 									<span>{service.name}</span>
 									<span className="font-medium ml-2">
-										${service.price}
+										₹{service.price}
 									</span>
 								</div>
 							))}

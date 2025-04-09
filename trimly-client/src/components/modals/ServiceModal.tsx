@@ -60,7 +60,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
 						<MuiTextField
 							id="price"
 							name="price"
-							label="Price ($)"
+							label="Price (₹)"
 							type="number"
 							placeholder="Enter price"
 							value={String(formik.values.price)}

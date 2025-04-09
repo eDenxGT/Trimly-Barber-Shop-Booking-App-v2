@@ -103,7 +103,7 @@ export function BookingDetailsDialog({
 						</div>
 						<div className="space-y-1">
 							<div className="text-sm text-slate-500">Total</div>
-							<div className="font-medium">${booking.total}</div>
+							<div className="font-medium">₹{booking.total}</div>
 						</div>
 						<div className="space-y-1">
 							<div className="text-sm text-slate-500">Status</div>
@@ -139,14 +139,14 @@ export function BookingDetailsDialog({
 										</div>
 									</div>
 									<div className="font-medium">
-										${service.price}
+										₹{service.price}
 									</div>
 								</div>
 							))}
 							<Separator className="my-2" />
 							<div className="flex justify-between items-center font-semibold">
 								<div>Total</div>
-								<div>${booking.total}</div>
+								<div>₹{booking.total}</div>
 							</div>
 						</div>
 					</div>
