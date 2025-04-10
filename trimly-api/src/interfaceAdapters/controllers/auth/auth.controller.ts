@@ -56,7 +56,7 @@ export class AuthController implements IAuthController {
 		private _forgotPasswordUseCase: IForgotPasswordUseCase,
 		@inject("IGoogleUseCase") private _googleUseCase: IGoogleUseCase,
 		@inject("IResetPasswordUseCase")
-		private _resetPasswordUseCase: IResetPasswordUseCase,
+		private _resetPasswordUseCase: IResetPasswordUseCase
 	) {}
 
 	//* ─────────────────────────────────────────────────────────────
@@ -236,6 +236,7 @@ export class AuthController implements IAuthController {
 					success: false,
 					message: ERROR_MESSAGES.VALIDATION_ERROR,
 				});
+				return;
 			}
 			await this._forgotPasswordUseCase.execute(validatedData);
 

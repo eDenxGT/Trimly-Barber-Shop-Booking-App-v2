@@ -2,9 +2,13 @@
 import { container } from "tsyringe";
 
 import { DependencyInjection } from "./index.js";
+
+//* ====== Middleware Imports ====== *//
+import { BlockStatusMiddleware } from "../../interfaceAdapters/middlewares/block-status.middleware.js";
+
+//* ====== Controller Imports ====== *//
 import { AuthController } from "../../interfaceAdapters/controllers/auth/auth.controller.js";
 import { IAuthController } from "../../entities/controllerInterfaces/users/auth-controller.interface.js";
-import { BlockStatusMiddleware } from "../../interfaceAdapters/middlewares/block-status.middleware.js";
 import { UserController } from "../../interfaceAdapters/controllers/user.controller.js";
 import { IUserController } from "../../entities/controllerInterfaces/users/user-controller.interface.js";
 import { IServiceController } from "../../entities/controllerInterfaces/service/service-controller.interface.js";
@@ -13,12 +17,6 @@ import { ShopController } from "../../interfaceAdapters/controllers/shop.control
 import { IShopController } from "../../entities/controllerInterfaces/shop/shop-controller.interface.js";
 import { IBookingController } from "../../entities/controllerInterfaces/booking/booking-controller.interface.js";
 import { BookingController } from "../../interfaceAdapters/controllers/booking.controller.js";
-
-//* ====== Middleware Imports ====== *//
-
-//* ====== Controller Imports ====== *//
-// import { UserController } from "@/interfaceAdapters/controllers/user.controller";
-// import { ShopController } from "@/interfaceAdapters/controllers/shop.controller";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
