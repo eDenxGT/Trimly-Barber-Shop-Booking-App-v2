@@ -95,6 +95,7 @@ const extractToken = (
 //* ─────────────────────────────────────────────────────────────
 const isBlacklisted = async (token: string): Promise<boolean> => {
 	try {
+		console.log("Checking blacklist for token:", token);
 		const result = await redisClient.get(token);
 		return result !== null;
 	} catch (error) {
