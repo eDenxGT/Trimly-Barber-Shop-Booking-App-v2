@@ -8,6 +8,10 @@ export const transactionSchema = new Schema<ITransactionModel>(
       required: true,
       unique: true,
     },
+    userId: {
+      type: String,
+      required: true,
+    },
     walletId: {
       type: String,
       required: true,

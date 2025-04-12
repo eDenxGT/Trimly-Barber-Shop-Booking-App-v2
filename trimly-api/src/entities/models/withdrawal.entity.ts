@@ -1,10 +1,11 @@
 export interface IWithdrawalEntity {
+  withdrawalId: string;
   walletId: string;
   userId: string;
   userType: "client" | "barber";
   amount: number;
   status: "pending" | "approved" | "rejected";
-  method: "upi" | "bank_transfer";
+  method: "upi" | "bank";
   accountHolderName?: string;
   accountNumber?: string;
   ifscCode?: string;

@@ -17,6 +17,8 @@ import { ShopController } from "../../interfaceAdapters/controllers/shop.control
 import { IShopController } from "../../entities/controllerInterfaces/shop/shop-controller.interface.js";
 import { IBookingController } from "../../entities/controllerInterfaces/booking/booking-controller.interface.js";
 import { BookingController } from "../../interfaceAdapters/controllers/booking.controller.js";
+import { IWalletController } from "../../entities/controllerInterfaces/finance/wallet-controller.interface.js";
+import { WalletController } from "../../interfaceAdapters/controllers/wallet.controller.js";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -26,16 +28,19 @@ export const blockStatusMiddleware = container.resolve(BlockStatusMiddleware);
 
 //* ====== Controller Resolving ====== *//
 export const userController =
-	container.resolve<IUserController>(UserController);
+  container.resolve<IUserController>(UserController);
 
 export const authController =
-	container.resolve<IAuthController>(AuthController);
+  container.resolve<IAuthController>(AuthController);
 
 export const serviceController =
-	container.resolve<IServiceController>(ServiceController);
+  container.resolve<IServiceController>(ServiceController);
 
 export const shopController =
-	container.resolve<IShopController>(ShopController);
+  container.resolve<IShopController>(ShopController);
 
 export const bookingController =
-	container.resolve<IBookingController>(BookingController);
+  container.resolve<IBookingController>(BookingController);
+
+export const walletController =
+  container.resolve<IWalletController>(WalletController);

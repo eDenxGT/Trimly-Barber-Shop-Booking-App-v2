@@ -3,6 +3,7 @@ import { IWithdrawalModel } from "../models/withdrawal.model.js";
 
 export const withdrawalSchema = new Schema<IWithdrawalModel>(
   {
+    withdrawalId: { type: String, required: true},
     walletId: { type: String, required: true },
     userId: { type: String, required: true },
     userType: {
@@ -18,7 +19,7 @@ export const withdrawalSchema = new Schema<IWithdrawalModel>(
     },
     method: {
       type: String,
-      enum: ["upi", "bank_transfer"],
+      enum: ["upi", "bank"],
       required: true,
     },
     // UPI

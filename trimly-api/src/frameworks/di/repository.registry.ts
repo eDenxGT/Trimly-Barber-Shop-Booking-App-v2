@@ -18,40 +18,58 @@ import { IServiceRepository } from "../../entities/repositoryInterfaces/service/
 import { ServiceRepository } from "../../interfaceAdapters/repositories/service/service.repository.js";
 import { IBookingRepository } from "../../entities/repositoryInterfaces/booking/booking-repository.interface.js";
 import { BookingRepository } from "../../interfaceAdapters/repositories/booking/booking.repository.js";
+import { IWalletRepository } from "../../entities/repositoryInterfaces/finance/wallet-repository.interface.js";
+import { WalletRepository } from "../../interfaceAdapters/repositories/finance/wallet.repository.js";
+import { ITransactionRepository } from "../../entities/repositoryInterfaces/finance/transaction-repository.interface.js";
+import { TransactionRepository } from "../../interfaceAdapters/repositories/finance/transaction.repository.js";
+import { IWithdrawalRepository } from "../../entities/repositoryInterfaces/finance/withdrawal-repository.interface.js";
+import { WithdrawalRepository } from "../../interfaceAdapters/repositories/finance/withdrawal.repository.js";
 
 export class RepositoryRegistry {
-	static registerRepositories(): void {
-		//* ====== Register Repositories ====== *//
-		container.register<IClientRepository>("IClientRepository", {
-			useClass: ClientRepository,
-		});
+  static registerRepositories(): void {
+    //* ====== Register Repositories ====== *//
+    container.register<IClientRepository>("IClientRepository", {
+      useClass: ClientRepository,
+    });
 
-		container.register<IBarberRepository>("IBarberRepository", {
-			useClass: BarberRepository,
-		});
+    container.register<IBarberRepository>("IBarberRepository", {
+      useClass: BarberRepository,
+    });
 
-		container.register<IAdminRepository>("IAdminRepository", {
-			useClass: AdminRepository,
-		});
+    container.register<IAdminRepository>("IAdminRepository", {
+      useClass: AdminRepository,
+    });
 
-		container.register<IOtpRepository>("IOtpRepository", {
-			useClass: OtpRepository,
-		});
+    container.register<IOtpRepository>("IOtpRepository", {
+      useClass: OtpRepository,
+    });
 
-		container.register<IRefreshTokenRepository>("IRefreshTokenRepository", {
-			useClass: RefreshTokenRepository,
-		});
+    container.register<IRefreshTokenRepository>("IRefreshTokenRepository", {
+      useClass: RefreshTokenRepository,
+    });
 
-		container.register<IRedisTokenRepository>("IRedisTokenRepository", {
-			useClass: RedisTokenRepository,
-		});
+    container.register<IRedisTokenRepository>("IRedisTokenRepository", {
+      useClass: RedisTokenRepository,
+    });
 
-		container.register<IServiceRepository>("IServiceRepository", {
-			useClass: ServiceRepository,
-		});
+    container.register<IServiceRepository>("IServiceRepository", {
+      useClass: ServiceRepository,
+    });
 
-		container.register<IBookingRepository>("IBookingRepository", {
-			useClass: BookingRepository,
-		});
-	}
+    container.register<IBookingRepository>("IBookingRepository", {
+      useClass: BookingRepository,
+    });
+
+    container.register<IWalletRepository>("IWalletRepository", {
+      useClass: WalletRepository,
+    });
+
+    container.register<ITransactionRepository>("ITransactionRepository", {
+      useClass: TransactionRepository,
+    });
+
+    container.register<IWithdrawalRepository>("IWithdrawalRepository", {
+      useClass: WithdrawalRepository,
+    });
+  }
 }

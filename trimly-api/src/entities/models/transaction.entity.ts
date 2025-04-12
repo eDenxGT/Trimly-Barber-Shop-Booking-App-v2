@@ -1,5 +1,6 @@
 export interface ITransactionEntity {
   transactionId: string;
+  userId: string;
   walletId: string;
   type: "credit" | "debit";
   source: "booking" | "topup" | "withdrawal" | "refund";

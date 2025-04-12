@@ -7,6 +7,7 @@ import {
 	Settings,
 	Store,
 	Users,
+	Wallet,
 } from "lucide-react";
 
 import { AiTwotoneShop } from "react-icons/ai";
@@ -28,11 +29,12 @@ const navItems = {
 			icon: NotebookText,
 			path: "/my-bookings",
 		},
-		// {
-		// 	title: "Tutors",
-		// 	icon: <FaChalkboardTeacher className="h-5 w-5" />,
-		// 	href: "/student/tutors",
-		// },
+		{
+			title: "Wallet",
+			icon: Wallet,
+			path: "/wallet",
+		},
+
 		// {
 		// 	title: "Chat",
 		// 	icon: <MessageCircleMore className="h-5 w-5" />,
