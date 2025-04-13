@@ -1,9 +1,10 @@
 import { useRazorpay } from "react-razorpay";
 import TrimlyLogo from "/logo.svg";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { CurrencyCode } from "react-razorpay/dist/constants/currency";
+import { LoadingSpinnerModal } from "@/components/modals/LoadingSpinnerModal";
 
 export interface RazorpayButtonProps {
   className?: string;
@@ -21,19 +22,24 @@ export interface RazorpayButtonProps {
   }) => Promise<void>;
   onFailure: ({ orderId, status }: { orderId: string; status: string }) => void;
   amount: number;
+  disabled?: boolean;
   description: string;
   prefill?: {
     name?: string;
     email?: string;
     contact?: string;
   };
+  onSuccess?: () => void;
+  buttonText?: string;
 }
 
 export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
   className,
   onCreateOrder,
+  onSuccess,
   onVerifyPayment,
   onFailure,
+  disabled,
   amount,
   description,
   prefill = {
@@ -41,15 +47,17 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
     email: "customer@example.com",
     contact: "9876543210",
   },
+  buttonText,
 }) => {
   const { Razorpay } = useRazorpay();
   const { errorToast, successToast } = useToaster();
   const isPaymentFailedRef = useRef(false);
+  const [isPending, setIsPending] = useState(false);
 
   const handlePayment = async () => {
     try {
+      setIsPending(true);
       const { orderId, currency, customData } = await onCreateOrder();
-
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount,
@@ -68,8 +76,10 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
             ...response,
             customData,
           });
-
-          successToast("Payment successful");
+          if (onSuccess) {
+            onSuccess();
+          }
+          successToast(response.message || "Payment successful");
         },
         prefill,
         theme: { color: "#feba43" },
@@ -111,12 +121,22 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
     } catch (err: any) {
       console.error("Payment Init Error", err);
       errorToast(err.response.data.message || "Unable to initiate payment");
+    } finally {
+      setIsPending(false);
     }
   };
 
+  if (isPending) {
+    return <LoadingSpinnerModal isOpen={isPending} message="Processing..." />;
+  }
+
   return (
-    <MuiButton onClick={handlePayment} className={className}>
-      Pay ₹{amount} With Razorpay
+    <MuiButton
+      onClick={handlePayment}
+      disabled={disabled || isPending}
+      className={className}
+    >
+      {buttonText ? buttonText : `Pay ₹${amount} With Razorpay`}
     </MuiButton>
   );
 };

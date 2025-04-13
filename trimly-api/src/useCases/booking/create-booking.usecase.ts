@@ -7,12 +7,15 @@ import Razorpay from "razorpay";
 import { generateUniqueId } from "../../shared/utils/unique-uuid.helper.js";
 import { CustomError } from "../../entities/utils/custom.error.js";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
+import { ITransactionRepository } from "../../entities/repositoryInterfaces/finance/transaction-repository.interface.js";
 
 @injectable()
 export class CreateBookingUseCase implements ICreateBookingUseCase {
   constructor(
     @inject("IBookingRepository")
-    private _bookingRepository: IBookingRepository
+    private _bookingRepository: IBookingRepository,
+    @inject("ITransactionRepository")
+    private _transactionRepository: ITransactionRepository
   ) {}
   async execute({
     bookedTimeSlots,
@@ -86,6 +89,7 @@ export class CreateBookingUseCase implements ICreateBookingUseCase {
     }
 
     const bookingId = generateUniqueId("booking");
+    const transactionId = generateUniqueId("transaction");
 
     const razorpay = new Razorpay({
       key_id: config.payment.RAZORPAY_KEY_ID!,
@@ -112,6 +116,16 @@ export class CreateBookingUseCase implements ICreateBookingUseCase {
       shopId,
       startTime,
       total,
+    });
+
+    await this._transactionRepository.save({
+      transactionId,
+      userId: clientId,
+      amount: total,
+      type: "debit",
+      source: "booking",
+      status: "pending",
+      referenceId: bookingId,
     });
 
     return {

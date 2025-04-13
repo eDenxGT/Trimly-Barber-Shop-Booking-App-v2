@@ -12,11 +12,10 @@ export class GetTransactionByUserUseCase
     private _transactionRepository: ITransactionRepository
   ) {}
 
-  async execute(
-    userId: string
-  ): Promise<ITransactionEntity[] | null> {
-    return this._transactionRepository.find({
-      userId,
-    });
+  async execute(userId: string): Promise<ITransactionEntity[] | null> {
+    return this._transactionRepository.findSorted(
+      { userId },
+      { sort: { createdAt: -1 } }
+    ); 
   }
 }

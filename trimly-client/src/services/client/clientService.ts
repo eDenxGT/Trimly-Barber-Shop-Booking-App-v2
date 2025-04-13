@@ -119,12 +119,6 @@ export const bookingCancel = async (
   return response.data;
 };
 
-export const getWalletPageDataForClient =
-  async (): Promise<IWalletPageResponse> => {
-    const response = await clientAxiosInstance.get("/client/wallet");
-    return response.data;
-  };
-
 export const createBooking = async (bookingPayload: IBookingPayload) => {
   const res = await clientAxiosInstance.post("/client/booking", bookingPayload);
   return {
@@ -154,6 +148,47 @@ export const handleFailureBookingPayment = async ({
   status: string;
 }) => {
   await clientAxiosInstance.put("/client/payment", {
+    orderId,
+    status,
+  });
+};
+
+export const getWalletPageDataForClient =
+  async (): Promise<IWalletPageResponse> => {
+    const response = await clientAxiosInstance.get("/client/wallet");
+    return response.data;
+  };
+
+export const clientTopUpWallet = async (amount: number) => {
+  const response = await clientAxiosInstance.post("/client/wallet", {
+    amount,
+  });
+  return {
+    orderId: response.data.orderId,
+    amount: response.data.amount,
+    currency: response.data.currency,
+    customData: { transactionId: response.data.transactionId },
+  };
+};
+export const handleVerifyClientTopUpPayment = async (res: any) => {
+  const verificationData = {
+    razorpay_order_id: res.razorpay_order_id,
+    razorpay_payment_id: res.razorpay_payment_id,
+    razorpay_signature: res.razorpay_signature,
+    transactionId: res.customData.transactionId,
+  };
+
+  await clientAxiosInstance.put("/client/wallet", verificationData);
+};
+
+export const handleFailureClientTopUpPayment = async ({
+  orderId,
+  status,
+}: {
+  orderId: string;
+  status: string;
+}) => {
+  await clientAxiosInstance.patch("/client/wallet", {
     orderId,
     status,
   });

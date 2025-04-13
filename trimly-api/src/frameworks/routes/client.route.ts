@@ -104,7 +104,33 @@ export class ClientRoutes extends BaseRoute {
         (req: Request, res: Response) => {
           walletController.getWalletPageData(req, res);
         }
-      );
+      )
+      .post(
+        verifyAuth,
+        authorizeRole(["client"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          walletController.topUpWallet(req, res);
+        }
+      )
+      // handling payment verification
+      .put(
+        verifyAuth,
+        authorizeRole(["client"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          walletController.verifyTopUpPayment(req, res);
+        }
+      )
+      // handling payment failure
+      // .patch(
+      //   verifyAuth,
+      //   authorizeRole(["client"]),
+      //   blockStatusMiddleware.checkStatus as RequestHandler,
+      //   (req: Request, res: Response) => {
+      //     walletController.handlePaymentFailure(req, res);
+      //   }
+      // );
 
     this.router.get(
       "/client/barber-shops",

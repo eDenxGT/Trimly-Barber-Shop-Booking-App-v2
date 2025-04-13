@@ -89,6 +89,14 @@ import { GetTransactionByUserUseCase } from "../../useCases/finance/transaction/
 import { IGetTransactionByUserUseCase } from "../../entities/useCaseInterfaces/finance/transaction/get-transaction-by-user-usecase.interface.js";
 import { IGetWithdrawalByUserUseCase } from "../../entities/useCaseInterfaces/finance/withdrawal/get-withdrawal-by-user-usecase.interface.js";
 import { GetWithdrawalByUserUseCase } from "../../useCases/finance/withdrawal/get-withdrawal-by-user-usecase.js";
+import { TopUpWalletUseCase } from "../../useCases/finance/wallet/topup-wallet.usecase.js";
+import { ITopUpWalletUseCase } from "../../entities/useCaseInterfaces/finance/wallet/topup-wallet-usecase.interface.js";
+import { IRazorpayService } from "../../entities/useCaseInterfaces/services/razorpay-service.interface.js";
+import { RazorpayService } from "../../useCases/services/razorpay.service.js";
+import { IVerifyTopUpPaymentUseCase } from "../../entities/useCaseInterfaces/finance/wallet/verify-topup-payment-usecase.interface.js";
+import { VerifyTopUpPaymentUseCase } from "../../useCases/finance/wallet/verify-topup-payment.usecase.js";
+import { IUpdateWalletBalanceUseCase } from "../../entities/useCaseInterfaces/finance/wallet/update-wallet-balance-usecase.interface.js";
+import { UpdateWalletBalanceUseCase } from "../../useCases/finance/wallet/update-wallet-balance.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -262,6 +270,24 @@ export class UseCaseRegistry {
       }
     );
 
+    container.register<ITopUpWalletUseCase>("ITopUpWalletUseCase", {
+      useClass: TopUpWalletUseCase,
+    });
+
+    container.register<IVerifyTopUpPaymentUseCase>(
+      "IVerifyTopUpPaymentUseCase",
+      {
+        useClass: VerifyTopUpPaymentUseCase,
+      }
+    );
+
+    container.register<IUpdateWalletBalanceUseCase>(
+      "IUpdateWalletBalanceUseCase",
+      {
+        useClass: UpdateWalletBalanceUseCase,
+      }
+    );
+
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {
       useClass: PasswordBcrypt,
@@ -286,6 +312,10 @@ export class UseCaseRegistry {
 
     container.register<ITokenService>("ITokenService", {
       useClass: JWTService,
+    });
+
+    container.register<IRazorpayService>("IRazorpayService", {
+      useClass: RazorpayService,
     });
   }
 }

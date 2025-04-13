@@ -14,7 +14,6 @@ export const transactionSchema = new Schema<ITransactionModel>(
     },
     walletId: {
       type: String,
-      required: true,
     },
     type: {
       type: String,
