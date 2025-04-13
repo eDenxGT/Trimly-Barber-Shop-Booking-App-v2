@@ -15,6 +15,9 @@ export const transactionSchema = new Schema<ITransactionModel>(
     walletId: {
       type: String,
     },
+    orderId: {
+      type: String,
+    },
     type: {
       type: String,
       enum: ["credit", "debit"],

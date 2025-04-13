@@ -53,6 +53,8 @@ export const SUCCESS_MESSAGES = {
   VERIFICATION_SUCCESS: "Verification done",
   DATA_RETRIEVED: "Data loaded",
   ACTION_SUCCESS: "Action successful",
+  WITHDRAWAL_SUCCESS:
+    "Your withdrawal request has been processed successfully.",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
   REQUEST_SUBMITTED: "Request submitted waiting for admin approval",
   APPLICATION_SUBMITTED: "Application submitted waiting for admin approval",
@@ -83,6 +85,7 @@ export const ERROR_MESSAGES = {
   NOT_ALLOWED: "You can’t do this action",
   EMAIL_EXISTS: "Email already registered",
   USERNAME_EXISTS: "Username already taken",
+  WALLET_NOT_FOUND: "Wallet not found",
   REQUEST_NOT_FOUND: "Request not found",
   SERVICE_EXISTS: "Service already exists",
   SERVICE_NOT_FOUND: "Service not found",

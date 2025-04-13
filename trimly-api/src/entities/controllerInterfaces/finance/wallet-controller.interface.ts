@@ -5,4 +5,5 @@ export interface IWalletController {
   topUpWallet(req: Request, res: Response): Promise<void>;
   verifyTopUpPayment(req: Request, res: Response): Promise<void>;
   handleTopUpPaymentFailure(req: Request, res: Response): Promise<void>;
+  withdrawFromWallet(req: Request, res: Response): Promise<void>;
 }

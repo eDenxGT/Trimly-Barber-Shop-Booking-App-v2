@@ -14,6 +14,8 @@ import { ITopUpWalletUseCase } from "../../entities/useCaseInterfaces/finance/wa
 import { generateUniqueId } from "../../shared/utils/unique-uuid.helper.js";
 import { IVerifyTopUpPaymentUseCase } from "../../entities/useCaseInterfaces/finance/wallet/verify-topup-payment-usecase.interface.js";
 import { IUpdateWalletBalanceUseCase } from "../../entities/useCaseInterfaces/finance/wallet/update-wallet-balance-usecase.interface.js";
+import { IWithdrawFromWalletUseCase } from "../../entities/controllerInterfaces/finance/withdraw-from-wallet-usecase.interface.js";
+import { IHandleTopUpPaymentFailureUseCase } from "../../entities/useCaseInterfaces/finance/wallet/handle-topup-failure-payment-usecase.interface.js";
 
 @injectable()
 export class WalletController implements IWalletController {
@@ -25,9 +27,16 @@ export class WalletController implements IWalletController {
     @inject("IVerifyTopUpPaymentUseCase")
     private _verifyTopUpPaymentUseCase: IVerifyTopUpPaymentUseCase,
     @inject("IUpdateWalletBalanceUseCase")
-    private _updateWalletBalanceUseCase: IUpdateWalletBalanceUseCase
+    private _updateWalletBalanceUseCase: IUpdateWalletBalanceUseCase,
+    @inject("IWithdrawFromWalletUseCase")
+    private _withdrawFromWalletUseCase: IWithdrawFromWalletUseCase,
+    @inject("IHandleTopUpPaymentFailureUseCase")
+    private _handleTopUpPaymentFailureUseCase: IHandleTopUpPaymentFailureUseCase
   ) {}
 
+  //* ─────────────────────────────────────────────────────────────
+  //*                🛠️  Get Datas for wallet page
+  //* ─────────────────────────────────────────────────────────────
   async getWalletPageData(req: Request, res: Response): Promise<void> {
     try {
       const { userId, role } = (req as CustomRequest).user;
@@ -55,6 +64,9 @@ export class WalletController implements IWalletController {
     }
   }
 
+  //* ─────────────────────────────────────────────────────────────
+  //*                   🛠️  TopUp Wallet
+  //* ─────────────────────────────────────────────────────────────
   async topUpWallet(req: Request, res: Response): Promise<void> {
     try {
       const { userId, role } = (req as CustomRequest).user;
@@ -90,6 +102,9 @@ export class WalletController implements IWalletController {
     }
   }
 
+  //* ─────────────────────────────────────────────────────────────
+  //*                 🛠️  Verify TopUp Payment
+  //* ─────────────────────────────────────────────────────────────
   async verifyTopUpPayment(req: Request, res: Response): Promise<void> {
     try {
       const {
@@ -131,5 +146,62 @@ export class WalletController implements IWalletController {
     }
   }
 
-  async handleTopUpPaymentFailure(req: Request, res: Response): Promise<void> {}
+  //* ─────────────────────────────────────────────────────────────
+  //*                🛠️  Handle TopUp Payment Failure
+  //* ─────────────────────────────────────────────────────────────
+  async handleTopUpPaymentFailure(req: Request, res: Response): Promise<void> {
+    try {
+      const { orderId } = req.body;
+
+      if (!orderId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      await this._handleTopUpPaymentFailureUseCase.execute(orderId, "failed");
+
+      res.status(HTTP_STATUS.ACCEPTED).json({
+        success: true,
+        message: SUCCESS_MESSAGES.PAYMENT_FAILED,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                🛠️  Withdraw From Wallet
+  //* ─────────────────────────────────────────────────────────────
+  async withdrawFromWallet(req: Request, res: Response): Promise<void> {
+    try {
+      const { userId, role } = (req as CustomRequest).user;
+      const { amount, method, ...accountDetails } = req.body;
+
+      if (!userId || !amount || !method) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      await this._withdrawFromWalletUseCase.execute(
+        userId,
+        role as "client" | "barber",
+        amount,
+        method,
+        accountDetails
+      );
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.WITHDRAWAL_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
 }

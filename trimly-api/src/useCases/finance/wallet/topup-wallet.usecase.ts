@@ -3,6 +3,7 @@ import { IWalletRepository } from "../../../entities/repositoryInterfaces/financ
 import { ITopUpWalletUseCase } from "../../../entities/useCaseInterfaces/finance/wallet/topup-wallet-usecase.interface.js";
 import { ITransactionRepository } from "../../../entities/repositoryInterfaces/finance/transaction-repository.interface.js";
 import { IRazorpayService } from "../../../entities/useCaseInterfaces/services/razorpay-service.interface.js";
+import { generateUniqueId } from "../../../shared/utils/unique-uuid.helper.js";
 
 @injectable()
 export class TopUpWalletUseCase implements ITopUpWalletUseCase {
@@ -36,6 +37,7 @@ export class TopUpWalletUseCase implements ITopUpWalletUseCase {
 
     if (!existingWallet) {
       await this._walletRepository.save({
+        walletId: generateUniqueId("wallet"),
         ownerId: userId,
         ownerType: role,
         balance: 0,
@@ -47,6 +49,7 @@ export class TopUpWalletUseCase implements ITopUpWalletUseCase {
       transactionId,
       userId,
       amount,
+      orderId: razorpayOrder.id,
       type: "credit",
       source: "topup",
       status: "pending",

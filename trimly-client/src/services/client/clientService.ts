@@ -11,6 +11,7 @@ import {
   IWalletPageResponse,
 } from "@/types/Response";
 import { IBarber, IClient, UpdatePasswordData } from "@/types/User";
+import { WithdrawRequestDTO } from "@/types/Wallet";
 
 export type IUpdateClientData = Pick<
   IClient,
@@ -192,4 +193,14 @@ export const handleFailureClientTopUpPayment = async ({
     orderId,
     status,
   });
+};
+
+export const clientWithdrawFromWallet = async (
+  payload: WithdrawRequestDTO
+): Promise<IAxiosResponse> => {
+  const response = await clientAxiosInstance.post(
+    "/client/wallet/withdraw",
+    payload
+  );
+  return response.data;
 };

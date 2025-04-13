@@ -123,15 +123,24 @@ export class ClientRoutes extends BaseRoute {
         }
       )
       // handling payment failure
-      // .patch(
-      //   verifyAuth,
-      //   authorizeRole(["client"]),
-      //   blockStatusMiddleware.checkStatus as RequestHandler,
-      //   (req: Request, res: Response) => {
-      //     walletController.handlePaymentFailure(req, res);
-      //   }
-      // );
+      .patch(
+        verifyAuth,
+        authorizeRole(["client"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          walletController.handleTopUpPaymentFailure(req, res);
+        }
+      );
 
+    this.router.post(
+      "/client/wallet/withdraw",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        walletController.withdrawFromWallet(req, res);
+      }
+    );
     this.router.get(
       "/client/barber-shops",
       verifyAuth,

@@ -1,6 +1,7 @@
 export interface ITransaction {
   transactionId: string;
   userId: string;
+  orderId: string;
   walletId: string;
   type: "credit" | "debit";
   source: "booking" | "topup" | "withdrawal" | "refund";
@@ -35,4 +36,14 @@ export interface IWithdrawal {
   remarks?: string;
   requestedAt?: Date;
   processedAt?: Date;
+}
+
+export interface WithdrawRequestDTO {
+  amount: number;
+  method: "upi" | "bank";
+  upiId?: string;
+  accountHolderName?: string;
+  accountNumber?: string;
+  ifscCode?: string;
+  bankName?: string;
 }

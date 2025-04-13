@@ -1,4 +1,3 @@
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -11,38 +10,32 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-const withdrawalSchema = Yup.object().shape({
-  amount: Yup.number()
-    .required("Amount is required")
-    .positive("Amount must be positive")
-    .integer("Amount must be a whole number"),
-  accountType: Yup.string()
-    .oneOf(["upi", "bank"])
-    .required("Account type is required"),
-  accountDetails: Yup.string().required("Account details are required"),
-});
+import { MuiTextField } from "../common/fields/MuiTextField";
+import { withdrawalSchema } from "@/utils/validations/withdrawal.validator";
 
 interface WithdrawalModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess: (amount: number, accountType: "upi" | "bank", accountDetails: string) => void;
+  onSuccess: (amount: number, method: "upi" | "bank", details: any) => void;
   balance: number;
 }
 
-export function WithdrawalModal({ 
-  isOpen, 
-  onOpenChange, 
+export function WithdrawalModal({
+  isOpen,
+  onOpenChange,
   onSuccess,
-  balance
+  balance,
 }: WithdrawalModalProps) {
   const formik = useFormik({
     initialValues: {
-      amount: 0,
-      accountType: "upi" as "upi" | "bank",
-      accountDetails: "",
+      amount: 50,
+      method: "upi" as "upi" | "bank",
+      upiId: "",
+      accountHolderName: "",
+      accountNumber: "",
+      ifscCode: "",
+      bankName: "",
     },
     validationSchema: withdrawalSchema,
     validate: (values) => {
@@ -50,21 +43,37 @@ export function WithdrawalModal({
       if (values.amount > balance) {
         errors.amount = `Amount cannot exceed your balance of ₹${balance}`;
       }
+      if (values.amount < 50) {
+        errors.amount = "Minimum withdrawal amount is ₹50";
+      }
       return errors;
     },
     onSubmit: async (values, { resetForm }) => {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      // Call the success handler
-      onSuccess(values.amount, values.accountType, values.accountDetails);
-      resetForm();
+      const details =
+        values.method === "upi"
+          ? { upiId: values.upiId }
+          : {
+              accountHolderName: values.accountHolderName,
+              accountNumber: values.accountNumber,
+              ifscCode: values.ifscCode,
+              bankName: values.bankName,
+            };
+
+      onSuccess(values.amount, values.method, details);
+      // resetForm();
     },
   });
 
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      formik.resetForm();
+    }
+    onOpenChange(open);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Withdraw Funds</DialogTitle>
           <DialogDescription>
@@ -72,34 +81,20 @@ export function WithdrawalModal({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={formik.handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="amount" className="text-right">
-              Amount
-            </Label>
-            <div className="col-span-3 flex items-center">
-              <span className="mr-2 text-lg">₹</span>
-              <div className="w-full">
-                <Input
-                  id="amount"
-                  name="amount"
-                  type="number"
-                  min={1}
-                  max={balance}
-                  value={formik.values.amount}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className={`w-full ${
-                    formik.errors.amount && formik.touched.amount
-                      ? "border-red-500"
-                      : ""
-                  }`}
-                />
-                {formik.errors.amount && formik.touched.amount && (
-                  <div className="text-sm text-red-500 mt-1">
-                    {formik.errors.amount}
-                  </div>
-                )}
-              </div>
+          <div className="flex items-center gap-4">
+            <div className="w-full">
+              <MuiTextField
+                id="amount"
+                name="amount"
+                type="number"
+                label="Amount"
+                value={formik.values.amount}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={!!formik.touched.amount && !!formik.errors.amount}
+                helperText={formik.touched.amount ? formik.errors.amount : ""}
+                placeholder={`Enter amount (₹50 or upto ₹${balance})`}
+              />
             </div>
           </div>
 
@@ -107,10 +102,8 @@ export function WithdrawalModal({
             <Label className="text-right">Method</Label>
             <div className="col-span-3">
               <RadioGroup
-                value={formik.values.accountType}
-                onValueChange={(value) =>
-                  formik.setFieldValue("accountType", value)
-                }
+                value={formik.values.method}
+                onValueChange={(value) => formik.setFieldValue("method", value)}
                 className="flex flex-col space-y-1"
               >
                 <div className="flex items-center space-x-2">
@@ -122,47 +115,36 @@ export function WithdrawalModal({
                   <Label htmlFor="bank">Bank Transfer</Label>
                 </div>
               </RadioGroup>
-              {formik.errors.accountType && formik.touched.accountType && (
+              {formik.errors.method && formik.touched.method && (
                 <div className="text-sm text-red-500 mt-1">
-                  {formik.errors.accountType}
+                  {formik.errors.method}
                 </div>
               )}
             </div>
           </div>
 
           <AnimatePresence mode="wait">
-            {formik.values.accountType === "upi" ? (
+            {formik.values.method === "upi" ? (
               <motion.div
                 key="upi"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.2 }}
-                className="grid grid-cols-4 items-center gap-4"
+                className="flex items-center gap-4"
               >
-                <Label htmlFor="accountDetails" className="text-right">
-                  UPI ID
-                </Label>
-                <div className="col-span-3">
-                  <Input
-                    id="accountDetails"
-                    name="accountDetails"
-                    placeholder="name@upi"
-                    value={formik.values.accountDetails}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={`w-full ${
-                      formik.errors.accountDetails && formik.touched.accountDetails
-                        ? "border-red-500"
-                        : ""
-                    }`}
-                  />
-                  {formik.errors.accountDetails && formik.touched.accountDetails && (
-                    <div className="text-sm text-red-500 mt-1">
-                      {formik.errors.accountDetails}
-                    </div>
-                  )}
-                </div>
+                <MuiTextField
+                  id="upiId"
+                  name="upiId"
+                  placeholder="name@upi"
+                  type="text"
+                  label="UPI ID"
+                  value={formik.values.upiId}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={!!formik.touched.upiId && !!formik.errors.upiId}
+                  helperText={formik.touched.upiId ? formik.errors.upiId : ""}
+                />
               </motion.div>
             ) : (
               <motion.div
@@ -171,31 +153,80 @@ export function WithdrawalModal({
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.2 }}
-                className="grid grid-cols-4 items-center gap-4"
+                className="space-y-4 flex flex-col items-center gap-4"
               >
-                <Label htmlFor="accountDetails" className="text-right">
-                  Account No.
-                </Label>
-                <div className="col-span-3">
-                  <Input
-                    id="accountDetails"
-                    name="accountDetails"
-                    placeholder="Enter account number"
-                    value={formik.values.accountDetails}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={`w-full ${
-                      formik.errors.accountDetails && formik.touched.accountDetails
-                        ? "border-red-500"
-                        : ""
-                    }`}
-                  />
-                  {formik.errors.accountDetails && formik.touched.accountDetails && (
-                    <div className="text-sm text-red-500 mt-1">
-                      {formik.errors.accountDetails}
-                    </div>
-                  )}
-                </div>
+                <MuiTextField
+                  id="accountHolderName"
+                  name="accountHolderName"
+                  placeholder="Enter account holder name"
+                  type="text"
+                  label="Account Holder Name"
+                  value={formik.values.accountHolderName}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    !!formik.touched.accountHolderName &&
+                    !!formik.errors.accountHolderName
+                  }
+                  helperText={
+                    formik.touched.accountHolderName
+                      ? formik.errors.accountHolderName
+                      : ""
+                  }
+                />
+
+                <MuiTextField
+                  id="accountNumber"
+                  name="accountNumber"
+                  placeholder="Enter account number"
+                  type="number"
+                  label="Account Number"
+                  value={formik.values.accountNumber}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    !!formik.touched.accountNumber &&
+                    !!formik.errors.accountNumber
+                  }
+                  helperText={
+                    formik.touched.accountNumber
+                      ? formik.errors.accountNumber
+                      : ""
+                  }
+                />
+
+                <MuiTextField
+                  id="ifscCode"
+                  name="ifscCode"
+                  placeholder="Enter IFSC code"
+                  type="text"
+                  label="IFSC Code"
+                  value={formik.values.ifscCode}
+                  onChange={(e) => {
+                    const value = e.target.value.toUpperCase();
+                    formik.setFieldValue("ifscCode", value);
+                  }}
+                  onBlur={formik.handleBlur}
+                  error={!!formik.touched.ifscCode && !!formik.errors.ifscCode}
+                  helperText={
+                    formik.touched.ifscCode ? formik.errors.ifscCode : ""
+                  }
+                />
+
+                <MuiTextField
+                  id="bankName"
+                  name="bankName"
+                  placeholder="Enter bank name"
+                  type="text"
+                  label="Bank Name"
+                  value={formik.values.bankName}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={!!formik.touched.bankName && !!formik.errors.bankName}
+                  helperText={
+                    formik.touched.bankName ? formik.errors.bankName : ""
+                  }
+                />
               </motion.div>
             )}
           </AnimatePresence>
@@ -204,14 +235,19 @@ export function WithdrawalModal({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={() => handleOpenChange(false)}
               disabled={formik.isSubmitting}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={formik.isSubmitting}
+              disabled={
+                formik.isSubmitting ||
+                !formik.isValid ||
+                formik.values.amount <= 0 ||
+                formik.values.amount > balance
+              }
               className="bg-[var(--darkblue)] hover:bg-[var(--darkblue-hover)]"
             >
               {formik.isSubmitting ? "Processing..." : "Withdraw"}

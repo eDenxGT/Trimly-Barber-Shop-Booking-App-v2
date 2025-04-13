@@ -4,6 +4,7 @@ import { IWalletRepository } from "../../../entities/repositoryInterfaces/financ
 import { ITransactionRepository } from "../../../entities/repositoryInterfaces/finance/transaction-repository.interface.js";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants.js";
 import { CustomError } from "../../../entities/utils/custom.error.js";
+import { generateUniqueId } from "../../../shared/utils/unique-uuid.helper.js";
 
 @injectable()
 export class UpdateWalletBalanceUseCase implements IUpdateWalletBalanceUseCase {
@@ -45,6 +46,7 @@ export class UpdateWalletBalanceUseCase implements IUpdateWalletBalanceUseCase {
 
     if (!wallet) {
       wallet = await this._walletRepository.save({
+        walletId: generateUniqueId("wallet"),
         ownerId: userId,
         ownerType: role,
         balance: 0,
@@ -53,6 +55,7 @@ export class UpdateWalletBalanceUseCase implements IUpdateWalletBalanceUseCase {
     }
 
     wallet.balance += transaction.amount;
+    
     await this._walletRepository.update(
       { ownerId: userId },
       { balance: wallet.balance }

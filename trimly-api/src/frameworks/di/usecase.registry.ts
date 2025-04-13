@@ -97,6 +97,10 @@ import { IVerifyTopUpPaymentUseCase } from "../../entities/useCaseInterfaces/fin
 import { VerifyTopUpPaymentUseCase } from "../../useCases/finance/wallet/verify-topup-payment.usecase.js";
 import { IUpdateWalletBalanceUseCase } from "../../entities/useCaseInterfaces/finance/wallet/update-wallet-balance-usecase.interface.js";
 import { UpdateWalletBalanceUseCase } from "../../useCases/finance/wallet/update-wallet-balance.usecase.js";
+import { IWithdrawFromWalletUseCase } from "../../entities/controllerInterfaces/finance/withdraw-from-wallet-usecase.interface.js";
+import { WithdrawFromWalletUseCase } from "../../useCases/finance/withdrawal/withdraw-from-wallet.usecase.js";
+import { IHandleTopUpPaymentFailureUseCase } from "../../entities/useCaseInterfaces/finance/wallet/handle-topup-failure-payment-usecase.interface.js";
+import { HandleTopUpPaymentFailureUseCase } from "../../useCases/finance/wallet/handle-topup-failure-payment.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -285,6 +289,20 @@ export class UseCaseRegistry {
       "IUpdateWalletBalanceUseCase",
       {
         useClass: UpdateWalletBalanceUseCase,
+      }
+    );
+
+    container.register<IWithdrawFromWalletUseCase>(
+      "IWithdrawFromWalletUseCase",
+      {
+        useClass: WithdrawFromWalletUseCase,
+      }
+    );
+
+    container.register<IHandleTopUpPaymentFailureUseCase>(
+      "IHandleTopUpPaymentFailureUseCase",
+      {
+        useClass: HandleTopUpPaymentFailureUseCase,
       }
     );
 
