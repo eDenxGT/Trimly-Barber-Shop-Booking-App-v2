@@ -1,6 +1,7 @@
 import { clientAxiosInstance } from "@/api/client.axios";
 import { ForType } from "@/hooks/barber/useAllBarberShops";
 import { FetchNearestShopsParams } from "@/hooks/client/useNearestBarberShops";
+import { IBookingPayload } from "@/types/Booking";
 import {
   IAuthResponse,
   IAxiosResponse,
@@ -123,3 +124,37 @@ export const getWalletPageDataForClient =
     const response = await clientAxiosInstance.get("/client/wallet");
     return response.data;
   };
+
+export const createBooking = async (bookingPayload: IBookingPayload) => {
+  const res = await clientAxiosInstance.post("/client/booking", bookingPayload);
+  return {
+    orderId: res.data.id,
+    amount: res.data.amount,
+    currency: res.data.currency,
+    customData: { bookingId: res.data.bookingId },
+  };
+};
+
+export const verifyPayment = async (res: any) => {
+  const verificationData = {
+    razorpay_order_id: res.razorpay_order_id,
+    razorpay_payment_id: res.razorpay_payment_id,
+    razorpay_signature: res.razorpay_signature,
+    bookingId: res.customData.bookingId,
+  };
+
+  await clientAxiosInstance.post("/client/payment", verificationData);
+};
+
+export const handleFailureBookingPayment = async ({
+  orderId,
+  status,
+}: {
+  orderId: string;
+  status: string;
+}) => {
+  await clientAxiosInstance.put("/client/payment", {
+    orderId,
+    status,
+  });
+};

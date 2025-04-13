@@ -10,111 +10,115 @@ import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
 
 @injectable()
 export class CreateBookingUseCase implements ICreateBookingUseCase {
-	constructor(
-		@inject("IBookingRepository")
-		private _bookingRepository: IBookingRepository
-	) {}
-	async execute({
-		bookedTimeSlots,
-		clientId,
-		date,
-		duration,
-		services,
-		shopId,
-		startTime,
-		total,
-	}: {
-		bookedTimeSlots: string[];
-		clientId: string;
-		date: string;
-		duration: number;
-		services: string[];
-		shopId: string;
-		startTime: string;
-		total: number;
-	}): Promise<{
-		id: string;
-		amount: number;
-		currency: string;
-		bookingId: string;
-	}> {
-		const bookingDateObj = parseISO(date);
+  constructor(
+    @inject("IBookingRepository")
+    private _bookingRepository: IBookingRepository
+  ) {}
+  async execute({
+    bookedTimeSlots,
+    clientId,
+    date,
+    duration,
+    services,
+    shopId,
+    startTime,
+    total,
+  }: {
+    bookedTimeSlots: string[];
+    clientId: string;
+    date: string;
+    duration: number;
+    services: string[];
+    shopId: string;
+    startTime: string;
+    total: number;
+  }): Promise<{
+    id: string;
+    amount: number;
+    currency: string;
+    bookingId: string;
+  }> {
+    const bookingDateObj = parseISO(date);
 
-		const [time, modifier] = startTime.split(" ");
-		let [hours, minutes] = time.split(":").map(Number);
+    const [time, modifier] = startTime.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
 
-		if (modifier.toLowerCase() === "pm" && hours < 12) hours += 12;
-		if (modifier.toLowerCase() === "am" && hours === 12) hours = 0;
-		const bookingDateTime = setMinutes(
-			setHours(bookingDateObj, hours),
-			minutes
-		);
-		if (bookingDateTime.getTime() <= Date.now()) {
-			throw new CustomError(
-				ERROR_MESSAGES.YOU_CAN_ONLY_BOOK_FOR_FUTURE,
-				HTTP_STATUS.BAD_REQUEST
-			);
-		}
+    if (modifier.toLowerCase() === "pm" && hours < 12) hours += 12;
+    if (modifier.toLowerCase() === "am" && hours === 12) hours = 0;
+    const bookingDateTime = setMinutes(
+      setHours(bookingDateObj, hours),
+      minutes
+    );
+    if (bookingDateTime.getTime() <= Date.now()) {
+      throw new CustomError(
+        ERROR_MESSAGES.YOU_CAN_ONLY_BOOK_FOR_FUTURE,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
 
-		const existingBooking = await this._bookingRepository.findOne({
-			shopId,
-			date,
-			bookedTimeSlots: { $in: bookedTimeSlots },
-			status: "confirmed",
-		});
-		if (existingBooking) {
-			throw new CustomError(
-				ERROR_MESSAGES.BOOKING_EXISTS,
-				HTTP_STATUS.CONFLICT
-			);
-		}
+    const existingBooking = await this._bookingRepository.findOne({
+      shopId,
+      date,
+      bookedTimeSlots: { $in: bookedTimeSlots },
+      status: "confirmed",
+    });
+    if (existingBooking) {
+      throw new CustomError(
+        ERROR_MESSAGES.BOOKING_EXISTS,
+        HTTP_STATUS.CONFLICT
+      );
+    }
 
-		const cancelledBookings = await this._bookingRepository.find({
-			clientId,
-			status: "cancelled",
-		});
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
-		if (cancelledBookings.length > 5) {
-			throw new CustomError(
-				ERROR_MESSAGES.MORE_THAN_5_CANCELLED_BOOKING,
-				HTTP_STATUS.BAD_REQUEST
-			);
-		}
+    const cancelledBookings = await this._bookingRepository.find({
+      clientId,
+      status: "cancelled",
+      createdAt: { $gte: twoDaysAgo },
+    });
 
-		const bookingId = generateUniqueId("booking");
+    if (cancelledBookings.length > 5) {
+      throw new CustomError(
+        ERROR_MESSAGES.MORE_THAN_5_CANCELLED_BOOKING,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
 
-		const razorpay = new Razorpay({
-			key_id: config.payment.RAZORPAY_KEY_ID!,
-			key_secret: config.payment.RAZORPAY_SECRET!,
-		});
+    const bookingId = generateUniqueId("booking");
 
-		const order = await razorpay.orders.create({
-			amount: total * 100,
-			currency: "INR",
-			receipt: `receipt_${bookingId?.slice(0, 20)}`,
-			notes: {
-				bookingId: bookingId as string,
-			},
-		});
+    const razorpay = new Razorpay({
+      key_id: config.payment.RAZORPAY_KEY_ID!,
+      key_secret: config.payment.RAZORPAY_SECRET!,
+    });
 
-		await this._bookingRepository.save({
-			bookedTimeSlots,
-			bookingId,
-			clientId,
-			orderId: order.id,
-			date: bookingDateTime,
-			duration,
-			services,
-			shopId,
-			startTime,
-			total,
-		});
+    const order = await razorpay.orders.create({
+      amount: total * 100,
+      currency: "INR",
+      receipt: `receipt_${bookingId?.slice(0, 20)}`,
+      notes: {
+        bookingId: bookingId as string,
+      },
+    });
 
-		return {
-			id: order.id,
-			amount: order.amount as number,
-			currency: order.currency,
-			bookingId,
-		};
-	}
+    await this._bookingRepository.save({
+      bookedTimeSlots,
+      bookingId,
+      clientId,
+      orderId: order.id,
+      date: bookingDateTime,
+      duration,
+      services,
+      shopId,
+      startTime,
+      total,
+    });
+
+    return {
+      id: order.id,
+      amount: order.amount as number,
+      currency: order.currency,
+      bookingId,
+    };
+  }
 }

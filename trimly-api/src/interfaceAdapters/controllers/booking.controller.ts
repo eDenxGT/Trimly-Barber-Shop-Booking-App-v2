@@ -14,164 +14,163 @@ import { ICompleteBookingUseCase } from "../../entities/useCaseInterfaces/bookin
 
 @injectable()
 export class BookingController implements IBookingController {
-	constructor(
-		@inject("IGetAllBookingsByShopIdUseCase")
-		private _getAllBookingsByIdUseCase: IGetAllBookingsByShopIdUseCase,
-		@inject("ICreateBookingUseCase")
-		private _createBookingUseCase: ICreateBookingUseCase,
-		@inject("IVerifyPaymentUseCase")
-		private _verifyPaymentUseCase: IVerifyPaymentUseCase,
-		@inject("IHandleFailurePaymentUseCase")
-		private _handleFailurePaymentUseCase: IHandleFailurePaymentUseCase,
-		@inject("IGetAllBookingsByUserUseCase")
-		private _getAllBookingsByUserUseCase: IGetAllBookingsByUserUseCase,
-		@inject("ICancelBookingUseCase")
-		private _cancelBookingUseCase: ICancelBookingUseCase,
-		@inject("ICompleteBookingUseCase")
-		private _completeBookingUseCase: ICompleteBookingUseCase
-	) {}
+  constructor(
+    @inject("IGetAllBookingsByShopIdUseCase")
+    private _getAllBookingsByIdUseCase: IGetAllBookingsByShopIdUseCase,
+    @inject("ICreateBookingUseCase")
+    private _createBookingUseCase: ICreateBookingUseCase,
+    @inject("IVerifyPaymentUseCase")
+    private _verifyPaymentUseCase: IVerifyPaymentUseCase,
+    @inject("IHandleFailurePaymentUseCase")
+    private _handleFailurePaymentUseCase: IHandleFailurePaymentUseCase,
+    @inject("IGetAllBookingsByUserUseCase")
+    private _getAllBookingsByUserUseCase: IGetAllBookingsByUserUseCase,
+    @inject("ICancelBookingUseCase")
+    private _cancelBookingUseCase: ICancelBookingUseCase,
+    @inject("ICompleteBookingUseCase")
+    private _completeBookingUseCase: ICompleteBookingUseCase
+  ) {}
 
-	//* ─────────────────────────────────────────────────────────────
-	//*               🛠️ Get All Bookings By ShopId
-	//* ─────────────────────────────────────────────────────────────
-	async getAllBookings(req: Request, res: Response): Promise<void> {
-		try {
-			const { shopId, type } = req.query;
-			const { role, userId } = (req as CustomRequest).user;
+  //* ─────────────────────────────────────────────────────────────
+  //*               🛠️ Get All Bookings By ShopId
+  //* ─────────────────────────────────────────────────────────────
+  async getAllBookings(req: Request, res: Response): Promise<void> {
+    try {
+      const { shopId, type } = req.query;
+      const { role, userId } = (req as CustomRequest).user;
 
-			if ((type && type === "client") || type === "barber") {
-				const bookings =
-					await this._getAllBookingsByUserUseCase.execute(
-						userId,
-						role
-					);
-				// console.log(bookings);
-				res.status(HTTP_STATUS.OK).json({ success: true, bookings });
-				return;
-			}
+      if ((type && type === "client") || type === "barber") {
+        const bookings = await this._getAllBookingsByUserUseCase.execute(
+          userId,
+          role
+        );
+        // console.log(bookings);
+        res.status(HTTP_STATUS.OK).json({ success: true, bookings });
+        return;
+      }
 
-			const bookings = await this._getAllBookingsByIdUseCase.execute(
-				String(shopId),
-				role
-			);
-			res.status(HTTP_STATUS.OK).json({ success: true, bookings });
-		} catch (error) {
-			handleErrorResponse(req, res, error);
-		}
-	}
+      const bookings = await this._getAllBookingsByIdUseCase.execute(
+        String(shopId),
+        role
+      );
+      res.status(HTTP_STATUS.OK).json({ success: true, bookings });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
 
-	//* ─────────────────────────────────────────────────────────────
-	//*                    🛠️ Create Booking
-	//* ─────────────────────────────────────────────────────────────
-	async createBooking(req: Request, res: Response): Promise<void> {
-		try {
-			const {
-				bookedTimeSlots,
-				clientId,
-				date,
-				duration,
-				services,
-				shopId,
-				startTime,
-				total,
-			} = req.body;
+  //* ─────────────────────────────────────────────────────────────
+  //*                    🛠️ Create Booking
+  //* ─────────────────────────────────────────────────────────────
+  async createBooking(req: Request, res: Response): Promise<void> {
+    try {
+      const {
+        bookedTimeSlots,
+        clientId,
+        date,
+        duration,
+        services,
+        shopId,
+        startTime,
+        total,
+      } = req.body;
 
-			const bookingData = await this._createBookingUseCase.execute({
-				bookedTimeSlots,
-				clientId,
-				date,
-				duration,
-				services,
-				shopId,
-				startTime,
-				total,
-			});
+      const bookingData = await this._createBookingUseCase.execute({
+        bookedTimeSlots,
+        clientId,
+        date,
+        duration,
+        services,
+        shopId,
+        startTime,
+        total,
+      });
 
-			res.status(HTTP_STATUS.OK).json(bookingData);
-		} catch (error) {
-			handleErrorResponse(req, res, error);
-		}
-	}
+      res.status(HTTP_STATUS.OK).json(bookingData);
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
 
-	//* ─────────────────────────────────────────────────────────────
-	//*                    🛠️ Verify Payment
-	//* ─────────────────────────────────────────────────────────────
-	async verifyPayment(req: Request, res: Response): Promise<void> {
-		try {
-			const {
-				razorpay_order_id,
-				razorpay_payment_id,
-				razorpay_signature,
-				bookingId,
-			} = req.body;
+  //* ─────────────────────────────────────────────────────────────
+  //*                    🛠️ Verify Payment
+  //* ─────────────────────────────────────────────────────────────
+  async verifyPayment(req: Request, res: Response): Promise<void> {
+    try {
+      const {
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+        bookingId,
+      } = req.body;
 
-			await this._verifyPaymentUseCase.execute(
-				razorpay_order_id,
-				razorpay_payment_id,
-				razorpay_signature,
-				bookingId
-			);
+      await this._verifyPaymentUseCase.execute(
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+        bookingId
+      );
 
-			res.status(HTTP_STATUS.ACCEPTED).json({
-				success: true,
-				message: SUCCESS_MESSAGES.PAYMENT_SUCCESS,
-			});
-		} catch (error) {
-			handleErrorResponse(req, res, error);
-		}
-	}
+      res.status(HTTP_STATUS.ACCEPTED).json({
+        success: true,
+        message: SUCCESS_MESSAGES.PAYMENT_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
 
-	//* ─────────────────────────────────────────────────────────────
-	//*                 🛠️  Handle Payment Failure
-	//* ─────────────────────────────────────────────────────────────
-	async handlePaymentFailure(req: Request, res: Response): Promise<void> {
-		try {
-			const { orderId, status } = req.body;
+  //* ─────────────────────────────────────────────────────────────
+  //*                 🛠️  Handle Payment Failure
+  //* ─────────────────────────────────────────────────────────────
+  async handlePaymentFailure(req: Request, res: Response): Promise<void> {
+    try {
+      const { orderId, status } = req.body;
 
-			await this._handleFailurePaymentUseCase.execute(orderId, status);
+      await this._handleFailurePaymentUseCase.execute(orderId, status);
 
-			res.status(HTTP_STATUS.OK).json({
-				success: true,
-				message: SUCCESS_MESSAGES.PAYMENT_FAILED,
-			});
-		} catch (error) {
-			handleErrorResponse(req, res, error);
-		}
-	}
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.PAYMENT_FAILED,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
 
-	//* ─────────────────────────────────────────────────────────────
-	//*                 🛠️  Handle Payment Failure
-	//* ─────────────────────────────────────────────────────────────
-	async cancelBooking(req: Request, res: Response): Promise<void> {
-		try {
-			const { bookingId } = req.body;
+  //* ─────────────────────────────────────────────────────────────
+  //*                 🛠️  Handle Payment Failure
+  //* ─────────────────────────────────────────────────────────────
+  async cancelBooking(req: Request, res: Response): Promise<void> {
+    try {
+      const { bookingId } = req.body;
 
-			await this._cancelBookingUseCase.execute(String(bookingId));
+      await this._cancelBookingUseCase.execute(String(bookingId));
 
-			res.status(HTTP_STATUS.OK).json({
-				success: true,
-				message: SUCCESS_MESSAGES.CANCELLATION_SUCCESS,
-			});
-		} catch (error) {
-			handleErrorResponse(req, res, error);
-		}
-	}
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.CANCELLATION_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
 
-	//* ─────────────────────────────────────────────────────────────
-	//*                 🛠️  Handle Payment Failure
-	//* ─────────────────────────────────────────────────────────────
-	async updateBookingComplete(req: Request, res: Response): Promise<void> {
-		try {
-			const { bookingId } = req.body;
+  //* ─────────────────────────────────────────────────────────────
+  //*                 🛠️  Handle Payment Failure
+  //* ─────────────────────────────────────────────────────────────
+  async updateBookingComplete(req: Request, res: Response): Promise<void> {
+    try {
+      const { bookingId } = req.body;
 
-			await this._completeBookingUseCase.execute(String(bookingId));
+      await this._completeBookingUseCase.execute(String(bookingId));
 
-			res.status(HTTP_STATUS.OK).json({
-				success: true,
-				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
-			});
-		} catch (error) {
-			handleErrorResponse(req, res, error);
-		}
-	}
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
 }

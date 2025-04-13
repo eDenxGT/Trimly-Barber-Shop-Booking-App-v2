@@ -113,7 +113,7 @@ export const ERROR_MESSAGES = {
 	REFUND_FAILED: "Refund process failed",
 	PAYMENT_ERROR: "Payment could not be processed",
 	BOOKING_EXISTS: "Booking already exists. Refresh your page.",
-	MORE_THAN_5_CANCELLED_BOOKING: "You're having more than 5 cancelled bookings.",
+	MORE_THAN_5_CANCELLED_BOOKING: "You're having more than 5 cancelled bookings in the last 2 days.",
 	BOOKING_NOT_FOUND: "Booking not found.",
 	BOOKING_CANNOT_COMPLETE_BEFORE_TIME_ENDS:
 		"Booking cannot be marked as completed before it ends.",

@@ -90,20 +90,16 @@ export default function WalletDashboard({
       ? transactions
       : transactions.filter((t) => t.source === filter);
 
-  // Top-up form using useFormik
   const topUpFormik = useFormik({
     initialValues: {
       amount: 0,
     },
     validationSchema: topUpSchema,
     onSubmit: async (values, { resetForm }) => {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Update balance
       setBalance((prev) => prev + values.amount);
 
-      // Add transaction
       const newTransaction: ITransaction = {
         transactionId: `tx-${Date.now()}`,
         createdAt: new Date(),
