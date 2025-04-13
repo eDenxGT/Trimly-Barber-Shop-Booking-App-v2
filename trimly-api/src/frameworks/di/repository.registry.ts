@@ -24,6 +24,8 @@ import { ITransactionRepository } from "../../entities/repositoryInterfaces/fina
 import { TransactionRepository } from "../../interfaceAdapters/repositories/finance/transaction.repository.js";
 import { IWithdrawalRepository } from "../../entities/repositoryInterfaces/finance/withdrawal-repository.interface.js";
 import { WithdrawalRepository } from "../../interfaceAdapters/repositories/finance/withdrawal.repository.js";
+import { IReviewRepository } from "../../entities/repositoryInterfaces/review/review-repository.interface.js";
+import { ReviewRepository } from "../../interfaceAdapters/repositories/review/review.repository.js";
 
 export class RepositoryRegistry {
   static registerRepositories(): void {
@@ -70,6 +72,10 @@ export class RepositoryRegistry {
 
     container.register<IWithdrawalRepository>("IWithdrawalRepository", {
       useClass: WithdrawalRepository,
+    });
+
+    container.register<IReviewRepository>("IReviewRepository", {
+      useClass: ReviewRepository,
     });
   }
 }
