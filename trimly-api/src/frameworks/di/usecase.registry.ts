@@ -101,6 +101,8 @@ import { IWithdrawFromWalletUseCase } from "../../entities/controllerInterfaces/
 import { WithdrawFromWalletUseCase } from "../../useCases/finance/withdrawal/withdraw-from-wallet.usecase.js";
 import { IHandleTopUpPaymentFailureUseCase } from "../../entities/useCaseInterfaces/finance/wallet/handle-topup-failure-payment-usecase.interface.js";
 import { HandleTopUpPaymentFailureUseCase } from "../../useCases/finance/wallet/handle-topup-failure-payment.usecase.js";
+import { IAddShopReviewUseCase } from "../../entities/useCaseInterfaces/review/add-shop-review-usecase.interface.js";
+import { AddShopReviewUseCase } from "../../useCases/review/add-shop-review.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -305,6 +307,10 @@ export class UseCaseRegistry {
         useClass: HandleTopUpPaymentFailureUseCase,
       }
     );
+
+    container.register<IAddShopReviewUseCase>("IAddShopReviewUseCase", {
+      useClass: AddShopReviewUseCase,
+    });
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

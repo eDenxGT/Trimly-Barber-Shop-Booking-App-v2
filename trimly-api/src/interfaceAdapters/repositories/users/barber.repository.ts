@@ -88,6 +88,31 @@ export class BarberRepository
       pipeline.push({ $match: amenitiesFilter });
     }
 
+    pipeline.push(
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "userId",
+          foreignField: "shopId",
+          as: "reviews",
+        },
+      },
+      {
+        $addFields: {
+          averageRating: {
+            $cond: {
+              if: { $gt: [{ $size: "$reviews" }, 0] },
+              then: { $avg: "$reviews.rating" },
+              else: null,
+            },
+          },
+        },
+      },
+      {
+        $unset: "reviews",
+      }
+    );
+
     if (sortBy) {
       pipeline.push({
         $sort: {
@@ -136,7 +161,51 @@ export class BarberRepository
           as: "services",
         },
       },
+
+      {
+        $lookup: {
+          from: "reviews",
+          let: { shopUserId: "$userId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$shopId", "$$shopUserId"],
+                },
+              },
+            },
+            {
+              $lookup: {
+                from: "clients",
+                localField: "reviewerId",
+                foreignField: "userId",
+                as: "reviewer",
+              },
+            },
+            { $unwind: "$reviewer" },
+            {
+              $project: {
+                rating: 1,
+                reviewText: 1,
+                createdAt: 1,
+                reviewerId: 1,
+                "reviewer.fullName": 1,
+                "reviewer.avatar": 1,
+              },
+            },
+          ],
+          as: "reviews",
+        },
+      },
+
+      {
+        $addFields: {
+          averageRating: { $avg: "$reviews.rating" },
+          totalReviewCount: { $size: "$reviews" },
+        },
+      },
     ];
+
     if (filter.status === "active") {
       pipeline.push({
         $lookup: {

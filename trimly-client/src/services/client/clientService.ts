@@ -10,6 +10,7 @@ import {
   IClientResponse,
   IWalletPageResponse,
 } from "@/types/Response";
+import { ReviewDTO } from "@/types/Review";
 import { IBarber, IClient, UpdatePasswordData } from "@/types/User";
 import { WithdrawRequestDTO } from "@/types/Wallet";
 
@@ -202,5 +203,10 @@ export const clientWithdrawFromWallet = async (
     "/client/wallet/withdraw",
     payload
   );
+  return response.data;
+};
+
+export const postReviewOnBarber = async (payload: ReviewDTO) => {
+  const response = await clientAxiosInstance.post("/client/review", payload);
   return response.data;
 };

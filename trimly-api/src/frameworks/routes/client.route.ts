@@ -14,6 +14,7 @@ import {
   authController,
   blockStatusMiddleware,
   bookingController,
+  reviewController,
   shopController,
   userController,
   walletController,
@@ -148,6 +149,15 @@ export class ClientRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         shopController.getAllNearestShopsForClient(req, res);
+      }
+    );
+    this.router.post(
+      "/client/review",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        reviewController.addReview(req, res);
       }
     );
 
