@@ -12,70 +12,64 @@ import { BarberOpeningHoursPage } from "@/pages/barber/settings/BarberOpeningHou
 import { BarberSettingsPage } from "@/pages/barber/settings/BarberSettingsPage";
 import { BarberDashBoardPage } from "@/pages/barber/BarberDashboardPage";
 import { BarberBookingsPage } from "@/pages/barber/booking/BarberBookingsPage";
+import { BarberWalletPage } from "@/pages/barber/wallet/BarberWalletPage";
 
 export const BarberRoutes = () => {
-	return (
-		<Routes>
-			<Route index element={<NoAuthRoute element={<BarberAuth />} />} />
-			<Route
-				path="/"
-				element={
-					<ProtectedRoute
-						allowedRoles={["barber"]}
-						element={<BarberLayout />}
-					/>
-				}>
-				<Route path="dashboard" element={<BarberDashBoardPage />} />
+  return (
+    <Routes>
+      <Route index element={<NoAuthRoute element={<BarberAuth />} />} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute
+            allowedRoles={["barber"]}
+            element={<BarberLayout />}
+          />
+        }
+      >
+        <Route path="dashboard" element={<BarberDashBoardPage />} />
 
-				<Route path="bookings" element={<BarberBookingsPage />} />
-				<Route path="settings" element={<BarberSettingsPage />} />
-				<Route
-					path="settings/services"
-					element={<BarberServiceManagementPage />}
-				/>
-				<Route
-					path="settings/opening-hours"
-					element={<BarberOpeningHoursPage />}
-				/>
-				<Route
-					path="settings/change-password"
-					element={<BarberChangePasswordPage />}
-				/>
-				<Route
-					path="settings/profile"
-					element={<BarberProfileEditPage />}
-				/>
-				{/* 
+        <Route path="bookings" element={<BarberBookingsPage />} />
+        <Route path="settings" element={<BarberSettingsPage />} />
+        <Route
+          path="settings/services"
+          element={<BarberServiceManagementPage />}
+        />
+        <Route
+          path="settings/opening-hours"
+          element={<BarberOpeningHoursPage />}
+        />
+        <Route
+          path="settings/change-password"
+          element={<BarberChangePasswordPage />}
+        />
+        <Route path="settings/profile" element={<BarberProfileEditPage />} />
+        <Route path="wallet" element={<BarberWalletPage />} />
+
+        {/* 
 				<Route path="shop/:shopId" element={<BarberShopDetails role="barber" />} />
 				<Route path="shop/:shopId/edit" element={<BarberShopEditPage />} />
 				<Route path="shop/create" element={<BarberShopRegister />} /> 
 				*/}
-			</Route>
+      </Route>
 
-			{/*//? Forgot and reset pages */}
-			<Route
-				path="/forgot-password"
-				element={
-					<NoAuthRoute
-						element={
-							<ForgotPassword
-								role="barber"
-								signInPath="/barber"
-							/>
-						}
-					/>
-				}
-			/>
-			<Route
-				path="/reset-password/:token"
-				element={
-					<NoAuthRoute
-						element={
-							<ResetPassword role="barber" signInPath="/barber" />
-						}
-					/>
-				}
-			/>
-		</Routes>
-	);
+      {/*//? Forgot and reset pages */}
+      <Route
+        path="/forgot-password"
+        element={
+          <NoAuthRoute
+            element={<ForgotPassword role="barber" signInPath="/barber" />}
+          />
+        }
+      />
+      <Route
+        path="/reset-password/:token"
+        element={
+          <NoAuthRoute
+            element={<ResetPassword role="barber" signInPath="/barber" />}
+          />
+        }
+      />
+    </Routes>
+  );
 };
