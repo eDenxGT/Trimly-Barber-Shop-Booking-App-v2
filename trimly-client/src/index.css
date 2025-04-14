@@ -147,3 +147,15 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+.btn-outline {
+	border: 2px solid var(--darkblue);
+	color: var(--darkblue);
+	background-color: transparent;
+	transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .btn-outline:hover {
+	background-color: var(--darkblue);
+	color: white;
+  }

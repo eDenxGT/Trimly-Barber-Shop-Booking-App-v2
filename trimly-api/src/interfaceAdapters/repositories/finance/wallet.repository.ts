@@ -1,4 +1,4 @@
-import { IWalletEntity } from "../../../entities/models/wallet.entity.js";
+import { injectable } from "tsyringe";
 import { IWalletRepository } from "../../../entities/repositoryInterfaces/finance/wallet-repository.interface.js";
 import {
   IWalletModel,
@@ -6,6 +6,7 @@ import {
 } from "../../../frameworks/database/mongoDb/models/wallet.model.js";
 import { BaseRepository } from "../base.repository.js";
 
+@injectable()
 export class WalletRepository
   extends BaseRepository<IWalletModel>
   implements IWalletRepository

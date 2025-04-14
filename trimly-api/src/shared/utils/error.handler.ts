@@ -36,6 +36,7 @@ export const handleErrorResponse = (
 			message: error.message,
 		});
 	}
+	
 	if (error instanceof Error) {
 		console.error(chalk.bgRedBright(error.name), ": ", error);
 	} else {
