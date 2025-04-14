@@ -16,6 +16,7 @@ import {
   authController,
   blockStatusMiddleware,
   bookingController,
+  feedController,
   serviceController,
   userController,
   walletController,
@@ -51,7 +52,7 @@ export class BarberRoutes extends BaseRoute {
     );
 
     //* ─────────────────────────────────────────────────────────────
-    //*                   🛠️ Booking Endpoints
+    //*                    🛠️ Booking Endpoints
     //* ─────────────────────────────────────────────────────────────
     this.router
       .route("/barber/booking")
@@ -69,6 +70,28 @@ export class BarberRoutes extends BaseRoute {
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
           bookingController.updateBookingComplete(req, res);
+        }
+      );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                     🛠️ Post Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router
+      .route("/barber/posts")
+      // .get(
+      //   verifyAuth,
+      //   authorizeRole(["barber"]),
+      //   blockStatusMiddleware.checkStatus as RequestHandler,
+      //   (req: Request, res: Response) => {
+      //     postController.getAllPosts(req, res);
+      //   }
+      // )
+      .post(
+        verifyAuth,
+        authorizeRole(["barber"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          feedController.addPost(req, res);
         }
       );
 

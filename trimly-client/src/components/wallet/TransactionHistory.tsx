@@ -19,7 +19,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import type { ITransaction } from "@/types/Wallet";
-import { formatDateTime } from "./../../../utils/helpers/timeFormatter";
+import { formatDateTime } from "../../utils/helpers/timeFormatter";
 
 export type TransactionType = "credit" | "debit";
 export type TransactionSource = "booking" | "topup" | "withdrawal" | "refund";

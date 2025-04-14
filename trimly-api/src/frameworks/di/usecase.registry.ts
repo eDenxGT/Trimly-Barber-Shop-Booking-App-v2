@@ -103,6 +103,8 @@ import { IHandleTopUpPaymentFailureUseCase } from "../../entities/useCaseInterfa
 import { HandleTopUpPaymentFailureUseCase } from "../../useCases/finance/wallet/handle-topup-failure-payment.usecase.js";
 import { IAddShopReviewUseCase } from "../../entities/useCaseInterfaces/review/add-shop-review-usecase.interface.js";
 import { AddShopReviewUseCase } from "../../useCases/review/add-shop-review.usecase.js";
+import { IAddPostUseCase } from "../../entities/useCaseInterfaces/feed/add-post-usecase.interface.js";
+import { AddPostUseCase } from "../../useCases/feed/add-post.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -310,6 +312,10 @@ export class UseCaseRegistry {
 
     container.register<IAddShopReviewUseCase>("IAddShopReviewUseCase", {
       useClass: AddShopReviewUseCase,
+    });
+
+    container.register<IAddPostUseCase>("IAddPostUseCase", {
+      useClass: AddPostUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//

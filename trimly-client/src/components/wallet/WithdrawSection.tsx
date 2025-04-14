@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { UserRoles } from "@/types/UserRoles";
-import MuiButton from "../buttons/MuiButton";
+import MuiButton from "../common/buttons/MuiButton";
 import { ArrowDownToLine, PlusCircle } from "lucide-react";
 
 export const WithdrawSection = ({

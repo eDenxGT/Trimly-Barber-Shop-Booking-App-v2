@@ -1,4 +1,5 @@
 import { barberAxiosInstance } from "@/api/barber.axios";
+import { IPostFormData } from "@/types/Feed";
 import {
   IAuthResponse,
   IAxiosResponse,
@@ -171,5 +172,10 @@ export const barberWithdrawFromWallet = async (
     "/barber/wallet/withdraw",
     payload
   );
+  return response.data;
+};
+
+export const addPost = async (payload: IPostFormData) => {
+  const response = await barberAxiosInstance.post("/barber/posts", payload);
   return response.data;
 };

@@ -1,6 +1,6 @@
-import { TransactionHistory } from "@/components/common/wallet/TransactionHistory";
-import { WithdrawalsList } from "@/components/common/wallet/WithdrawalsList";
-import { WithdrawSection } from "@/components/common/wallet/WithdrawSection";
+import { TransactionHistory } from "@/components/wallet/TransactionHistory";
+import { WithdrawalsList } from "@/components/wallet/WithdrawalsList";
+import { WithdrawSection } from "@/components/wallet/WithdrawSection";
 import { TopUpModal } from "@/components/modals/TopUpModal";
 import { WithdrawalModal } from "@/components/modals/WithdrawalModal";
 import { useLoading } from "@/hooks/common/useLoading";

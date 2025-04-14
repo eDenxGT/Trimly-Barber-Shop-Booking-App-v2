@@ -21,6 +21,8 @@ import { IWalletController } from "../../entities/controllerInterfaces/finance/w
 import { WalletController } from "../../interfaceAdapters/controllers/wallet.controller.js";
 import { ReviewController } from "../../interfaceAdapters/controllers/review.controller.js";
 import { IReviewController } from "../../entities/controllerInterfaces/review/review-controller.interface.js";
+import { IFeedController } from "../../entities/controllerInterfaces/feed/feed-controller.interface.js";
+import { FeedController } from "../../interfaceAdapters/controllers/feed.controller.js";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -49,3 +51,6 @@ export const walletController =
 
 export const reviewController =
   container.resolve<IReviewController>(ReviewController);
+
+export const feedController =
+  container.resolve<IFeedController>(FeedController);

@@ -1,6 +1,7 @@
 import {
   Home,
   LayoutDashboard,
+  Notebook,
   NotebookText,
   NotepadText,
   ScrollText,
@@ -72,16 +73,11 @@ const navItems = {
       icon: Wallet,
       path: "/barber/wallet",
     },
-    // {
-    // 	title: "Earning",
-    // 	icon: <DollarSign className="h-5 w-5" />,
-    // 	href: "/tutor/earnings",
-    // },
-    // {
-    // 	title: "Quiz",
-    // 	icon: <ClipboardList className="h-5 w-5" />,
-    // 	href: "/tutor/quiz",
-    // },
+    {
+      title: "My Posts",
+      icon: Notebook,
+      path: "/barber/my-posts",
+    },
     // {
     // 	title: "Chat",
     // 	icon: <MessageCircleMore className="h-5 w-5" />,

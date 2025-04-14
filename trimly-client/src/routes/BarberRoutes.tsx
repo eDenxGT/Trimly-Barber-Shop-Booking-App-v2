@@ -13,6 +13,7 @@ import { BarberSettingsPage } from "@/pages/barber/settings/BarberSettingsPage";
 import { BarberDashBoardPage } from "@/pages/barber/BarberDashboardPage";
 import { BarberBookingsPage } from "@/pages/barber/booking/BarberBookingsPage";
 import { BarberWalletPage } from "@/pages/barber/wallet/BarberWalletPage";
+import { BarberAddPostPage } from "@/pages/barber/feed/BarberAddPostPage";
 
 export const BarberRoutes = () => {
   return (
@@ -45,11 +46,11 @@ export const BarberRoutes = () => {
         />
         <Route path="settings/profile" element={<BarberProfileEditPage />} />
         <Route path="wallet" element={<BarberWalletPage />} />
+        <Route path="my-posts" element={<BarberAddPostPage />} />
 
         {/* 
 				<Route path="shop/:shopId" element={<BarberShopDetails role="barber" />} />
 				<Route path="shop/:shopId/edit" element={<BarberShopEditPage />} />
-				<Route path="shop/create" element={<BarberShopRegister />} /> 
 				*/}
       </Route>
 

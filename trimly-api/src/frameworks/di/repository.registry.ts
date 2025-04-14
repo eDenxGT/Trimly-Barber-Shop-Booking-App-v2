@@ -26,6 +26,10 @@ import { IWithdrawalRepository } from "../../entities/repositoryInterfaces/finan
 import { WithdrawalRepository } from "../../interfaceAdapters/repositories/finance/withdrawal.repository.js";
 import { IReviewRepository } from "../../entities/repositoryInterfaces/review/review-repository.interface.js";
 import { ReviewRepository } from "../../interfaceAdapters/repositories/review/review.repository.js";
+import { IPostRepository } from "../../entities/repositoryInterfaces/feed/post-repository.interface.js";
+import { PostRepository } from "../../interfaceAdapters/repositories/feed/post.repository.js";
+import { ICommentRepository } from "../../entities/repositoryInterfaces/feed/comment-repository.interface.js";
+import { CommentRepository } from "../../interfaceAdapters/repositories/feed/comment.repository.js";
 
 export class RepositoryRegistry {
   static registerRepositories(): void {
@@ -76,6 +80,14 @@ export class RepositoryRegistry {
 
     container.register<IReviewRepository>("IReviewRepository", {
       useClass: ReviewRepository,
+    });
+
+    container.register<IPostRepository>("IPostRepository", {
+      useClass: PostRepository,
+    });
+
+    container.register<ICommentRepository>("ICommentRepository", {
+      useClass: CommentRepository,
     });
   }
 }
