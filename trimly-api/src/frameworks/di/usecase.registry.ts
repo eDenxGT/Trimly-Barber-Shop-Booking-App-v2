@@ -105,6 +105,10 @@ import { IAddShopReviewUseCase } from "../../entities/useCaseInterfaces/review/a
 import { AddShopReviewUseCase } from "../../useCases/review/add-shop-review.usecase.js";
 import { IAddPostUseCase } from "../../entities/useCaseInterfaces/feed/add-post-usecase.interface.js";
 import { AddPostUseCase } from "../../useCases/feed/add-post.usecase.js";
+import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/feed/get-all-posts-by-barber-usecase.interface.js";
+import { GetAllPostsByBarberUseCase } from "../../useCases/feed/get-all-posts-by-barber.usecase.js";
+import { GetSinglePostByPostIdUseCase } from "../../useCases/feed/get-single-post-by-postid.usecase.js";
+import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/get-single-post-by-postid-usecase.interface.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -317,6 +321,17 @@ export class UseCaseRegistry {
     container.register<IAddPostUseCase>("IAddPostUseCase", {
       useClass: AddPostUseCase,
     });
+
+    container.register<IGetAllPostsByBarberUseCase>("IGetAllPostsByBarberUseCase", {
+      useClass: GetAllPostsByBarberUseCase,
+    });
+
+    container.register<IGetSinglePostByPostIdUseCase>(
+      "IGetSinglePostByPostIdUseCase",
+      {
+        useClass: GetSinglePostByPostIdUseCase,
+      }
+    );
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

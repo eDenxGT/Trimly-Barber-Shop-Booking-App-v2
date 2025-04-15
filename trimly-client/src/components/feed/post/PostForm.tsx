@@ -58,9 +58,11 @@ export const PostForm: React.FC<PostFormProps> = ({
     validationSchema: PostSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const imageUrl = await uploadImageToCloudinary(
-        imageFileRef.current as File
-      );
+      let imageUrl: string | null = null;
+      
+      if (imageFileRef.current) {
+        imageUrl = await uploadImageToCloudinary(imageFileRef.current as File);
+      }
 
       const submitData: IPost = {
         caption: values.caption,
@@ -111,7 +113,11 @@ export const PostForm: React.FC<PostFormProps> = ({
   return (
     <Card className="w-full max-w-2xl mx-auto shadow-gray-400">
       <CardHeader className="flex justify-center items-center">
-        <MuiAnimatedButton variant="darkblue" className="h-7 w-12" onClick={handleCancel}>
+        <MuiAnimatedButton
+          variant="darkblue"
+          className="h-7 w-12"
+          onClick={handleCancel}
+        >
           <ArrowLeft className="h-4 w-4" />
         </MuiAnimatedButton>
         <CardTitle className="text-center text-2xl font-bold">

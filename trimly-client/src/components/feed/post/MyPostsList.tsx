@@ -1,0 +1,135 @@
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { PostCardSkeleton } from "@/components/common/skeletons/BarberPostCardSkeleton";
+import { useGetPostsForBarber } from "@/hooks/feed/useGetPosts";
+import MuiAnimatedButton from "@/components/common/buttons/AnimatedButton";
+import { PostCard } from "@/components/common/cards/BarberPostCard";
+import { PostOverviewModal } from "@/components/modals/PostOverviewModal";
+import { useState } from "react";
+import { IPost } from "@/types/Feed";
+
+export const MyPostsList = () => {
+  const navigate = useNavigate();
+  const [isPostOverviewModalOpen, setIsPostOverviewModalOpen] = useState(false);
+  const { data, fetchNextPage, hasNextPage, isFetching, isError } =
+    useGetPostsForBarber();
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
+
+  const handleOnOpenChange = (open: boolean) => {
+    setIsPostOverviewModalOpen(open);
+  };
+  const toggleStatus = (postId: string) => {
+    console.log("Toggling status for post:", postId);
+    // Implement your status toggle functionality here
+  };
+  const handleEdit = (postId: string) => {
+    console.log("Editing post:", postId);
+    navigate(`/barber/my-posts/${postId}/edit`);
+  };
+
+  const handleDelete = (postId: string) => {
+    console.log("Deleting post:", postId);
+    // Implement your delete functionality here
+  };
+  const posts = data?.pages.flatMap((page) => page.items) || [];
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-semibold">All Posts</h1>
+        <MuiAnimatedButton
+          className="max-h-9"
+          onClick={() => navigate("/barber/my-posts/create")}
+        >
+          Create Post <Plus className="w-4 h-4 ml-2" />
+        </MuiAnimatedButton>
+      </div>
+
+      {/* <div className="flex flex-col space-y-4 mb-8">
+        <div className="flex items-center space-x-4">
+          <div className="relative w-full">
+            <Input
+              type="text"
+              placeholder="Search posts..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="pl-10"
+            />
+            <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+          </div>
+          <Button
+            onClick={handleResetFilters}
+            variant="outline"
+            className="self-start"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Reset
+          </Button>
+        </div>
+      </div> */}
+
+      {isFetching && posts?.length === 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, index) => (
+            <PostCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : isError ? (
+        <div className="text-center py-8 text-red-500">Error loading posts</div>
+      ) : (
+        <InfiniteScroll
+          dataLength={posts?.length || 0}
+          next={fetchNextPage}
+          hasMore={hasNextPage || false}
+          loader={
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {[...Array(6)].map((_, index) => (
+                <PostCardSkeleton key={index} />
+              ))}
+            </div>
+          }
+          endMessage={
+            posts?.length > 0 && (
+              <div className="text-center py-4 text-gray-500">
+                No more posts to load
+              </div>
+            )
+          }
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.isArray(posts) &&
+              posts?.map((post) => (
+                <PostCard
+                  onClick={() => {
+                    setSelectedPost(post);
+                    setIsPostOverviewModalOpen(true);
+                  }}
+                  key={post.postId}
+                  post={post}
+                  onToggleStatus={toggleStatus}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              ))}
+          </div>
+        </InfiniteScroll>
+      )}
+
+      {posts?.length === 0 && !isFetching && (
+        <div className="text-center py-8 text-gray-600">
+          <p className="text-xl font-semibold mb-2">No posts found</p>
+          {/* <p>Try adjusting your search</p> */}
+        </div>
+      )}
+      <PostOverviewModal
+        isOpen={isPostOverviewModalOpen}
+        onOpenChange={handleOnOpenChange}
+        selectedPost={selectedPost}
+        toggleStatus={toggleStatus}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
+    </div>
+  );
+};

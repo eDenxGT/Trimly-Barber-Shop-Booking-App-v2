@@ -7,6 +7,7 @@ import {
   IBarberResponse,
   IBookingResponse,
   IServiceResponse,
+  ISinglePostResponse,
   IWalletPageResponse,
 } from "@/types/Response";
 import { IService } from "@/types/Service";
@@ -177,5 +178,37 @@ export const barberWithdrawFromWallet = async (
 
 export const addPost = async (payload: IPostFormData) => {
   const response = await barberAxiosInstance.post("/barber/posts", payload);
+  return response.data;
+};
+
+export const fetchPostsForBarbers = async ({
+  pageParam = 1,
+}: {
+  pageParam: number;
+}) => {
+  const response = await barberAxiosInstance.get("/barber/posts", {
+    params: { page: pageParam, limit: 3 },
+  });
+  return response.data;
+};
+
+export const fetchPostByPostIdForBarbers = async (postId: string) => {
+  const response = await barberAxiosInstance.get<ISinglePostResponse>(
+    `/barber/posts/${postId}`
+  );
+  return response.data;
+};
+
+export const editPost = async ({
+  payload,
+  postId,
+}: {
+  payload: IPostFormData;
+  postId: string;
+}) => {
+  const response = await barberAxiosInstance.put(
+    `/barber/posts/${postId}`,
+    payload
+  );
   return response.data;
 };

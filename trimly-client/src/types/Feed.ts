@@ -4,7 +4,12 @@ export interface IPost {
   caption: string;
   description: string;
   image: string;
+  userDetails?: {
+    fullName: string;
+    avatar: string;
+  };
   likes?: string[];
+  comments?: IComment[];
   status?: "active" | "blocked";
   createdAt?: Date;
   updatedAt?: Date;
@@ -15,6 +20,10 @@ export interface IComment {
   postId?: string;
   userId?: string;
   commentText: string;
+  userDetails?: {
+    fullName: string;
+    avatar: string;
+  };
   likes?: string[];
   createdAt?: Date;
   updatedAt?: Date;

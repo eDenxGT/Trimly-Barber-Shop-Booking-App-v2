@@ -1,4 +1,5 @@
 import { IBooking } from "./Booking";
+import { IPost } from "./Feed";
 import { IService } from "./Service";
 import { IAdmin, IBarber, IClient, UserDTO } from "./User";
 import { ITransaction, IWithdrawal } from "./Wallet";
@@ -62,4 +63,13 @@ export interface IBarberHoursResponse extends IAxiosResponse {
       close?: string;
     } | null;
   };
+}
+
+export interface IPostsResponse extends IAxiosResponse {
+  items: IPost[];
+  total: number;
+}
+
+export interface ISinglePostResponse extends IAxiosResponse {
+  post: IPost;
 }

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 /**
  * Converts a time string from 24-hour format to 12-hour format
  * @param time24h Time in 24-hour format (HH:MM)
@@ -81,4 +83,11 @@ export const formatDateTime = (dateString: string) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+};
+
+export const getSmartDate = (dateStr: string) => {
+  const date = moment(dateStr);
+  return moment().diff(date, "hours") < 24
+    ? date.fromNow()
+    : formatDate(dateStr); 
 };

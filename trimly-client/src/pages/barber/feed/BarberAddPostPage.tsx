@@ -1,5 +1,5 @@
 import { PostForm } from "@/components/feed/post/PostForm";
-import { useAddPost } from "@/hooks/feed/useAddPost";
+import { useAddPost } from "@/hooks/feed/usePostMutation";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { IPostFormData } from "@/types/Feed";
 import { AnimatePresence, motion } from "framer-motion";

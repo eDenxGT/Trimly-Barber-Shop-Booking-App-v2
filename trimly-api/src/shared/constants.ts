@@ -109,6 +109,7 @@ export const ERROR_MESSAGES = {
   WRONG_CURRENT_PASSWORD: "Current password is incorrect",
   ACCOUNT_UNDER_VERIFICATION:
     "Your account is under verification. Please wait for admin approval.",
+  POST_NOT_FOUND: "Post not found",
   SAME_CURR_NEW_PASSWORD:
     "New password must be different from current password",
   INSUFFICIENT_FUNDS: "Not enough balance",

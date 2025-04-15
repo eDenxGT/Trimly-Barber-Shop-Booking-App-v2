@@ -78,20 +78,47 @@ export class BarberRoutes extends BaseRoute {
     //* ─────────────────────────────────────────────────────────────
     this.router
       .route("/barber/posts")
-      // .get(
-      //   verifyAuth,
-      //   authorizeRole(["barber"]),
-      //   blockStatusMiddleware.checkStatus as RequestHandler,
-      //   (req: Request, res: Response) => {
-      //     postController.getAllPosts(req, res);
-      //   }
-      // )
+      .get(
+        verifyAuth,
+        authorizeRole(["barber"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          feedController.getAllPostsForBarber(req, res);
+        }
+      )
       .post(
         verifyAuth,
         authorizeRole(["barber"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
           feedController.addPost(req, res);
+        }
+      );
+
+    this.router
+      .route("/barber/posts/:postId")
+      .get(
+        verifyAuth,
+        authorizeRole(["barber"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          feedController.getPostByPostId(req, res);
+        }
+      )
+      .put(
+        verifyAuth,
+        authorizeRole(["barber"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          feedController.editPost(req, res);
+        }
+      )
+      .delete(
+        verifyAuth,
+        authorizeRole(["barber"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          feedController.deletePost(req, res);
         }
       );
 
