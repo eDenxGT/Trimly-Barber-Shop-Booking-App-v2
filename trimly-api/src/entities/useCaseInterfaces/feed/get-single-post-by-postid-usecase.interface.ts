@@ -1,5 +1,10 @@
 import { IPostEntity } from "../../models/post.entity.js";
 
 export interface IGetSinglePostByPostIdUseCase {
-  execute(userId: string, role: string, postId: string): Promise<IPostEntity>;
+  execute(
+    userId: string,
+    role: string,
+    postId: string,
+    forType: string
+  ): Promise<IPostEntity | null>;
 }

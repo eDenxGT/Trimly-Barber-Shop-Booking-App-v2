@@ -8,6 +8,7 @@ import {
   IBarberResponse,
   IBookingResponse,
   IClientResponse,
+  ISinglePostResponse,
   IWalletPageResponse,
 } from "@/types/Response";
 import { ReviewDTO } from "@/types/Review";
@@ -208,5 +209,16 @@ export const clientWithdrawFromWallet = async (
 
 export const postReviewOnBarber = async (payload: ReviewDTO) => {
   const response = await clientAxiosInstance.post("/client/review", payload);
+  return response.data;
+};
+
+export const fetchPostByPostIdForClients = async (
+  postId: string,
+  forType: string
+) => {
+  const response = await clientAxiosInstance.get<ISinglePostResponse>(
+    `/client/posts/${postId}`,
+    { params: { forType } }
+  );
   return response.data;
 };

@@ -19,7 +19,8 @@ export class GetAllPostsByBarberUseCase implements IGetAllPostsByBarberUseCase {
         barberId: userId,
       },
       skip,
-      limit
+      limit,
+      userId
     );
   }
 }

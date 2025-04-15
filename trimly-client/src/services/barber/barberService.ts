@@ -193,9 +193,13 @@ export const fetchPostsForBarbers = async ({
   return response.data;
 };
 
-export const fetchPostByPostIdForBarbers = async (postId: string) => {
+export const fetchPostByPostIdForBarbers = async (
+  postId: string,
+  forType: string
+) => {
   const response = await barberAxiosInstance.get<ISinglePostResponse>(
-    `/barber/posts/${postId}`
+    `/barber/posts/${postId}`,
+    { params: { forType } }
   );
   return response.data;
 };
@@ -221,5 +225,26 @@ export const deletePost = async (postId: string) => {
 
 export const updatePostStatus = async (postId: string) => {
   const response = await barberAxiosInstance.patch(`/barber/posts/${postId}`);
+  return response.data;
+};
+
+export const barberToggleLikePost = async ({ postId }: { postId: string }) => {
+  const response = await barberAxiosInstance.post(
+    `/barber/posts/${postId}/like`
+  );
+  return response.data;
+};
+
+export const barberPostComment = async ({
+  postId,
+  comment,
+}: {
+  postId: string;
+  comment: string;
+}) => {
+  const response = await barberAxiosInstance.post(
+    `/barber/posts/${postId}/comment`,
+    { comment }
+  );
   return response.data;
 };

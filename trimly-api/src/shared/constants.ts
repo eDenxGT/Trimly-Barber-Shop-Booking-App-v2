@@ -74,6 +74,7 @@ export const SUCCESS_MESSAGES = {
   FILE_UPLOADED: "File uploaded successfully",
   PROFILE_UPDATED: "Profile updated",
   SESSION_EXTENDED: "Session extended",
+  TOGGLE_LIKE_SUCCESS: "Like/unlike successful",
   POST_ADDED: "Post added successfully",
 } as const;
 

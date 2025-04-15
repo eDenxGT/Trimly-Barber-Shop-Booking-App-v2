@@ -14,6 +14,7 @@ import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/
 import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/update-post-usecase.interface.js";
 import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/delete-post-usecase.interface.js";
 import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/update-post-status-usecase.interface.js";
+import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/toggle-like-post-usecase.interface.js";
 
 @injectable()
 export class FeedController implements IFeedController {
@@ -28,7 +29,9 @@ export class FeedController implements IFeedController {
     @inject("IDeletePostUseCase")
     private _deletePostUseCase: IDeletePostUseCase,
     @inject("IUpdatePostStatusUseCase")
-    private _updatePostStatusUseCase: IUpdatePostStatusUseCase
+    private _updatePostStatusUseCase: IUpdatePostStatusUseCase,
+    @inject("IToggleLikePostUseCase")
+    private _toggleLikePostUseCase: IToggleLikePostUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -72,7 +75,7 @@ export class FeedController implements IFeedController {
       const { items, total } = await this._getAllPostsByBarberUseCase.execute(
         userId,
         Number(page),
-        Number(limit)
+        Number(limit),
       );
       res.status(HTTP_STATUS.OK).json({
         success: true,
@@ -85,12 +88,13 @@ export class FeedController implements IFeedController {
   }
 
   //* ─────────────────────────────────────────────────────────────
-  //*                    🛠️ Get Post By PostId
+  //*                 🛠️ Get Post By PostId
   //* ─────────────────────────────────────────────────────────────
   async getPostByPostId(req: Request, res: Response): Promise<void> {
     try {
       const { userId, role } = (req as CustomRequest).user;
       const { postId } = req.params;
+      const { forType } = req.query;
 
       if (!userId || !postId) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
@@ -102,7 +106,8 @@ export class FeedController implements IFeedController {
       const post = await this._getSinglePostByPostIdUseCase.execute(
         userId,
         role,
-        postId
+        postId,
+        String(forType)
       );
       res.status(HTTP_STATUS.OK).json({
         success: true,
@@ -193,6 +198,34 @@ export class FeedController implements IFeedController {
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.DELETE_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                     🛠️ Toggle Like Post
+  //* ─────────────────────────────────────────────────────────────
+  async toggleLikePost(req: Request, res: Response): Promise<void> {
+    try {
+      const { postId } = req.params;
+      const { userId } = (req as CustomRequest).user;
+      if (!postId || !userId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+      const liked = await this._toggleLikePostUseCase.execute({
+        postId,
+        userId,
+      });
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        liked: liked,
+        message: SUCCESS_MESSAGES.TOGGLE_LIKE_SUCCESS,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

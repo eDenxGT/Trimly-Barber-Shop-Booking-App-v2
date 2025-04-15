@@ -9,29 +9,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Calendar, Clock, Heart, Edit, Trash2 } from "lucide-react";
+import { Calendar, Heart, Edit, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
-
-interface Post {
-  _id: string;
-  postId: string;
-  caption: string;
-  description: string;
-  image: string;
-  status: "active" | "blocked";
-  likes: string[];
-  createdAt: string;
-  updatedAt: string;
-}
+import { IPost } from "@/types/Feed";
 
 interface PostCardProps {
-  post: Post;
+  post: IPost;
   onToggleStatus: (postId: string) => void;
   onEdit: (postId: string) => void;
   onDelete: (postId: string) => void;
   onClick: () => void;
+  onToggleLike: (postId: string) => void;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({
@@ -40,13 +30,14 @@ export const PostCard: React.FC<PostCardProps> = ({
   onEdit,
   onDelete,
   onClick,
+  onToggleLike,
 }) => {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 
   return (
     <Card
       key={post.postId}
-      className="overflow-hidden py-0 transition-all hover:shadow-md hover:scale-105"
+      className="overflow-hidden py-0 transition-all hover:shadow-md hover:scale-101"
     >
       <div className="aspect-video overflow-hidden relative">
         <img
@@ -64,7 +55,7 @@ export const PostCard: React.FC<PostCardProps> = ({
         </div>
       </div>
 
-      <CardHeader className="p-4">
+      <CardHeader className="p-4 min-h-30">
         <div className="flex justify-between items-start">
           <CardTitle className="text-xl font-semibold">
             {post.caption}
@@ -75,9 +66,11 @@ export const PostCard: React.FC<PostCardProps> = ({
             </span>
             <Switch
               checked={post.status === "active"}
-              onCheckedChange={() => onToggleStatus(post.postId)}
-              className={"cursor-pointer" +
-                post.status === "active" ? "bg-green-500" : "bg-red-500"
+              onCheckedChange={() => onToggleStatus(post.postId || "")}
+              className={
+                "cursor-pointer" + post.status === "active"
+                  ? "bg-green-500"
+                  : "bg-red-500"
               }
             />
           </div>
@@ -91,11 +84,9 @@ export const PostCard: React.FC<PostCardProps> = ({
         <div className="flex flex-col gap-1 text-xs text-gray-500">
           <div className="flex items-center">
             <Calendar className="h-3.5 w-3.5 mr-1" />
-            <span>Posted: {getSmartDate(post.createdAt)}</span>
-          </div>
-          <div className="flex items-center">
-            <Clock className="h-3.5 w-3.5 mr-1" />
-            <span>Last Updated: {getSmartDate(post.updatedAt)}</span>
+            <span>
+              Posted: {getSmartDate(post.createdAt?.toString() || "")}
+            </span>
           </div>
         </div>
       </CardContent>
@@ -103,18 +94,19 @@ export const PostCard: React.FC<PostCardProps> = ({
       <CardFooter className="p-4 pt-0 flex justify-between">
         <div className="flex items-center text-gray-500">
           <Heart
-            className="h-4 w-4 mr-1"
-            fill={post.likes?.length > 0 ? "#f43f5e" : "none"}
-            stroke={post.likes?.length > 0 ? "#f43f5e" : "currentColor"}
+            className="h-4 w-4 mr-1 cursor-pointer"
+            fill={post?.isLiked ? "#f43f5e" : "none"}
+            stroke={post?.isLiked ? "#f43f5e" : "currentColor"}
+            onClick={() => onToggleLike(post.postId || "")}
           />
-          <span className="text-sm">{post.likes?.length || 0}</span>
+          <span className="text-sm">{post?.likes?.length || 0}</span>
         </div>
         <div className="flex gap-2">
           <Button
             size="sm"
             variant="outline"
             className="h-8 px-2 btn-outline"
-            onClick={() => onEdit(post.postId)}
+            onClick={() => onEdit(post.postId || "")}
           >
             <Edit className="h-4 w-4" />
           </Button>
@@ -130,7 +122,7 @@ export const PostCard: React.FC<PostCardProps> = ({
       </CardFooter>
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
-        onConfirm={() => onDelete(post.postId)}
+        onConfirm={() => onDelete(post.postId || "")}
         onClose={() => setIsConfirmationModalOpen(false)}
         title="Delete Post"
         description="Are you sure you want to delete this post?"

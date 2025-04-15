@@ -15,11 +15,17 @@ export const useGetPostsForBarber = () => {
 };
 
 export const useGetPostByPostId = (
-  queryFunc: (postId: string) => Promise<ISinglePostResponse>,
-  postId: string
+  queryFunc: (postId: string, forType: string) => Promise<ISinglePostResponse>,
+  postId: string,
+  forType: string
 ) => {
   return useQuery<ISinglePostResponse>({
-    queryKey: ["post"],
-    queryFn: () => queryFunc(postId),
+    queryKey: ["post", postId],
+    queryFn: () => queryFunc(postId, forType),
+    enabled: !!postId,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    refetchIntervalInBackground: true,
+    retry: 1,
   });
 };

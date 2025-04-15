@@ -8,6 +8,7 @@ export interface IPost {
     fullName: string;
     avatar: string;
   };
+  isLiked?: boolean;
   likes?: string[];
   comments?: IComment[];
   status?: "active" | "blocked";

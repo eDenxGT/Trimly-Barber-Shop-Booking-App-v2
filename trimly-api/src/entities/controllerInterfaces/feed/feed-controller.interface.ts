@@ -7,4 +7,5 @@ export interface IFeedController {
   editPost(req: Request, res: Response): Promise<void>;
   updatePostStatus(req: Request, res: Response): Promise<void>;
   deletePost(req: Request, res: Response): Promise<void>;
+  toggleLikePost(req: Request, res: Response): Promise<void>;
 }

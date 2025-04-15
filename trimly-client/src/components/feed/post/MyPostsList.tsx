@@ -12,11 +12,15 @@ import { IPost } from "@/types/Feed";
 interface IMyPostsListProps {
   onDelete: (postId: string) => void;
   onStatusUpdate: (postId: string) => void;
+  onToggleLike: (postId: string) => void;
+  onPostComment: (postId: string, comment: string) => void;
 }
 
 export const MyPostsList = ({
   onDelete,
   onStatusUpdate,
+  onToggleLike,
+  onPostComment,
 }: IMyPostsListProps) => {
   const navigate = useNavigate();
   const [isPostOverviewModalOpen, setIsPostOverviewModalOpen] = useState(false);
@@ -37,12 +41,16 @@ export const MyPostsList = ({
   const handleDelete = (postId: string) => {
     onDelete(postId);
   };
+  const handlePostComment = (postId: string, comment: string) => {
+    onPostComment(postId, comment);
+  };
   const posts = data?.pages.flatMap((page) => page.items) || [];
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-semibold">All Posts</h1>
+
         <MuiAnimatedButton
           className="max-h-9"
           onClick={() => navigate("/barber/my-posts/create")}
@@ -106,6 +114,7 @@ export const MyPostsList = ({
             {Array.isArray(posts) &&
               posts?.map((post) => (
                 <PostCard
+                  onToggleLike={() => onToggleLike(post.postId)}
                   onClick={() => {
                     setSelectedPost(post);
                     setIsPostOverviewModalOpen(true);
@@ -128,9 +137,11 @@ export const MyPostsList = ({
         </div>
       )}
       <PostOverviewModal
+      onPostComment={handlePostComment}
+        onToggleLike={onToggleLike}
         isOpen={isPostOverviewModalOpen}
         onOpenChange={handleOnOpenChange}
-        selectedPost={selectedPost}
+        selectedPostId={selectedPost?.postId || null}
         toggleStatus={toggleStatus}
         handleEdit={handleEdit}
         handleDelete={handleDelete}

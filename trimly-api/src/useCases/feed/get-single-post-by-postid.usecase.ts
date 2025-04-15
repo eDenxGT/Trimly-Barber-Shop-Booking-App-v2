@@ -15,8 +15,9 @@ export class GetSinglePostByPostIdUseCase
   async execute(
     userId: string,
     role: string,
-    postId: string
-  ): Promise<IPostEntity> {
+    postId: string,
+    forType: string
+  ): Promise<IPostEntity | null> {
     const filter: Partial<IPostEntity> | null =
       role === "barber"
         ? { postId, barberId: userId }
@@ -30,15 +31,25 @@ export class GetSinglePostByPostIdUseCase
         HTTP_STATUS.BAD_REQUEST
       );
     }
-    
-    const post = await this._postRepository.getSinglePostByPostId(filter);
-    if (!post) {
-      throw new CustomError(
-        ERROR_MESSAGES.POST_NOT_FOUND,
-        HTTP_STATUS.NOT_FOUND
-      );
-    }
 
+    let post = null;
+    if (forType === "edit") {
+      post = await this._postRepository.findOne(filter);
+      if (!post) {
+        throw new CustomError(
+          ERROR_MESSAGES.POST_NOT_FOUND,
+          HTTP_STATUS.NOT_FOUND
+        );
+      }
+    } else if (forType === "details") {
+      post = await this._postRepository.getSinglePostByPostId(filter, userId);
+      if (!post) {
+        throw new CustomError(
+          ERROR_MESSAGES.POST_NOT_FOUND,
+          HTTP_STATUS.NOT_FOUND
+        );
+      }
+    }
     return post;
   }
 }

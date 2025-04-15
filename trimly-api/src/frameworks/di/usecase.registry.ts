@@ -115,6 +115,8 @@ import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/delete
 import { DeletePostUseCase } from "../../useCases/feed/delete-post.usecase.js";
 import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/update-post-status-usecase.interface.js";
 import { UpdatePostStatusUseCase } from "../../useCases/feed/update-post-status.usecase.js";
+import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/toggle-like-post-usecase.interface.js";
+import { ToggleLikePostUseCase } from "../../useCases/feed/toggle-like-post.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -352,6 +354,10 @@ export class UseCaseRegistry {
 
     container.register<IUpdatePostStatusUseCase>("IUpdatePostStatusUseCase", {
       useClass: UpdatePostStatusUseCase,
+    });
+
+    container.register<IToggleLikePostUseCase>("IToggleLikePostUseCase", {
+      useClass: ToggleLikePostUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//

@@ -87,7 +87,7 @@ export const formatDateTime = (dateString: string) => {
 
 export const getSmartDate = (dateStr: string) => {
   const date = moment(dateStr);
-  return moment().diff(date, "hours") < 24
-    ? date.fromNow()
-    : formatDate(dateStr); 
+  const daysDiff = moment().diff(date, "days");
+
+  return daysDiff < 3 ? date.fromNow() : formatDate(dateStr);
 };

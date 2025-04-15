@@ -43,3 +43,44 @@ export const useUpdatePostStatus = () => {
     },
   });
 };
+
+export const useToggleLikePost = (
+  mutationFn: ({ postId }: { postId: string }) => Promise<IAxiosResponse>
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<IAxiosResponse, Error, { postId: string }>({
+    mutationFn,
+    onSuccess: (_, { postId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["listed-posts-on-barber"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["post", postId],
+      });
+    },
+  });
+};
+
+export const usePostComment = (
+  mutationFn: ({
+    postId,
+    comment,
+  }: {
+    postId: string;
+    comment: string;
+  }) => Promise<IAxiosResponse>
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IAxiosResponse,
+    Error,
+    { postId: string; comment: string }
+  >({
+    mutationFn,
+    onSuccess: (_, { postId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["post", postId],
+      });
+    },
+  });
+};

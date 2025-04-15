@@ -19,7 +19,8 @@ export class PostRepository
   async findAllPosts(
     filter: Partial<IPostEntity>,
     skip: number,
-    limit: number
+    limit: number,
+    userId?: string
   ): Promise<{ items: IPostEntity[]; total: number }> {
     const matchStage = {
       $match: {
@@ -52,11 +53,59 @@ export class PostRepository
               null,
             ],
           },
+          totalComments: { $size: { $ifNull: ["$comments", []] } },
+          isLiked: {
+            $cond: [
+              { $in: [userId, { $ifNull: ["$likes", []] }] },
+              true,
+              false,
+            ],
+          },
         },
       },
       {
         $project: {
           barberDetails: 0,
+          comments: 0,
+        },
+      },
+    ];
+
+    const [items, total] = await Promise.all([
+      PostModel.aggregate(aggregationPipeline),
+      PostModel.countDocuments(filter),
+    ]);
+
+    return { items, total };
+  }
+
+  async getSinglePostByPostId(
+    filter: Partial<IPostEntity>,
+    userId?: string
+  ): Promise<IPostEntity | null> {
+    const aggregationPipeline: any[] = [
+      { $match: filter },
+
+      {
+        $lookup: {
+          from: "barbers",
+          localField: "barberId",
+          foreignField: "userId",
+          as: "barberDetails",
+        },
+      },
+      {
+        $addFields: {
+          userDetails: {
+            $cond: [
+              { $gt: [{ $size: "$barberDetails" }, 0] },
+              {
+                fullName: { $arrayElemAt: ["$barberDetails.shopName", 0] },
+                avatar: { $arrayElemAt: ["$barberDetails.avatar", 0] },
+              },
+              null,
+            ],
+          },
         },
       },
       {
@@ -89,6 +138,7 @@ export class PostRepository
       },
       {
         $project: {
+          barberDetails: 0,
           commentUser: 0,
         },
       },
@@ -121,23 +171,47 @@ export class PostRepository
           comments: {
             $cond: [{ $eq: [{ $size: "$comments" }, 0] }, null, "$comments"],
           },
+          isLiked: {
+            $cond: [
+              { $in: [userId, { $ifNull: ["$likes", []] }] },
+              true,
+              false,
+            ],
+          },
         },
       },
-      { $sort: { createdAt: -1 } },
+      { $limit: 1 },
     ];
 
-    const [items, total] = await Promise.all([
-      PostModel.aggregate(aggregationPipeline),
-      PostModel.countDocuments(filter),
-    ]);
-
-    return {
-      items,
-      total,
-    };
+    const result = await PostModel.aggregate(aggregationPipeline);
+    return result[0] || null;
   }
 
-  async getSinglePostByPostId(filter: Partial<IPostEntity>): Promise<IPostEntity | null> {
-    return await PostModel.findOne(filter);
+  async addLike({
+    postId,
+    userId,
+  }: {
+    postId: string;
+    userId: string;
+  }): Promise<IPostEntity | null> {
+    return await PostModel.findOneAndUpdate(
+      { postId },
+      { $addToSet: { likes: userId } },
+      { new: true }
+    );
+  }
+
+  async removeLike({
+    postId,
+    userId,
+  }: {
+    postId: string;
+    userId: string;
+  }): Promise<IPostEntity | null> {
+    return await PostModel.findOneAndUpdate(
+      { postId },
+      { $pull: { likes: userId } },
+      { new: true }
+    );
   }
 }

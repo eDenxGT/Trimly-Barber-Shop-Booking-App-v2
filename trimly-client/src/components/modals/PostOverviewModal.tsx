@@ -2,29 +2,63 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Heart, MessageCircle, Send } from "lucide-react";
-import type { IPost } from "@/types/Feed";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import { useOutletContext } from "react-router-dom";
 import type { IBarber, IClient } from "@/types/User";
 import { CommentsSection } from "../feed/comment/CommentSection";
 import { PostHeader } from "../feed/post/PostHeader";
+import { useEffect, useRef, useState } from "react";
+import { IPost } from "@/types/Feed";
+import { useGetPostByPostId } from "@/hooks/feed/useGetPosts";
+import { fetchPostByPostIdForBarbers } from "@/services/barber/barberService";
+import { fetchPostByPostIdForClients } from "@/services/client/clientService";
+import MuiAnimatedButton from "../common/buttons/AnimatedButton";
 
 type PostDetailModalProps = {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedPost: IPost | null;
+  selectedPostId: string | null;
   toggleStatus: (postId: string) => void;
   handleEdit: (postId: string) => void;
   handleDelete: (postId: string) => void;
+  onToggleLike: (postId: string) => void;
+  onPostComment: (postId: string, comment: string) => void;
 };
 
 export function PostOverviewModal({
   isOpen,
   onOpenChange,
-  selectedPost,
+  selectedPostId,
   handleEdit,
   handleDelete,
+  onToggleLike,
+  onPostComment,
 }: PostDetailModalProps) {
+  const { role } = useOutletContext<IBarber | IClient>();
+  const queryFn =
+    role === "barber"
+      ? fetchPostByPostIdForBarbers
+      : fetchPostByPostIdForClients;
+
+  const { data } = useGetPostByPostId(queryFn, selectedPostId || "", "details");
+  const commentRef = useRef<HTMLInputElement>(null);
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
+  const [newComment, setNewComment] = useState<string>("");
+
+  useEffect(() => {
+    if (data?.post) {
+      setSelectedPost(data.post);
+    }
+  }, [data]);
+
+  const handlePostComment = () => {
+    if (selectedPost && newComment.trim() !== "") {
+      onPostComment(selectedPost.postId || "", newComment.trim());
+      setNewComment("");
+      // commentRef.current?.focus();
+    }
+  };
+
   const user: IClient | IBarber = useOutletContext();
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -98,25 +132,21 @@ export function PostOverviewModal({
                 <div className="flex justify-between p-3">
                   <div className="flex gap-4">
                     <Button
+                      onClick={() => onToggleLike(selectedPost?.postId || "")}
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 rounded-full"
                     >
                       <Heart
                         className="h-6 w-6"
-                        fill={
-                          selectedPost?.likes?.length ?? 0 > 0
-                            ? "#f43f5e"
-                            : "none"
-                        }
+                        fill={selectedPost?.isLiked ? "#f43f5e" : "none"}
                         stroke={
-                          selectedPost?.likes?.length ?? 0 > 0
-                            ? "#f43f5e"
-                            : "currentColor"
+                          selectedPost?.isLiked ? "#f43f5e" : "currentColor"
                         }
                       />
                     </Button>
                     <Button
+                      onClick={() => commentRef.current?.focus()}
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 rounded-full"
@@ -142,7 +172,7 @@ export function PostOverviewModal({
 
                 <div className="flex items-center p-3 border-t">
                   <Avatar className="h-7 w-7 mr-2">
-                    <AvatarImage src={user?.avatar || "/placeholder.svg"} />
+                    <AvatarImage src={user?.avatar} />
                     <AvatarFallback>
                       {user.role === "client"
                         ? (user as IClient)?.fullName?.charAt(0)
@@ -150,17 +180,21 @@ export function PostOverviewModal({
                     </AvatarFallback>
                   </Avatar>
                   <input
+                    ref={commentRef}
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
                     type="text"
                     placeholder="Add a comment..."
                     className="flex-1 bg-transparent text-sm outline-none"
                   />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-blue-500 font-semibold"
+                  <MuiAnimatedButton
+                    onClick={() => handlePostComment()}
+                    disabled={newComment.trim() === ""}
+                    variant="darkblue"
+                    className="text-blue-500 max-h-8 font-semibold"
                   >
                     Post
-                  </Button>
+                  </MuiAnimatedButton>
                 </div>
               </div>
             </div>

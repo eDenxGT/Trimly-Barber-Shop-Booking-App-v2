@@ -1,14 +1,22 @@
 import { MyPostsList } from "@/components/feed/post/MyPostsList";
 import {
   useDeletePost,
+  usePostComment,
+  useToggleLikePost,
   useUpdatePostStatus,
 } from "@/hooks/feed/usePostMutation";
 import { useToaster } from "@/hooks/ui/useToaster";
+import {
+  barberPostComment,
+  barberToggleLikePost,
+} from "@/services/barber/barberService";
 import { AnimatePresence, motion } from "framer-motion";
 
 export const BarberMyPostsListPage = () => {
   const { mutate: deleteBarberPost } = useDeletePost();
   const { mutate: updateStatus } = useUpdatePostStatus();
+  const { mutate: toggleLike } = useToggleLikePost(barberToggleLikePost);
+  const { mutate: postComment } = usePostComment(barberPostComment);
   const { successToast, errorToast } = useToaster();
 
   const handleDeletePost = (postId: string) => {
@@ -41,6 +49,36 @@ export const BarberMyPostsListPage = () => {
     );
   };
 
+  const handleToggleLike = (postId: string) => {
+    toggleLike(
+      { postId },
+      {
+        onSuccess: (data) => {
+          successToast(data.message);
+        },
+        onError: (error: any) => {
+          errorToast(error.response.data.message);
+        },
+      }
+    );
+  };
+  const handlePostComment = (postId: string, comment: string) => {
+    postComment(
+      {
+        postId,
+        comment,
+      },
+      {
+        onSuccess: (data) => {
+          successToast(data.message);
+        },
+        onError: (error: any) => {
+          errorToast(error.response.data.message);
+        },
+      }
+    );
+  };
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -52,8 +90,10 @@ export const BarberMyPostsListPage = () => {
         className="mt-18"
       >
         <MyPostsList
+          onToggleLike={handleToggleLike}
           onDelete={handleDeletePost}
           onStatusUpdate={handleStatusUpdate}
+          onPostComment={handlePostComment}
         />
       </motion.div>
     </AnimatePresence>
