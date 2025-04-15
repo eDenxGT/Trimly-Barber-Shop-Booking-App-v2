@@ -100,6 +100,7 @@ export const ERROR_MESSAGES = {
   INVALID_CREDENTIALS: "Wrong email or password",
   USER_NOT_FOUND: "User not found",
   ROUTE_NOT_FOUND: "Page not found",
+  COMMENT_NOT_FOUND: "Comment not found",
   UNAUTHORIZED_ACCESS: "Not authorized",
   SERVER_ERROR: "Something went wrong try again later",
   VALIDATION_ERROR: "Check your inputs and try again",

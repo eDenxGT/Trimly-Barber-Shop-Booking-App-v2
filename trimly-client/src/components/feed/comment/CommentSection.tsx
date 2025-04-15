@@ -59,7 +59,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
             size="icon"
             className="h-6 w-6 rounded-full"
           >
-            <Heart className="h-3 w-3" />
+            <Heart
+              className={`h-3 w-3 hover:scale-110 transition-all ${
+                comment?.isCommentLiked ? "fill-red-500 stroke-red-500" : ""
+              }`}
+            />
           </Button>
         </div>
       ))}

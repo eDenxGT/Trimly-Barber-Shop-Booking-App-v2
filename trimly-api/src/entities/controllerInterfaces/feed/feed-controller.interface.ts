@@ -9,4 +9,5 @@ export interface IFeedController {
   deletePost(req: Request, res: Response): Promise<void>;
   toggleLikePost(req: Request, res: Response): Promise<void>;
   addComment(req: Request, res: Response): Promise<void>;
+  toggleCommentLike(req: Request, res: Response): Promise<void>;
 }

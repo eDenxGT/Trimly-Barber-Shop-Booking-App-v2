@@ -139,7 +139,7 @@ export class BarberRoutes extends BaseRoute {
         feedController.toggleLikePost(req, res);
       }
     );
-    
+
     this.router.post(
       "/barber/posts/:postId/comment",
       verifyAuth,
@@ -147,6 +147,15 @@ export class BarberRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         feedController.addComment(req, res);
+      }
+    );
+    this.router.patch(
+      "/barber/posts/comment/:commentId/like",
+      verifyAuth,
+      authorizeRole(["barber"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        feedController.toggleCommentLike(req, res);
       }
     );
 

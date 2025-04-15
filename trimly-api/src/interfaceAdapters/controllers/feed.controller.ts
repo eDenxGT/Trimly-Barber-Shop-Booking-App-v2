@@ -16,6 +16,7 @@ import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/post/d
 import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/post/update-post-status-usecase.interface.js";
 import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/post/toggle-like-post-usecase.interface.js";
 import { IAddCommentUseCase } from "../../entities/useCaseInterfaces/feed/comment/add-comment-usecase.interface.js";
+import { IToggleCommentLikeUseCase } from "../../entities/useCaseInterfaces/feed/comment/toggle-comment-like-usecase.interface.js";
 
 @injectable()
 export class FeedController implements IFeedController {
@@ -34,7 +35,9 @@ export class FeedController implements IFeedController {
     @inject("IToggleLikePostUseCase")
     private _toggleLikePostUseCase: IToggleLikePostUseCase,
     @inject("IAddCommentUseCase")
-    private _addCommentUseCase: IAddCommentUseCase
+    private _addCommentUseCase: IAddCommentUseCase,
+    @inject("IToggleCommentLikeUseCase")
+    private _toggleCommentLikeUseCase: IToggleCommentLikeUseCase,
   ) {}
 
   //? ✨=========================================================✨
@@ -266,6 +269,33 @@ export class FeedController implements IFeedController {
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.COMMENT_ADDED,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                       🛠️ Toggle Like Comment
+  //* ─────────────────────────────────────────────────────────────
+  async toggleCommentLike(req: Request, res: Response): Promise<void> {
+    try {
+      const { commentId } = req.params;
+      const { userId } = (req as CustomRequest).user;
+      if (!commentId || !userId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+      await this._toggleCommentLikeUseCase.execute({
+        commentId,
+        userId,
+      });
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.TOGGLE_LIKE_SUCCESS,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

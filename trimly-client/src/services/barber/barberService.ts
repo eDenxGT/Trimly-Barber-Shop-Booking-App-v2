@@ -251,9 +251,11 @@ export const barberPostComment = async ({
 
 export const barberToggleCommentLike = async ({
   commentId,
-}: { commentId: string }) => {
-  const response = await barberAxiosInstance.post(
-    `/barber/posts/${commentId}/like`
+}: {
+  commentId: string;
+}) => {
+  const response = await barberAxiosInstance.patch(
+    `/barber/posts/comment/${commentId}/like`
   );
   return response.data;
 };

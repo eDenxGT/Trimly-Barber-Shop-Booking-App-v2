@@ -119,6 +119,8 @@ import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/po
 import { ToggleLikePostUseCase } from "../../useCases/feed/post/toggle-like-post.usecase.js";
 import { IAddCommentUseCase } from "../../entities/useCaseInterfaces/feed/comment/add-comment-usecase.interface.js";
 import { AddCommentUseCase } from "../../useCases/feed/comment/add-comment.usecase.js";
+import { ToggleCommentLikeUseCase } from "../../useCases/feed/comment/toggle-comment-like.usecase.js";
+import { IToggleCommentLikeUseCase } from "../../entities/useCaseInterfaces/feed/comment/toggle-comment-like-usecase.interface.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -364,6 +366,10 @@ export class UseCaseRegistry {
 
     container.register<IAddCommentUseCase>("IAddCommentUseCase", {
       useClass: AddCommentUseCase,
+    });
+
+    container.register<IToggleCommentLikeUseCase>("IToggleCommentLikeUseCase", {
+      useClass: ToggleCommentLikeUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//
