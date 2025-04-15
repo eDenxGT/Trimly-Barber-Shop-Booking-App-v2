@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { IPostEntity } from "../../entities/models/post.entity.js";
-import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/feed/get-all-posts-by-barber-usecase.interface.js";
-import { IPostRepository } from "../../entities/repositoryInterfaces/feed/post-repository.interface.js";
+import { IPostEntity } from "../../../entities/models/post.entity.js";
+import { IGetAllPostsByBarberUseCase } from "../../../entities/useCaseInterfaces/feed/post/get-all-posts-by-barber-usecase.interface.js";
+import { IPostRepository } from "../../../entities/repositoryInterfaces/feed/post-repository.interface.js";
 
 @injectable()
 export class GetAllPostsByBarberUseCase implements IGetAllPostsByBarberUseCase {

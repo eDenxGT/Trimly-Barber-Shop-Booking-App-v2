@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/delete-post-usecase.interface.js";
-import { IPostRepository } from "../../entities/repositoryInterfaces/feed/post-repository.interface.js";
-import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
-import { CustomError } from "../../entities/utils/custom.error.js";
+import { IDeletePostUseCase } from "../../../entities/useCaseInterfaces/feed/post/delete-post-usecase.interface.js";
+import { IPostRepository } from "../../../entities/repositoryInterfaces/feed/post-repository.interface.js";
+import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants.js";
+import { CustomError } from "../../../entities/utils/custom.error.js";
 
 @injectable()
 export class DeletePostUseCase implements IDeletePostUseCase {

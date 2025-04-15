@@ -6,10 +6,12 @@ import { Heart } from "lucide-react";
 
 interface CommentsSectionProps {
   comments?: IComment[] | null;
+  onToggleCommentLike: (commentId: string) => void;
 }
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({
   comments,
+  onToggleCommentLike,
 }) => {
   if (!comments || comments.length === 0) {
     return (
@@ -20,7 +22,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 min-h-[220px]">
       {comments.map((comment) => (
         <div key={comment.commentId} className="flex items-start mb-4">
           <Avatar className="h-7 w-7 mr-2">
@@ -40,20 +42,23 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
             </div>
             <div className="flex items-center text-xs text-gray-400 mt-1">
               <span>{getSmartDate(String(comment.createdAt))}</span>
-              {comment.likes && comment.likes.length > 0 && (
+              {comment?.likesCount && comment.likesCount > 0 ? (
                 <>
                   <span className="mx-1">•</span>
                   <span>
-                    {comment.likes.length}{" "}
-                    {comment.likes.length === 1 ? "like" : "likes"}
+                    {comment.likesCount}{" "}
+                    {comment.likesCount === 1 ? "like" : "likes"}
                   </span>
                 </>
-              )}
-              <span className="mx-1">•</span>
-              <button className="font-medium">Reply</button>
+              ) : null}
             </div>
           </div>
-          <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full">
+          <Button
+            onClick={() => onToggleCommentLike(comment.commentId || "")}
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 rounded-full"
+          >
             <Heart className="h-3 w-3" />
           </Button>
         </div>

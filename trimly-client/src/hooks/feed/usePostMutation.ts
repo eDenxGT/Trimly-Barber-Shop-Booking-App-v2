@@ -84,3 +84,27 @@ export const usePostComment = (
     },
   });
 };
+
+export const useToggleCommentLike = (
+  mutationFn: ({
+    commentId,
+    postId,
+  }: {
+    commentId: string;
+    postId: string;
+  }) => Promise<IAxiosResponse>
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IAxiosResponse,
+    Error,
+    { commentId: string; postId: string }
+  >({
+    mutationFn,
+    onSuccess: (_, { postId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["post", postId],
+      });
+    },
+  });
+};

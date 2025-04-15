@@ -1,4 +1,4 @@
-import { IPostEntity } from "../../models/post.entity.js";
+import { IPostEntity } from "../../../models/post.entity.js";
 
 export interface IGetAllPostsByBarberUseCase {
   execute(

@@ -23,6 +23,7 @@ type PostDetailModalProps = {
   handleDelete: (postId: string) => void;
   onToggleLike: (postId: string) => void;
   onPostComment: (postId: string, comment: string) => void;
+  onToggleCommentLike: (commentId: string, postId: string) => void;
 };
 
 export function PostOverviewModal({
@@ -33,6 +34,7 @@ export function PostOverviewModal({
   handleDelete,
   onToggleLike,
   onPostComment,
+  onToggleCommentLike,
 }: PostDetailModalProps) {
   const { role } = useOutletContext<IBarber | IClient>();
   const queryFn =
@@ -45,6 +47,7 @@ export function PostOverviewModal({
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
   const [newComment, setNewComment] = useState<string>("");
 
+  console.log(data);
   useEffect(() => {
     if (data?.post) {
       setSelectedPost(data.post);
@@ -57,6 +60,10 @@ export function PostOverviewModal({
       setNewComment("");
       // commentRef.current?.focus();
     }
+  };
+
+  const handleToggleCommentLike = (commentId: string) => {
+    onToggleCommentLike(commentId, selectedPost?.postId || "");
   };
 
   const user: IClient | IBarber = useOutletContext();
@@ -124,7 +131,10 @@ export function PostOverviewModal({
                 </div>
 
                 {/* Comments - This will grow to fill available space */}
-                <CommentsSection comments={selectedPost.comments} />
+                <CommentsSection
+                  comments={selectedPost.comments}
+                  onToggleCommentLike={handleToggleCommentLike}
+                />
               </div>
 
               {/* Footer - Actions & Add Comment - Always at the bottom */}

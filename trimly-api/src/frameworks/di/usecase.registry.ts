@@ -103,20 +103,22 @@ import { IHandleTopUpPaymentFailureUseCase } from "../../entities/useCaseInterfa
 import { HandleTopUpPaymentFailureUseCase } from "../../useCases/finance/wallet/handle-topup-failure-payment.usecase.js";
 import { IAddShopReviewUseCase } from "../../entities/useCaseInterfaces/review/add-shop-review-usecase.interface.js";
 import { AddShopReviewUseCase } from "../../useCases/review/add-shop-review.usecase.js";
-import { IAddPostUseCase } from "../../entities/useCaseInterfaces/feed/add-post-usecase.interface.js";
-import { AddPostUseCase } from "../../useCases/feed/add-post.usecase.js";
-import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/feed/get-all-posts-by-barber-usecase.interface.js";
-import { GetAllPostsByBarberUseCase } from "../../useCases/feed/get-all-posts-by-barber.usecase.js";
-import { GetSinglePostByPostIdUseCase } from "../../useCases/feed/get-single-post-by-postid.usecase.js";
-import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/get-single-post-by-postid-usecase.interface.js";
-import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/update-post-usecase.interface.js";
-import { UpdatePostUseCase } from "../../useCases/feed/update-post.usecase.js";
-import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/delete-post-usecase.interface.js";
-import { DeletePostUseCase } from "../../useCases/feed/delete-post.usecase.js";
-import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/update-post-status-usecase.interface.js";
-import { UpdatePostStatusUseCase } from "../../useCases/feed/update-post-status.usecase.js";
-import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/toggle-like-post-usecase.interface.js";
-import { ToggleLikePostUseCase } from "../../useCases/feed/toggle-like-post.usecase.js";
+import { IAddPostUseCase } from "../../entities/useCaseInterfaces/feed/post/add-post-usecase.interface.js";
+import { AddPostUseCase } from "../../useCases/feed/post/add-post.usecase.js";
+import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/feed/post/get-all-posts-by-barber-usecase.interface.js";
+import { GetAllPostsByBarberUseCase } from "../../useCases/feed/post/get-all-posts-by-barber.usecase.js";
+import { GetSinglePostByPostIdUseCase } from "../../useCases/feed/post/get-single-post-by-postid.usecase.js";
+import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/post/get-single-post-by-postid-usecase.interface.js";
+import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/post/update-post-usecase.interface.js";
+import { UpdatePostUseCase } from "../../useCases/feed/post/update-post.usecase.js";
+import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/post/delete-post-usecase.interface.js";
+import { DeletePostUseCase } from "../../useCases/feed/post/delete-post.usecase.js";
+import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/post/update-post-status-usecase.interface.js";
+import { UpdatePostStatusUseCase } from "../../useCases/feed/post/update-post-status.usecase.js";
+import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/post/toggle-like-post-usecase.interface.js";
+import { ToggleLikePostUseCase } from "../../useCases/feed/post/toggle-like-post.usecase.js";
+import { IAddCommentUseCase } from "../../entities/useCaseInterfaces/feed/comment/add-comment-usecase.interface.js";
+import { AddCommentUseCase } from "../../useCases/feed/comment/add-comment.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -358,6 +360,10 @@ export class UseCaseRegistry {
 
     container.register<IToggleLikePostUseCase>("IToggleLikePostUseCase", {
       useClass: ToggleLikePostUseCase,
+    });
+
+    container.register<IAddCommentUseCase>("IAddCommentUseCase", {
+      useClass: AddCommentUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//

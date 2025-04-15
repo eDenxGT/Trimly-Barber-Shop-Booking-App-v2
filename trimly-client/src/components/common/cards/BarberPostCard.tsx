@@ -33,7 +33,6 @@ export const PostCard: React.FC<PostCardProps> = ({
   onToggleLike,
 }) => {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-
   return (
     <Card
       key={post.postId}

@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/get-single-post-by-postid-usecase.interface.js";
-import { IPostEntity } from "../../entities/models/post.entity.js";
-import { IPostRepository } from "../../entities/repositoryInterfaces/feed/post-repository.interface.js";
-import { CustomError } from "../../entities/utils/custom.error.js";
-import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
+import { IGetSinglePostByPostIdUseCase } from "../../../entities/useCaseInterfaces/feed/post/get-single-post-by-postid-usecase.interface.js";
+import { IPostEntity } from "../../../entities/models/post.entity.js";
+import { IPostRepository } from "../../../entities/repositoryInterfaces/feed/post-repository.interface.js";
+import { CustomError } from "../../../entities/utils/custom.error.js";
+import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants.js";
 
 @injectable()
 export class GetSinglePostByPostIdUseCase

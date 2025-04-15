@@ -2,19 +2,20 @@ import { Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import { IFeedController } from "../../entities/controllerInterfaces/feed/feed-controller.interface.js";
 import { handleErrorResponse } from "../../shared/utils/error.handler.js";
-import { IAddPostUseCase } from "../../entities/useCaseInterfaces/feed/add-post-usecase.interface.js";
+import { IAddPostUseCase } from "../../entities/useCaseInterfaces/feed/post/add-post-usecase.interface.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
 import {
   ERROR_MESSAGES,
   HTTP_STATUS,
   SUCCESS_MESSAGES,
 } from "../../shared/constants.js";
-import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/feed/get-all-posts-by-barber-usecase.interface.js";
-import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/get-single-post-by-postid-usecase.interface.js";
-import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/update-post-usecase.interface.js";
-import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/delete-post-usecase.interface.js";
-import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/update-post-status-usecase.interface.js";
-import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/toggle-like-post-usecase.interface.js";
+import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/feed/post/get-all-posts-by-barber-usecase.interface.js";
+import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/post/get-single-post-by-postid-usecase.interface.js";
+import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/post/update-post-usecase.interface.js";
+import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/post/delete-post-usecase.interface.js";
+import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/post/update-post-status-usecase.interface.js";
+import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/post/toggle-like-post-usecase.interface.js";
+import { IAddCommentUseCase } from "../../entities/useCaseInterfaces/feed/comment/add-comment-usecase.interface.js";
 
 @injectable()
 export class FeedController implements IFeedController {
@@ -31,8 +32,14 @@ export class FeedController implements IFeedController {
     @inject("IUpdatePostStatusUseCase")
     private _updatePostStatusUseCase: IUpdatePostStatusUseCase,
     @inject("IToggleLikePostUseCase")
-    private _toggleLikePostUseCase: IToggleLikePostUseCase
+    private _toggleLikePostUseCase: IToggleLikePostUseCase,
+    @inject("IAddCommentUseCase")
+    private _addCommentUseCase: IAddCommentUseCase
   ) {}
+
+  //? ✨=========================================================✨
+  //?                     📝 POST SECTION
+  //? ✨=========================================================✨
 
   //* ─────────────────────────────────────────────────────────────
   //*                     🛠️ Add Post
@@ -75,7 +82,7 @@ export class FeedController implements IFeedController {
       const { items, total } = await this._getAllPostsByBarberUseCase.execute(
         userId,
         Number(page),
-        Number(limit),
+        Number(limit)
       );
       res.status(HTTP_STATUS.OK).json({
         success: true,
@@ -226,6 +233,39 @@ export class FeedController implements IFeedController {
         success: true,
         liked: liked,
         message: SUCCESS_MESSAGES.TOGGLE_LIKE_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //? ✨=========================================================✨
+  //?                     📝 COMMENT SECTION
+  //? ✨=========================================================✨
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                       🛠️ Post Comment
+  //* ─────────────────────────────────────────────────────────────
+  async addComment(req: Request, res: Response): Promise<void> {
+    try {
+      const { postId } = req.params;
+      const { userId } = (req as CustomRequest).user;
+      const { comment } = req.body;
+      if (!postId || !userId || !comment) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+      await this._addCommentUseCase.execute({
+        postId,
+        userId,
+        comment,
+      });
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.COMMENT_ADDED,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

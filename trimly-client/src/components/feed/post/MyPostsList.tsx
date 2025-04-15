@@ -14,6 +14,7 @@ interface IMyPostsListProps {
   onStatusUpdate: (postId: string) => void;
   onToggleLike: (postId: string) => void;
   onPostComment: (postId: string, comment: string) => void;
+  onToggleCommentLike: (commentId: string, postId: string) => void;
 }
 
 export const MyPostsList = ({
@@ -21,6 +22,7 @@ export const MyPostsList = ({
   onStatusUpdate,
   onToggleLike,
   onPostComment,
+  onToggleCommentLike,
 }: IMyPostsListProps) => {
   const navigate = useNavigate();
   const [isPostOverviewModalOpen, setIsPostOverviewModalOpen] = useState(false);
@@ -43,6 +45,9 @@ export const MyPostsList = ({
   };
   const handlePostComment = (postId: string, comment: string) => {
     onPostComment(postId, comment);
+  };
+  const handleToggleCommentLike = (commentId: string, postId: string) => {
+    onToggleCommentLike(commentId, postId);
   };
   const posts = data?.pages.flatMap((page) => page.items) || [];
 
@@ -137,8 +142,9 @@ export const MyPostsList = ({
         </div>
       )}
       <PostOverviewModal
-      onPostComment={handlePostComment}
+        onPostComment={handlePostComment}
         onToggleLike={onToggleLike}
+        onToggleCommentLike={handleToggleCommentLike}
         isOpen={isPostOverviewModalOpen}
         onOpenChange={handleOnOpenChange}
         selectedPostId={selectedPost?.postId || null}

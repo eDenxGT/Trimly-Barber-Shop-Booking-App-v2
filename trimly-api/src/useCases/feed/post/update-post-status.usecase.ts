@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { IPostRepository } from "../../entities/repositoryInterfaces/feed/post-repository.interface.js";
-import { CustomError } from "../../entities/utils/custom.error.js";
-import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
-import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/update-post-status-usecase.interface.js";
+import { IPostRepository } from "../../../entities/repositoryInterfaces/feed/post-repository.interface.js";
+import { CustomError } from "../../../entities/utils/custom.error.js";
+import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants.js";
+import { IUpdatePostStatusUseCase } from "../../../entities/useCaseInterfaces/feed/post/update-post-status-usecase.interface.js";
 
 @injectable()
 export class UpdatePostStatusUseCase implements IUpdatePostStatusUseCase {

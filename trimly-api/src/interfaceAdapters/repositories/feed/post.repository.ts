@@ -108,6 +108,16 @@ export class PostRepository
           },
         },
       },
+
+      {
+        $lookup: {
+          from: "comments",
+          localField: "postId",
+          foreignField: "postId",
+          as: "comments",
+        },
+      },
+
       {
         $unwind: {
           path: "$comments",
@@ -119,29 +129,55 @@ export class PostRepository
           from: "clients",
           localField: "comments.userId",
           foreignField: "userId",
-          as: "commentUser",
+          as: "clientCommentUser",
+        },
+      },
+      {
+        $lookup: {
+          from: "barbers",
+          localField: "comments.userId",
+          foreignField: "userId",
+          as: "barberCommentUser",
         },
       },
       {
         $addFields: {
           "comments.userDetails": {
             $cond: [
-              { $gt: [{ $size: "$commentUser" }, 0] },
+              { $gt: [{ $size: "$clientCommentUser" }, 0] },
               {
-                fullName: { $arrayElemAt: ["$commentUser.fullName", 0] },
-                avatar: { $arrayElemAt: ["$commentUser.avatar", 0] },
+                fullName: { $arrayElemAt: ["$clientCommentUser.fullName", 0] },
+                avatar: { $arrayElemAt: ["$clientCommentUser.avatar", 0] },
               },
-              null,
+              {
+                $cond: [
+                  { $gt: [{ $size: "$barberCommentUser" }, 0] },
+                  {
+                    fullName: {
+                      $arrayElemAt: ["$barberCommentUser.shopName", 0],
+                    },
+                    avatar: { $arrayElemAt: ["$barberCommentUser.avatar", 0] },
+                  },
+                  null,
+                ],
+              },
             ],
+          },
+          "comments.isCommentLiked": {
+            $cond: [
+              { $in: [userId, { $ifNull: ["$comments.likes", []] }] },
+              true,
+              false,
+            ],
+          },
+          "comments.likesCount": {
+            $size: {
+              $ifNull: ["$comments.likes", []],
+            },
           },
         },
       },
-      {
-        $project: {
-          barberDetails: 0,
-          commentUser: 0,
-        },
-      },
+
       {
         $group: {
           _id: "$postId",
@@ -158,7 +194,7 @@ export class PostRepository
           comments: {
             $push: {
               $cond: [
-                { $gt: ["$comments.commentText", null] },
+                { $ifNull: ["$comments.commentId", false] },
                 "$comments",
                 "$$REMOVE",
               ],
@@ -169,7 +205,7 @@ export class PostRepository
       {
         $addFields: {
           comments: {
-            $cond: [{ $eq: [{ $size: "$comments" }, 0] }, null, "$comments"],
+            $cond: [{ $eq: [{ $size: "$comments" }, 0] }, [], "$comments"],
           },
           isLiked: {
             $cond: [
@@ -180,6 +216,7 @@ export class PostRepository
           },
         },
       },
+
       { $limit: 1 },
     ];
 

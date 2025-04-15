@@ -9,6 +9,7 @@ export interface IPost {
     avatar: string;
   };
   isLiked?: boolean;
+  likesCount?: number;
   likes?: string[];
   comments?: IComment[];
   status?: "active" | "blocked";
@@ -26,6 +27,8 @@ export interface IComment {
     avatar: string;
   };
   likes?: string[];
+  isCommentLiked?: boolean;
+  likesCount?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

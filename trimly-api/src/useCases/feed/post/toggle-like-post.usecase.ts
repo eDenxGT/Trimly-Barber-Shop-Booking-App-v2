@@ -1,8 +1,8 @@
 import { injectable, inject } from "tsyringe";
-import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/toggle-like-post-usecase.interface.js";
-import { IPostRepository } from "../../entities/repositoryInterfaces/feed/post-repository.interface.js";
-import { CustomError } from "../../entities/utils/custom.error.js";
-import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
+import { IToggleLikePostUseCase } from "../../../entities/useCaseInterfaces/feed/post/toggle-like-post-usecase.interface.js";
+import { IPostRepository } from "../../../entities/repositoryInterfaces/feed/post-repository.interface.js";
+import { CustomError } from "../../../entities/utils/custom.error.js";
+import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants.js";
 
 @injectable()
 export class ToggleLikePostUseCase implements IToggleLikePostUseCase {

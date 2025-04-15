@@ -139,6 +139,16 @@ export class BarberRoutes extends BaseRoute {
         feedController.toggleLikePost(req, res);
       }
     );
+    
+    this.router.post(
+      "/barber/posts/:postId/comment",
+      verifyAuth,
+      authorizeRole(["barber"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        feedController.addComment(req, res);
+      }
+    );
 
     //* ─────────────────────────────────────────────────────────────
     //*                   🛠️ Service Endpoints

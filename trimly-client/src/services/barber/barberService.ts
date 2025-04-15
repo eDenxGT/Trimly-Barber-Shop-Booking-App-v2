@@ -248,3 +248,12 @@ export const barberPostComment = async ({
   );
   return response.data;
 };
+
+export const barberToggleCommentLike = async ({
+  commentId,
+}: { commentId: string }) => {
+  const response = await barberAxiosInstance.post(
+    `/barber/posts/${commentId}/like`
+  );
+  return response.data;
+};
