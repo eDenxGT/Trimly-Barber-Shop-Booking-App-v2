@@ -76,7 +76,7 @@ export const PostCard: React.FC<PostCardProps> = ({
             <Switch
               checked={post.status === "active"}
               onCheckedChange={() => onToggleStatus(post.postId)}
-              className={
+              className={"cursor-pointer" +
                 post.status === "active" ? "bg-green-500" : "bg-red-500"
               }
             />

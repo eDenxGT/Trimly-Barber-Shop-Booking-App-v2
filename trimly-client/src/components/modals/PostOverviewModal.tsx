@@ -22,7 +22,6 @@ export function PostOverviewModal({
   isOpen,
   onOpenChange,
   selectedPost,
-  toggleStatus,
   handleEdit,
   handleDelete,
 }: PostDetailModalProps) {
@@ -53,7 +52,6 @@ export function PostOverviewModal({
                 status={selectedPost.status}
                 postId={selectedPost.postId}
                 isPostOwner={selectedPost.barberId === user.userId}
-                onToggleStatus={toggleStatus}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />

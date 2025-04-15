@@ -113,6 +113,8 @@ import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/update
 import { UpdatePostUseCase } from "../../useCases/feed/update-post.usecase.js";
 import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/delete-post-usecase.interface.js";
 import { DeletePostUseCase } from "../../useCases/feed/delete-post.usecase.js";
+import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/update-post-status-usecase.interface.js";
+import { UpdatePostStatusUseCase } from "../../useCases/feed/update-post-status.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -346,6 +348,10 @@ export class UseCaseRegistry {
 
     container.register<IDeletePostUseCase>("IDeletePostUseCase", {
       useClass: DeletePostUseCase,
+    });
+
+    container.register<IUpdatePostStatusUseCase>("IUpdatePostStatusUseCase", {
+      useClass: UpdatePostStatusUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//

@@ -11,9 +11,7 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
 import { useState } from "react";
 
@@ -23,7 +21,6 @@ interface PostHeaderProps {
   status?: "active" | "blocked";
   postId?: string;
   isPostOwner: boolean;
-  onToggleStatus?: (postId: string) => void;
   onEdit?: (postId: string) => void;
   onDelete?: (postId: string) => void;
 }
@@ -34,7 +31,6 @@ export const PostHeader: React.FC<PostHeaderProps> = ({
   status = "active",
   postId = "",
   isPostOwner,
-  onToggleStatus,
   onEdit,
   onDelete,
 }) => {
@@ -49,21 +45,17 @@ export const PostHeader: React.FC<PostHeaderProps> = ({
         </Avatar>
         <div>
           <p className="text-sm font-semibold">{fullName}</p>
-          <p className="text-xs text-gray-500">
-            Post status: {status === "active" ? "Active" : "Blocked"}
-          </p>
+          {isPostOwner && (
+            <p className="text-xs text-gray-500">
+              Post status: {status === "active" ? "Active" : "Blocked"}
+            </p>
+          )}
         </div>
       </div>
 
       {/* Switch + Popover Actions */}
       {isPostOwner && (
         <div className="flex items-center mr-5 gap-2">
-          <Switch
-            checked={status === "active"}
-            onCheckedChange={() => onToggleStatus?.(postId)}
-            className={cn(status === "active" ? "bg-green-500" : "bg-red-500")}
-          />
-
           <Popover>
             <PopoverTrigger asChild>
               <Button

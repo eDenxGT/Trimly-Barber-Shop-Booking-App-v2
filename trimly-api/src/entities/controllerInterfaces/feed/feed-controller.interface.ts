@@ -5,5 +5,6 @@ export interface IFeedController {
   getAllPostsForBarber(req: Request, res: Response): Promise<void>;
   getPostByPostId(req: Request, res: Response): Promise<void>;
   editPost(req: Request, res: Response): Promise<void>;
+  updatePostStatus(req: Request, res: Response): Promise<void>;
   deletePost(req: Request, res: Response): Promise<void>;
 }

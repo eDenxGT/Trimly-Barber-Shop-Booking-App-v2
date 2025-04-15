@@ -113,6 +113,14 @@ export class BarberRoutes extends BaseRoute {
           feedController.editPost(req, res);
         }
       )
+      .patch(
+        verifyAuth,
+        authorizeRole(["barber"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          feedController.updatePostStatus(req, res);
+        }
+      )
       .delete(
         verifyAuth,
         authorizeRole(["barber"]),

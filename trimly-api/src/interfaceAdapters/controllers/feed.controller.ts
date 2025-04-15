@@ -13,6 +13,7 @@ import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/fe
 import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/get-single-post-by-postid-usecase.interface.js";
 import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/update-post-usecase.interface.js";
 import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/delete-post-usecase.interface.js";
+import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/update-post-status-usecase.interface.js";
 
 @injectable()
 export class FeedController implements IFeedController {
@@ -24,7 +25,10 @@ export class FeedController implements IFeedController {
     private _getSinglePostByPostIdUseCase: IGetSinglePostByPostIdUseCase,
     @inject("IUpdatePostUseCase")
     private _updatePostUseCase: IUpdatePostUseCase,
-    @inject("IDeletePostUseCase") private _deletePostUseCase: IDeletePostUseCase
+    @inject("IDeletePostUseCase")
+    private _deletePostUseCase: IDeletePostUseCase,
+    @inject("IUpdatePostStatusUseCase")
+    private _updatePostStatusUseCase: IUpdatePostStatusUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -132,6 +136,33 @@ export class FeedController implements IFeedController {
         description,
         image,
       });
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                   🛠️ Update Post Status
+  //* ─────────────────────────────────────────────────────────────
+  async updatePostStatus(req: Request, res: Response): Promise<void> {
+    try {
+      const { postId } = req.params;
+      const { userId } = (req as CustomRequest).user;
+
+      if (!postId || !userId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      await this._updatePostStatusUseCase.execute(postId, userId);
+
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
