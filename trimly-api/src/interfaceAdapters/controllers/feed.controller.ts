@@ -12,6 +12,7 @@ import {
 import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/feed/get-all-posts-by-barber-usecase.interface.js";
 import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/get-single-post-by-postid-usecase.interface.js";
 import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/update-post-usecase.interface.js";
+import { IDeletePostUseCase } from "../../entities/useCaseInterfaces/feed/delete-post-usecase.interface.js";
 
 @injectable()
 export class FeedController implements IFeedController {
@@ -21,7 +22,9 @@ export class FeedController implements IFeedController {
     private _getAllPostsByBarberUseCase: IGetAllPostsByBarberUseCase,
     @inject("IGetSinglePostByPostIdUseCase")
     private _getSinglePostByPostIdUseCase: IGetSinglePostByPostIdUseCase,
-    @inject("IUpdatePostUseCase") private _updatePostUseCase: IUpdatePostUseCase
+    @inject("IUpdatePostUseCase")
+    private _updatePostUseCase: IUpdatePostUseCase,
+    @inject("IDeletePostUseCase") private _deletePostUseCase: IDeletePostUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -144,14 +147,18 @@ export class FeedController implements IFeedController {
   async deletePost(req: Request, res: Response): Promise<void> {
     try {
       const { postId } = req.params;
-      if (!postId) {
+      const { userId } = (req as CustomRequest).user;
+      if (!postId || !userId) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success: false,
           message: ERROR_MESSAGES.MISSING_PARAMETERS,
         });
         return;
       }
-      // await this._getSinglePostByPostIdUseCase.execute(userId, role, postId);
+      await this._deletePostUseCase.execute({
+        postId,
+        userId,
+      });
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.DELETE_SUCCESS,

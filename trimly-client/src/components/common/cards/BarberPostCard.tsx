@@ -46,14 +46,14 @@ export const PostCard: React.FC<PostCardProps> = ({
   return (
     <Card
       key={post.postId}
-      className="overflow-hidden py-0 transition-all hover:shadow-md hover:scale-105 cursor-pointer"
+      className="overflow-hidden py-0 transition-all hover:shadow-md hover:scale-105"
     >
       <div className="aspect-video overflow-hidden relative">
         <img
           onClick={onClick}
           src={post.image}
           alt={post.caption}
-          className="w-full h-full object-cover transition-transform hover:scale-105"
+          className="w-full h-full cursor-pointer object-cover transition-transform hover:scale-105"
         />
         <div className="absolute top-3 right-3">
           <Badge

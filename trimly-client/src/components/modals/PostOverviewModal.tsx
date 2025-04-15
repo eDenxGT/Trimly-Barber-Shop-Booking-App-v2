@@ -1,11 +1,7 @@
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Heart,
-  MessageCircle,
-  Send,
-} from "lucide-react";
+import { Heart, MessageCircle, Send } from "lucide-react";
 import type { IPost } from "@/types/Feed";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import { useOutletContext } from "react-router-dom";
@@ -31,7 +27,6 @@ export function PostOverviewModal({
   handleDelete,
 }: PostDetailModalProps) {
   const user: IClient | IBarber = useOutletContext();
-  console.log(selectedPost);
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent

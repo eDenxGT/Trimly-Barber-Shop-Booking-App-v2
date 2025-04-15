@@ -9,7 +9,15 @@ import { PostOverviewModal } from "@/components/modals/PostOverviewModal";
 import { useState } from "react";
 import { IPost } from "@/types/Feed";
 
-export const MyPostsList = () => {
+interface IMyPostsListProps {
+  onDelete: (postId: string) => void;
+  onStatusUpdate: (postId: string) => void;
+}
+
+export const MyPostsList = ({
+  onDelete,
+  onStatusUpdate,
+}: IMyPostsListProps) => {
   const navigate = useNavigate();
   const [isPostOverviewModalOpen, setIsPostOverviewModalOpen] = useState(false);
   const { data, fetchNextPage, hasNextPage, isFetching, isError } =
@@ -20,17 +28,14 @@ export const MyPostsList = () => {
     setIsPostOverviewModalOpen(open);
   };
   const toggleStatus = (postId: string) => {
-    console.log("Toggling status for post:", postId);
-    // Implement your status toggle functionality here
+    onStatusUpdate(postId);
   };
   const handleEdit = (postId: string) => {
-    console.log("Editing post:", postId);
     navigate(`/barber/my-posts/${postId}/edit`);
   };
 
   const handleDelete = (postId: string) => {
-    console.log("Deleting post:", postId);
-    // Implement your delete functionality here
+    onDelete(postId);
   };
   const posts = data?.pages.flatMap((page) => page.items) || [];
 

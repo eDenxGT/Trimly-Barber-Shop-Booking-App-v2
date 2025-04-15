@@ -14,7 +14,7 @@ import { BarberDashBoardPage } from "@/pages/barber/BarberDashboardPage";
 import { BarberBookingsPage } from "@/pages/barber/booking/BarberBookingsPage";
 import { BarberWalletPage } from "@/pages/barber/wallet/BarberWalletPage";
 import { BarberAddPostPage } from "@/pages/barber/feed/BarberAddPostPage";
-import { BarberMyPostsList } from "@/pages/barber/feed/BarberMyPostsList";
+import { BarberMyPostsListPage } from "@/pages/barber/feed/BarberMyPostsListPage";
 import { BarberEditPostPage } from "@/pages/barber/feed/BarberEditPostPage";
 
 export const BarberRoutes = () => {
@@ -48,7 +48,7 @@ export const BarberRoutes = () => {
         />
         <Route path="settings/profile" element={<BarberProfileEditPage />} />
         <Route path="wallet" element={<BarberWalletPage />} />
-        <Route path="my-posts" element={<BarberMyPostsList />} />
+        <Route path="my-posts" element={<BarberMyPostsListPage />} />
         <Route path="my-posts/create" element={<BarberAddPostPage />} />
         <Route path="my-posts/:postId/edit" element={<BarberEditPostPage />} />
       </Route>

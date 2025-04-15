@@ -176,6 +176,7 @@ export const barberWithdrawFromWallet = async (
   return response.data;
 };
 
+// * Post APIs
 export const addPost = async (payload: IPostFormData) => {
   const response = await barberAxiosInstance.post("/barber/posts", payload);
   return response.data;
@@ -210,5 +211,15 @@ export const editPost = async ({
     `/barber/posts/${postId}`,
     payload
   );
+  return response.data;
+};
+
+export const deletePost = async (postId: string) => {
+  const response = await barberAxiosInstance.delete(`/barber/posts/${postId}`);
+  return response.data;
+};
+
+export const updatePostStatus = async (postId: string) => {
+  const response = await barberAxiosInstance.patch(`/barber/posts/${postId}`);
   return response.data;
 };
