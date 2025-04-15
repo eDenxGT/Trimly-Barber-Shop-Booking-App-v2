@@ -109,6 +109,8 @@ import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/fe
 import { GetAllPostsByBarberUseCase } from "../../useCases/feed/get-all-posts-by-barber.usecase.js";
 import { GetSinglePostByPostIdUseCase } from "../../useCases/feed/get-single-post-by-postid.usecase.js";
 import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/get-single-post-by-postid-usecase.interface.js";
+import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/update-post-usecase.interface.js";
+import { UpdatePostUseCase } from "../../useCases/feed/update-post.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -322,9 +324,12 @@ export class UseCaseRegistry {
       useClass: AddPostUseCase,
     });
 
-    container.register<IGetAllPostsByBarberUseCase>("IGetAllPostsByBarberUseCase", {
-      useClass: GetAllPostsByBarberUseCase,
-    });
+    container.register<IGetAllPostsByBarberUseCase>(
+      "IGetAllPostsByBarberUseCase",
+      {
+        useClass: GetAllPostsByBarberUseCase,
+      }
+    );
 
     container.register<IGetSinglePostByPostIdUseCase>(
       "IGetSinglePostByPostIdUseCase",
@@ -332,6 +337,10 @@ export class UseCaseRegistry {
         useClass: GetSinglePostByPostIdUseCase,
       }
     );
+
+    container.register<IUpdatePostUseCase>("IUpdatePostUseCase", {
+      useClass: UpdatePostUseCase,
+    });
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

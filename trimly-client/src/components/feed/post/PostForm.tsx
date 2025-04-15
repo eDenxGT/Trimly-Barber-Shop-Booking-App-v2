@@ -37,6 +37,7 @@ export const PostForm: React.FC<PostFormProps> = ({
   isSubmitting = true,
 }) => {
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [isImageUploading, setIsImageUploading] = useState(false);
   const { infoToast } = useToaster();
   const imageFileRef = useRef<File | null>(null);
   const navigate = useNavigate();
@@ -58,23 +59,33 @@ export const PostForm: React.FC<PostFormProps> = ({
     validationSchema: PostSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
-      let imageUrl: string | null = null;
-      
-      if (imageFileRef.current) {
-        imageUrl = await uploadImageToCloudinary(imageFileRef.current as File);
+      try {
+        let imageUrl: string | null = null;
+
+        if (imageFileRef.current) {
+          setIsImageUploading(true);
+          imageUrl = await uploadImageToCloudinary(
+            imageFileRef.current as File
+          );
+          setIsImageUploading(false);
+        }
+
+        const submitData: IPost = {
+          caption: values.caption,
+          description: values.description,
+          image: imageUrl || values.image,
+        };
+
+        if (post?.postId) {
+          submitData.postId = post.postId;
+        }
+
+        onSubmit(submitData);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsImageUploading(false);
       }
-
-      const submitData: IPost = {
-        caption: values.caption,
-        description: values.description,
-        image: imageUrl || values.image,
-      };
-
-      if (post?.postId) {
-        submitData.postId = post.postId;
-      }
-
-      onSubmit(submitData);
     },
   });
 
@@ -117,6 +128,7 @@ export const PostForm: React.FC<PostFormProps> = ({
           variant="darkblue"
           className="h-7 w-12"
           onClick={handleCancel}
+          disabled={isSubmitting || isImageUploading}
         >
           <ArrowLeft className="h-4 w-4" />
         </MuiAnimatedButton>
@@ -240,14 +252,14 @@ export const PostForm: React.FC<PostFormProps> = ({
             variant="outline"
             onClick={handleCancel}
             className="btn-outline"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isImageUploading}
           >
             Cancel
           </Button>
           <MuiButton
             type="submit"
-            disabled={isSubmitting}
-            loading={isSubmitting}
+            disabled={isSubmitting || isImageUploading}
+            loading={isSubmitting || isImageUploading}
           >
             <span className="flex items-center gap-2">
               {post ? "Update Post" : "Create Post"}

@@ -11,6 +11,7 @@ import {
 } from "../../shared/constants.js";
 import { IGetAllPostsByBarberUseCase } from "../../entities/useCaseInterfaces/feed/get-all-posts-by-barber-usecase.interface.js";
 import { IGetSinglePostByPostIdUseCase } from "../../entities/useCaseInterfaces/feed/get-single-post-by-postid-usecase.interface.js";
+import { IUpdatePostUseCase } from "../../entities/useCaseInterfaces/feed/update-post-usecase.interface.js";
 
 @injectable()
 export class FeedController implements IFeedController {
@@ -19,7 +20,8 @@ export class FeedController implements IFeedController {
     @inject("IGetAllPostsByBarberUseCase")
     private _getAllPostsByBarberUseCase: IGetAllPostsByBarberUseCase,
     @inject("IGetSinglePostByPostIdUseCase")
-    private _getSinglePostByPostIdUseCase: IGetSinglePostByPostIdUseCase
+    private _getSinglePostByPostIdUseCase: IGetSinglePostByPostIdUseCase,
+    @inject("IUpdatePostUseCase") private _updatePostUseCase: IUpdatePostUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -109,16 +111,24 @@ export class FeedController implements IFeedController {
   //* ─────────────────────────────────────────────────────────────
   async editPost(req: Request, res: Response): Promise<void> {
     try {
+      const { userId } = (req as CustomRequest).user;
       const { postId } = req.params;
       const { caption, description, image } = req.body;
-      if (!postId) {
+
+      if (!postId || !caption || !description || !image || !userId) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
           success: false,
           message: ERROR_MESSAGES.MISSING_PARAMETERS,
         });
         return;
       }
-      // await this._getSinglePostByPostIdUseCase.execute(userId, role, postId);
+      await this._updatePostUseCase.execute({
+        userId,
+        postId,
+        caption,
+        description,
+        image,
+      });
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
