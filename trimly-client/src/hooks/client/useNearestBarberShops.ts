@@ -1,4 +1,3 @@
-import { IAllBarberShopsResponse } from "@/types/Response";
 import { IBarber } from "@/types/User";
 import { useInfiniteQuery } from "@tanstack/react-query";
 

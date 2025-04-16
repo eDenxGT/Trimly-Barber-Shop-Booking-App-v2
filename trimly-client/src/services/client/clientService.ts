@@ -58,7 +58,7 @@ export const getAllNearestBarberShops = async ({
   sortBy = "rating",
   sortOrder = "asc",
   page = 1,
-  limit = 9,
+  limit = 3,
 }: FetchNearestShopsParams): Promise<IBarber[]> => {
   const response = await clientAxiosInstance.get("/client/barber-shops", {
     params: {

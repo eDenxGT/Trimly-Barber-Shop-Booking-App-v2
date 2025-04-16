@@ -27,6 +27,7 @@ const ShopListingPage = () => {
 		amenities,
 		sortBy: sortRules[0].sortBy,
 		sortOrder: sortRules[0].sortOrder,
+		limit: 3,
 	});
 
 	const shops = data ? data.pages.flatMap((page) => page) : [];
