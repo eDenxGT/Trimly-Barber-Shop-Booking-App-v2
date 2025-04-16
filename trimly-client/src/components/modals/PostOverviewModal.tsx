@@ -18,9 +18,9 @@ type PostDetailModalProps = {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   selectedPostId: string | null;
-  toggleStatus: (postId: string) => void;
-  handleEdit: (postId: string) => void;
-  handleDelete: (postId: string) => void;
+  toggleStatus?: (postId: string) => void;
+  handleEdit?: (postId: string) => void;
+  handleDelete?: (postId: string) => void;
   onToggleLike: (postId: string) => void;
   onPostComment: (postId: string, comment: string) => void;
   onToggleCommentLike: (commentId: string, postId: string) => void;
@@ -47,7 +47,6 @@ export function PostOverviewModal({
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
   const [newComment, setNewComment] = useState<string>("");
 
-  console.log(data);
   useEffect(() => {
     if (data?.post) {
       setSelectedPost(data.post);

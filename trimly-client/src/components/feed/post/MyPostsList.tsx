@@ -64,29 +64,6 @@ export const MyPostsList = ({
         </MuiAnimatedButton>
       </div>
 
-      {/* <div className="flex flex-col space-y-4 mb-8">
-        <div className="flex items-center space-x-4">
-          <div className="relative w-full">
-            <Input
-              type="text"
-              placeholder="Search posts..."
-              value={searchTerm}
-              onChange={handleSearch}
-              className="pl-10"
-            />
-            <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
-          </div>
-          <Button
-            onClick={handleResetFilters}
-            variant="outline"
-            className="self-start"
-          >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Reset
-          </Button>
-        </div>
-      </div> */}
-
       {isFetching && posts?.length === 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, index) => (

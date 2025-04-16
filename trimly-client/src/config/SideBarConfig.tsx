@@ -1,6 +1,7 @@
 import {
   Home,
   LayoutDashboard,
+  Newspaper,
   Notebook,
   NotebookText,
   NotepadText,
@@ -29,6 +30,11 @@ const navItems = {
       title: "My Bookings",
       icon: NotebookText,
       path: "/my-bookings",
+    },
+    {
+      title: "Feed",
+      icon: Newspaper,
+      path: "/feed",
     },
     {
       title: "Wallet",

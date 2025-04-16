@@ -188,7 +188,7 @@ export const fetchPostsForBarbers = async ({
   pageParam: number;
 }) => {
   const response = await barberAxiosInstance.get("/barber/posts", {
-    params: { page: pageParam, limit: 3 },
+    params: { page: pageParam, limit: 9 },
   });
   return response.data;
 };

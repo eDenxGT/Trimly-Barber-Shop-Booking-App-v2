@@ -33,6 +33,7 @@ export class PostRepository
       { $sort: { createdAt: -1 } },
       { $skip: skip },
       { $limit: limit },
+
       {
         $lookup: {
           from: "barbers",
@@ -41,6 +42,16 @@ export class PostRepository
           as: "barberDetails",
         },
       },
+
+      {
+        $lookup: {
+          from: "comments",
+          localField: "postId",
+          foreignField: "postId",
+          as: "commentsList",
+        },
+      },
+
       {
         $addFields: {
           userDetails: {
@@ -53,7 +64,12 @@ export class PostRepository
               null,
             ],
           },
-          totalComments: { $size: { $ifNull: ["$comments", []] } },
+          likesCount: {
+            $size: { $ifNull: ["$likes", []] },
+          },
+          totalComments: {
+            $size: { $ifNull: ["$commentsList", []] },
+          },
           isLiked: {
             $cond: [
               { $in: [userId, { $ifNull: ["$likes", []] }] },
@@ -63,10 +79,12 @@ export class PostRepository
           },
         },
       },
+
       {
         $project: {
           barberDetails: 0,
-          comments: 0,
+          commentsList: 0,
+          likes: 0,
         },
       },
     ];

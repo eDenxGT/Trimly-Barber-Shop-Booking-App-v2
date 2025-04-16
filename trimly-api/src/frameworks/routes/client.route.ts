@@ -14,6 +14,7 @@ import {
   authController,
   blockStatusMiddleware,
   bookingController,
+  feedController,
   reviewController,
   shopController,
   userController,
@@ -171,6 +172,58 @@ export class ClientRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         shopController.getShopDetailsById(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                   🛠️ Post Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router.get(
+      "/client/posts",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        feedController.getAllPostsForClient(req, res);
+      }
+    );
+
+    this.router.get(
+      "/client/posts/:postId",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        feedController.getPostByPostId(req, res);
+      }
+    );
+
+    this.router.post(
+      "/client/posts/:postId/like",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        feedController.toggleLikePost(req, res);
+      }
+    );
+
+    this.router.post(
+      "/client/posts/:postId/comment",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        feedController.addComment(req, res);
+      }
+    );
+    this.router.patch(
+      "/client/posts/comment/:commentId/like",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        feedController.toggleCommentLike(req, res);
       }
     );
 

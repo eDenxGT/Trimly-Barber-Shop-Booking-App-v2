@@ -17,6 +17,7 @@ import { IUpdatePostStatusUseCase } from "../../entities/useCaseInterfaces/feed/
 import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/post/toggle-like-post-usecase.interface.js";
 import { IAddCommentUseCase } from "../../entities/useCaseInterfaces/feed/comment/add-comment-usecase.interface.js";
 import { IToggleCommentLikeUseCase } from "../../entities/useCaseInterfaces/feed/comment/toggle-comment-like-usecase.interface.js";
+import { IGetAllPostsForClientUseCase } from "../../entities/useCaseInterfaces/feed/post/get-all-posts-for-client-usecase.interface.js";
 
 @injectable()
 export class FeedController implements IFeedController {
@@ -38,6 +39,8 @@ export class FeedController implements IFeedController {
     private _addCommentUseCase: IAddCommentUseCase,
     @inject("IToggleCommentLikeUseCase")
     private _toggleCommentLikeUseCase: IToggleCommentLikeUseCase,
+    @inject("IGetAllPostsForClientUseCase")
+    private _getAllPostsForClientUseCase: IGetAllPostsForClientUseCase
   ) {}
 
   //? ✨=========================================================✨
@@ -83,6 +86,35 @@ export class FeedController implements IFeedController {
         return;
       }
       const { items, total } = await this._getAllPostsByBarberUseCase.execute(
+        userId,
+        Number(page),
+        Number(limit)
+      );
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        items,
+        total,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                  🛠️ Get All Posts For Clients
+  //* ─────────────────────────────────────────────────────────────
+  async getAllPostsForClient(req: Request, res: Response): Promise<void> {
+    try {
+      const { userId } = (req as CustomRequest).user;
+      const { page, limit } = req.query;
+      if (!userId || !page || !limit) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+      const { items, total } = await this._getAllPostsForClientUseCase.execute(
         userId,
         Number(page),
         Number(limit)

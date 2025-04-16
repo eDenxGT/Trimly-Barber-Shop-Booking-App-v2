@@ -88,7 +88,7 @@ export const BarberMyPostsListPage = () => {
     toggleCommentLike(
       { commentId, postId },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           // successToast(data.message);
         },
         onError: (error: any) => {

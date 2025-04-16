@@ -55,6 +55,9 @@ export const useToggleLikePost = (
         queryKey: ["listed-posts-on-barber"],
       });
       queryClient.invalidateQueries({
+        queryKey: ["listed-posts-on-client"],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["post", postId],
       });
     },

@@ -212,6 +212,7 @@ export const postReviewOnBarber = async (payload: ReviewDTO) => {
   return response.data;
 };
 
+// * Post APIs
 export const fetchPostByPostIdForClients = async (
   postId: string,
   forType: string
@@ -219,6 +220,49 @@ export const fetchPostByPostIdForClients = async (
   const response = await clientAxiosInstance.get<ISinglePostResponse>(
     `/client/posts/${postId}`,
     { params: { forType } }
+  );
+  return response.data;
+};
+
+export const fetchPostsForClients = async ({
+  pageParam = 1,
+}: {
+  pageParam: number;
+}) => {
+  const response = await clientAxiosInstance.get("/client/posts", {
+    params: { page: pageParam, limit: 9 },
+  });
+  return response.data;
+};
+
+export const clientToggleLikePost = async ({ postId }: { postId: string }) => {
+  const response = await clientAxiosInstance.post(
+    `/client/posts/${postId}/like`
+  );
+  return response.data;
+};
+
+export const clientPostComment = async ({
+  postId,
+  comment,
+}: {
+  postId: string;
+  comment: string;
+}) => {
+  const response = await clientAxiosInstance.post(
+    `/client/posts/${postId}/comment`,
+    { comment }
+  );
+  return response.data;
+};
+
+export const clientToggleCommentLike = async ({
+  commentId,
+}: {
+  commentId: string;
+}) => {
+  const response = await clientAxiosInstance.patch(
+    `/client/posts/comment/${commentId}/like`
   );
   return response.data;
 };

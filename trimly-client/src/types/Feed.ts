@@ -12,6 +12,7 @@ export interface IPost {
   likesCount?: number;
   likes?: string[];
   comments?: IComment[];
+  totalComments?: number;
   status?: "active" | "blocked";
   createdAt?: Date;
   updatedAt?: Date;
