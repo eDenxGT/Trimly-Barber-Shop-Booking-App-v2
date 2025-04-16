@@ -14,4 +14,20 @@ export class WalletRepository
   constructor() {
     super(WalletModel);
   }
+
+  async incrementBalance(ownerId: string, amount: number): Promise<void> {
+    await this.model.findOneAndUpdate(
+      { ownerId },
+      { $inc: { balance: amount } },
+      { new: true }
+    );
+  }
+
+  async decrementBalance(ownerId: string, amount: number): Promise<void> {
+    await this.model.findOneAndUpdate(
+      { ownerId },
+      { $inc: { balance: -amount } },
+      { new: true }
+    );
+  }
 }

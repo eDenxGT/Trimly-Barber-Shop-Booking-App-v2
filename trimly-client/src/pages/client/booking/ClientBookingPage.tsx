@@ -24,7 +24,6 @@ import { useBarberShopById } from "@/hooks/barber/useBarberShopById";
 import { generateSlots } from "@/utils/helpers/generateTimeSlots";
 import { IClient } from "@/types/User";
 import { RazorpayButton } from "@/services/payment/RazorPay";
-import { clientAxiosInstance } from "@/api/client.axios";
 
 export interface TimeSlot {
   time: string;
@@ -519,6 +518,7 @@ export function ClientBookingPage() {
                       // 	duration={totals.totalDuration}
                       // />
                       <RazorpayButton
+                        onSuccess={handlePaymentSuccess}
                         className="w-full"
                         amount={totals.total}
                         description="Slot Booking Payment"

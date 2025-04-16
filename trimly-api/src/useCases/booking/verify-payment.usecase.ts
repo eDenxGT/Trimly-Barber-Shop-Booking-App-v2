@@ -40,7 +40,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
       { status: "confirmed" }
     );
     await this._transactionRepository.update(
-      { referenceId: bookingId },
+      { referenceId: bookingId, source: "booking" },
       { status: "success" }
     );
   }

@@ -5,6 +5,7 @@ import { ClientBookingPage } from "@/pages/client/booking/ClientBookingPage";
 import { ClientMyBookingsPage } from "@/pages/client/booking/ClientMyBookingsPage";
 import { ClientAuth } from "@/pages/client/ClientAuth";
 import { ClientHomePage } from "@/pages/client/ClientHomePage";
+import { ClientPostDetailsPage } from "@/pages/client/feed/ClientPostDetailsPage";
 import { ClientSocialFeedPage } from "@/pages/client/feed/ClientSocialFeedPage";
 import { ClientChangePasswordPage } from "@/pages/client/settings/ClientChangePasswordPage";
 import { ClientProfileEditPage } from "@/pages/client/settings/ClientProfileEditPage";
@@ -41,11 +42,13 @@ export const ClientRoutes = () => {
         <Route path="shops/:shopId/booking" element={<ClientBookingPage />} />
 
         <Route path="my-bookings" element={<ClientMyBookingsPage />} />
-        
+
         <Route path="wallet" element={<ClientWalletPage />} />
 
         <Route path="feed" element={<ClientSocialFeedPage />} />
-        
+
+        <Route path="feed/post/:postId" element={<ClientPostDetailsPage />} />
+
         <Route path="settings" element={<ClientSettingsPage />} />
 
         <Route

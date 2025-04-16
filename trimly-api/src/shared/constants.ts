@@ -109,6 +109,7 @@ export const ERROR_MESSAGES = {
   SHOP_EXISTS: "You already have a registered shop",
   SHOP_BLOCKED: "This shop is blocked by admin",
   MISSING_PARAMETERS: "Some details are missing",
+  TRANSACTION_NOT_FOUND: "Transaction not found",
   WRONG_CURRENT_PASSWORD: "Current password is incorrect",
   ACCOUNT_UNDER_VERIFICATION:
     "Your account is under verification. Please wait for admin approval.",

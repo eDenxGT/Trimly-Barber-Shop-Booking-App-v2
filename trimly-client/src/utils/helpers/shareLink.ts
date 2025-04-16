@@ -1,3 +1,5 @@
+const frontendUrl = import.meta.env.VITE_FRONTEND_URL;
+
 export const handleShare = async () => {
   try {
     if (!navigator.share) {
@@ -24,14 +26,14 @@ export const handlePostShare = async (postId: string) => {
       await navigator.share({
         title: "Check this post on Trimly!",
         text: "Look at this cool haircut!",
-        url: `https://trimly.app/post/${postId}`,
+        url: `${frontendUrl}/feed/post/${postId}`,
       });
       console.log("Post shared successfully!");
     } catch (error) {
       console.error("Sharing failed:", error);
     }
   } else {
-    navigator.clipboard.writeText(`https://trimly.app/post/${postId}`);
+    navigator.clipboard.writeText(`${frontendUrl}/feed/post/${postId}`);
     alert("Link copied to clipboard!");
   }
 };

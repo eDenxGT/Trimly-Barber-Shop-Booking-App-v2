@@ -1,18 +1,17 @@
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Send } from "lucide-react";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import { useOutletContext } from "react-router-dom";
 import type { IBarber, IClient } from "@/types/User";
 import { CommentsSection } from "../feed/comment/CommentSection";
 import { PostHeader } from "../feed/post/PostHeader";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { IPost } from "@/types/Feed";
 import { useGetPostByPostId } from "@/hooks/feed/useGetPosts";
 import { fetchPostByPostIdForBarbers } from "@/services/barber/barberService";
 import { fetchPostByPostIdForClients } from "@/services/client/clientService";
-import MuiAnimatedButton from "../common/buttons/AnimatedButton";
+import { PostDetailsFooter } from "../feed/post/details/PostDetailsFooter";
+import { handlePostShare } from "@/utils/helpers/shareLink";
 
 type PostDetailModalProps = {
   isOpen: boolean;
@@ -24,6 +23,7 @@ type PostDetailModalProps = {
   onToggleLike: (postId: string) => void;
   onPostComment: (postId: string, comment: string) => void;
   onToggleCommentLike: (commentId: string, postId: string) => void;
+  handleRedirectToPost?: (postId: string) => void;
 };
 
 export function PostOverviewModal({
@@ -35,6 +35,7 @@ export function PostOverviewModal({
   onToggleLike,
   onPostComment,
   onToggleCommentLike,
+  handleRedirectToPost,
 }: PostDetailModalProps) {
   const { role } = useOutletContext<IBarber | IClient>();
   const queryFn =
@@ -43,7 +44,6 @@ export function PostOverviewModal({
       : fetchPostByPostIdForClients;
 
   const { data } = useGetPostByPostId(queryFn, selectedPostId || "", "details");
-  const commentRef = useRef<HTMLInputElement>(null);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
   const [newComment, setNewComment] = useState<string>("");
 
@@ -99,7 +99,13 @@ export function PostOverviewModal({
               {/* Content and Comments - Using flex-1 to take available space */}
               <div className="flex-1 overflow-y-auto flex flex-col">
                 <div className="px-4 py-2 border-b">
-                  <div className="flex items-start mb-2">
+                  <div
+                    onClick={() =>
+                      handleRedirectToPost &&
+                      handleRedirectToPost(selectedPost.postId || "")
+                    }
+                    className="flex cursor-pointer items-start mb-2"
+                  >
                     <Avatar className="h-8 w-8 mr-2">
                       <AvatarImage
                         src={
@@ -114,7 +120,7 @@ export function PostOverviewModal({
                     </Avatar>
                     <div>
                       <div className="flex items-center">
-                        <p className="text-sm font-semibold mr-1">
+                        <p className="text-sm cursor-pointer font-semibold mr-1">
                           {selectedPost.userDetails?.fullName}
                         </p>
                         <p className="text-sm">{selectedPost.caption}</p>
@@ -137,75 +143,17 @@ export function PostOverviewModal({
               </div>
 
               {/* Footer - Actions & Add Comment - Always at the bottom */}
-              <div className="border-t mt-auto">
-                <div className="flex justify-between p-3">
-                  <div className="flex gap-4">
-                    <Button
-                      onClick={() => onToggleLike(selectedPost?.postId || "")}
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-full"
-                    >
-                      <Heart
-                        className="h-6 w-6"
-                        fill={selectedPost?.isLiked ? "#f43f5e" : "none"}
-                        stroke={
-                          selectedPost?.isLiked ? "#f43f5e" : "currentColor"
-                        }
-                      />
-                    </Button>
-                    <Button
-                      onClick={() => commentRef.current?.focus()}
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-full"
-                    >
-                      <MessageCircle className="h-6 w-6" />
-                    </Button>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 rounded-full"
-                  >
-                    <Send className="h-6 w-6" />
-                  </Button>
-                </div>
-
-                <div className="px-3 py-2">
-                  <p className="text-sm font-semibold">
-                    {selectedPost.likes?.length || 0}{" "}
-                    {selectedPost.likes?.length === 1 ? "like" : "likes"}
-                  </p>
-                </div>
-
-                <div className="flex items-center p-3 border-t">
-                  <Avatar className="h-7 w-7 mr-2">
-                    <AvatarImage src={user?.avatar} />
-                    <AvatarFallback>
-                      {user.role === "client"
-                        ? (user as IClient)?.fullName?.charAt(0)
-                        : (user as IBarber)?.shopName?.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <input
-                    ref={commentRef}
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    type="text"
-                    placeholder="Add a comment..."
-                    className="flex-1 bg-transparent text-sm outline-none"
-                  />
-                  <MuiAnimatedButton
-                    onClick={() => handlePostComment()}
-                    disabled={newComment.trim() === ""}
-                    variant="darkblue"
-                    className="text-blue-500 max-h-8 font-semibold"
-                  >
-                    Post
-                  </MuiAnimatedButton>
-                </div>
-              </div>
+              <PostDetailsFooter
+                userAvatar={user?.avatar || "/placeholder.svg"}
+                post={selectedPost}
+                newComment={newComment}
+                setNewComment={setNewComment}
+                handleToggleLike={onToggleLike}
+                handlePostComment={handlePostComment}
+                handlePostShare={() =>
+                  handlePostShare(selectedPost?.postId || "")
+                }
+              />
             </div>
           </>
         )}

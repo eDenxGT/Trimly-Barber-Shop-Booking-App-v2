@@ -98,7 +98,7 @@ export const PostCard: React.FC<PostCardProps> = ({
             stroke={post?.isLiked ? "#f43f5e" : "currentColor"}
             onClick={() => onToggleLike(post.postId || "")}
           />
-          <span className="text-sm">{post?.likes?.length || 0}</span>
+          <span className="text-sm">{post?.likesCount || 0}</span>
         </div>
         <div className="flex gap-2">
           <Button

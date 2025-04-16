@@ -23,20 +23,24 @@ import { IBooking } from "@/types/Booking";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { useNavigate } from "react-router-dom";
 import { openInGoogleMap } from "@/utils/helpers/googleMapRedirect";
+import { ReviewModal } from "@/components/modals/ReviewModal";
 
 export function BookingHistory({
   bookings = [],
   handleCancel,
+  isDialogOpen,
+  setIsDialogOpen,
 }: {
   bookings: IBooking[];
   handleCancel: (bookingId: string) => void;
+  isDialogOpen: boolean;
+  setIsDialogOpen: (value: boolean) => void;
 }) {
   const [activeTab, setActiveTab] = useState("all");
   const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const navigate = useNavigate();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Format date for display
   const formatDate = (date: Date | string) => {
     if (!date) return "N/A";
     const dateObj = date instanceof Date ? date : new Date(date);
@@ -329,7 +333,7 @@ export function BookingHistory({
                   selectedBooking?.status === "pending") && (
                   <MuiButton
                     onClick={() =>
-                      handleCancel(selectedBooking?.bookingId || "")
+                      handleCancel(selectedBooking?.bookingId as string)
                     }
                     variant="darkblue"
                   >
@@ -339,7 +343,12 @@ export function BookingHistory({
                 {(selectedBooking?.status === "completed" ||
                   selectedBooking?.status) === "cancelled" && (
                   <div className="flex gap-3">
-                    <MuiButton variant="darkblue">Rate It</MuiButton>
+                    <MuiButton
+                      onClick={() => setIsReviewModalOpen(true)}
+                      variant="darkblue"
+                    >
+                      Rate It
+                    </MuiButton>
                     <MuiButton
                       onClick={() =>
                         navigate(
@@ -356,6 +365,11 @@ export function BookingHistory({
           )}
         </DialogContent>
       </Dialog>
+      <ReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        shopId={selectedBooking?.shopDetails?.userId || ""}
+      />
     </div>
   );
 }

@@ -82,10 +82,10 @@ export class CreateBookingUseCase implements ICreateBookingUseCase {
     });
 
     if (cancelledBookings.length > 5) {
-      throw new CustomError(
-        ERROR_MESSAGES.MORE_THAN_5_CANCELLED_BOOKING,
-        HTTP_STATUS.BAD_REQUEST
-      );
+      // throw new CustomError(
+      //   ERROR_MESSAGES.MORE_THAN_5_CANCELLED_BOOKING,
+      //   HTTP_STATUS.BAD_REQUEST
+      // );
     }
 
     const bookingId = generateUniqueId("booking");

@@ -230,7 +230,7 @@ export const fetchPostsForClients = async ({
   pageParam: number;
 }) => {
   const response = await clientAxiosInstance.get("/client/posts", {
-    params: { page: pageParam, limit: 9 },
+    params: { page: pageParam, limit: 3 },
   });
   return response.data;
 };

@@ -28,7 +28,7 @@ export interface RazorpayButtonProps {
     email?: string;
     contact?: string;
   };
-  onSuccess?: () => void;
+  onSuccess: () => void;
   buttonText?: string;
 }
 
@@ -73,10 +73,8 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
             ...response,
             customData,
           });
-          if (onSuccess) {
-            onSuccess();
-          }
-          successToast(response.message || "Payment successful");
+          onSuccess();
+          successToast(response.message);
         },
         prefill,
         theme: { color: "#feba43" },

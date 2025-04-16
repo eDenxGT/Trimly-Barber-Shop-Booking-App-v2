@@ -192,7 +192,7 @@ export const PostCard = ({
   };
 
   return (
-    <Card className="overflow-hidden py-0 shadow-lg border border-slate-200 mb-6 max-w-md mx-auto bg-white rounded-lg transform transition-all duration-200 hover:shadow-md">
+    <Card className="overflow-hidden py-0 w-full gap-0 shadow-lg border border-slate-200 mb-6 max-w-md mx-auto bg-white rounded-lg transform transition-all duration-200 hover:shadow-md">
       {/* Card Header */}
       <div className="p-3 flex justify-between items-center">
         <div className="flex items-center gap-2">
@@ -256,7 +256,7 @@ export const PostCard = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="p-3 flex justify-between">
+      <div className="p-2 flex justify-between">
         <div className="flex gap-0">
           <motion.div whileTap={{ scale: 0.8 }}>
             <Button
@@ -298,12 +298,13 @@ export const PostCard = ({
       </div>
 
       {/* Likes Count */}
-      <div className="px-4 py-1">
+      <div className="px-4 pb-1">
         <p className="text-sm font-semibold">
           {post.likesCount?.toLocaleString()}{" "}
           {post.likesCount === 1 ? "like" : "likes"}
         </p>
       </div>
+      <Separator className="mb-2" />
 
       {/* Caption and Description */}
       <div className="px-4 py-1">
@@ -320,26 +321,27 @@ export const PostCard = ({
 
       {/* Comments */}
       <div className="px-4">
-        {post.totalComments && post.totalComments > 0 && (
-          <p
-            className="text-sm text-gray-500 mb-2 cursor-pointer hover:underline"
-            onClick={() => onViewDetail && onViewDetail()}
-          >
-            View {post.totalComments > 1 ? "all" : ""} {post.totalComments}{" "}
-            {post.totalComments === 1 ? "comment" : "comments"}
-          </p>
-        )}
+        {post.totalComments
+          ? post.totalComments > 0 && (
+              <p
+                className="text-sm text-gray-500 mb-2 cursor-pointer hover:underline"
+                onClick={() => onViewDetail && onViewDetail()}
+              >
+                View {post.totalComments > 1 ? "all" : ""} {post.totalComments}{" "}
+                {post.totalComments === 1 ? "comment" : "comments"}
+              </p>
+            )
+          : null}
       </div>
 
       {/* Timestamp Footer */}
-      <div className="px-4">
+      <div className="px-4 pb-3">
         <p className="text-xs text-gray-400 uppercase">
           {post.createdAt && format(post.createdAt, "MMMM d, yyyy")}
         </p>
       </div>
 
       {/* Comment Input */}
-      <Separator />
     </Card>
   );
 };

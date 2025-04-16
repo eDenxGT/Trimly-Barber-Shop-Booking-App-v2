@@ -25,6 +25,7 @@ export class PostRepository
     const matchStage = {
       $match: {
         ...(filter.barberId ? { barberId: filter.barberId } : {}),
+        ...(filter.status ? { status: filter.status } : {}),
       },
     };
 
@@ -232,9 +233,13 @@ export class PostRepository
               false,
             ],
           },
+          likesCount: {
+            $size: {
+              $ifNull: ["$likes", []],
+            },
+          },
         },
       },
-
       { $limit: 1 },
     ];
 
