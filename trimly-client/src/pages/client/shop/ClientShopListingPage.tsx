@@ -30,7 +30,6 @@ const ShopListingPage = () => {
 	});
 
 	const shops = data ? data.pages.flatMap((page) => page) : [];
-	console.log("shops", shops);
 	useEffect(() => {
 		const newFilters: string[] = [];
 

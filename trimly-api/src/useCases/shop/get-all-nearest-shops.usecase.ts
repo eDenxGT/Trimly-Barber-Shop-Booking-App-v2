@@ -49,7 +49,7 @@ export class GetAllNearestShopsUseCase implements IGetAllNearestShopsUseCase {
 			limit: limit || 9,
 		};
 		const sort = {
-			sortBy: sortBy || "rating",
+			sortBy: "averageRating",
 			sortOrder: sortOrder || "asc",
 		};
 		const shops =

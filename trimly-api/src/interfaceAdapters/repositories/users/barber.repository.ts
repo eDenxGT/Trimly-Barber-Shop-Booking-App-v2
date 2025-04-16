@@ -35,7 +35,7 @@ export class BarberRepository
       location?: any;
     },
     sorting: {
-      sortBy: "rating";
+      sortBy: "averageRating";
       sortOrder: "asc" | "desc";
     },
     pagination: {

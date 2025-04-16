@@ -11,7 +11,7 @@ export interface IBarberRepository extends IBaseRepository<IBarberEntity> {
 			amenities: string[];
 		},
 		sorting: {
-			sortBy: "rating";
+			sortBy: string;
 			sortOrder: "asc" | "desc";
 		},
 		pagination: {
