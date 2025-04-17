@@ -90,6 +90,7 @@ export const ERROR_MESSAGES = {
   EMAIL_EXISTS: "Email already registered",
   USERNAME_EXISTS: "Username already taken",
   WALLET_NOT_FOUND: "Wallet not found",
+  WALLET_UPDATE_FAILED: "Failed to update wallet.",
   REQUEST_NOT_FOUND: "Request not found",
   SERVICE_EXISTS: "Service already exists",
   SERVICE_NOT_FOUND: "Service not found",
@@ -116,7 +117,7 @@ export const ERROR_MESSAGES = {
   POST_NOT_FOUND: "Post not found",
   SAME_CURR_NEW_PASSWORD:
     "New password must be different from current password",
-  INSUFFICIENT_FUNDS: "Not enough balance",
+  INSUFFICIENT_BALANCE: "Not enough balance",
   YOU_CAN_ONLY_BOOK_FOR_FUTURE: "You can only book for a future date and time.",
   TRANSACTION_FAILED: "Transaction failed try again",
   REFUND_FAILED: "Refund process failed",

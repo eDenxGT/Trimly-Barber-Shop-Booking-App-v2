@@ -8,39 +8,32 @@ import { IGetWithdrawalByUserUseCase } from "../../entities/useCaseInterfaces/fi
 
 @injectable()
 export class GetWalletOverviewUseCase implements IGetWalletOverviewUseCase {
-  constructor(
-    @inject("IGetWalletByUserUseCase")
-    private _getWalletByUserUseCase: IGetWalletByUserUseCase,
-    @inject("IGetTransactionByUserUseCase")
-    private _getTransactionByUserUseCase: IGetTransactionByUserUseCase,
-    @inject("IGetWithdrawalByUserUseCase")
-    private _getWithdrawalByUserUseCase: IGetWithdrawalByUserUseCase
-  ) {}
-  async execute(
-    userId: string,
-    role: TRole
-  ): Promise<IWalletOverviewDTO | null> {
-    const wallet = await this._getWalletByUserUseCase.execute(userId, role);
-    if (!wallet) {
-      return null;
-    }
+	constructor(
+		@inject("IGetWalletByUserUseCase")
+		private _getWalletByUserUseCase: IGetWalletByUserUseCase,
+		@inject("IGetTransactionByUserUseCase")
+		private _getTransactionByUserUseCase: IGetTransactionByUserUseCase,
+		@inject("IGetWithdrawalByUserUseCase")
+		private _getWithdrawalByUserUseCase: IGetWithdrawalByUserUseCase
+	) {}
+	async execute(
+		userId: string,
+		role: "client" | "barber"
+	): Promise<IWalletOverviewDTO | null> {
+		const wallet = await this._getWalletByUserUseCase.execute(userId, role);
 
-    const transactions = await this._getTransactionByUserUseCase.execute(
-      userId
-    );
-    if (!transactions) {
-      return null;
-    }
+		const transactions = await this._getTransactionByUserUseCase.execute(
+			userId
+		);
 
-    const withdrawals = await this._getWithdrawalByUserUseCase.execute(userId);
-    if (!withdrawals) {
-      return null;
-    }
+		const withdrawals = await this._getWithdrawalByUserUseCase.execute(
+			userId
+		);
 
-    return {
-      balance: wallet.balance,
-      transactions,
-      withdrawals,
-    };
-  }
+		return {
+			balance: wallet?.balance || 0,
+			transactions: transactions || [],
+			withdrawals: withdrawals || [],
+		};
+	}
 }

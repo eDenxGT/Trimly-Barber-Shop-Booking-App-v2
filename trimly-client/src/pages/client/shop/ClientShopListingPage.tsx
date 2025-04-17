@@ -10,7 +10,7 @@ const ShopListingPage = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [amenities, setAmenities] = useState<string[]>([]);
 	const [sortRules, setSortRules] = useState([
-		{ sortBy: "rating", sortOrder: "desc" },
+		{ sortBy: "", sortOrder: "" },
 	]);
 	const [activeFilters, setActiveFilters] = useState<string[]>([]);
 	const user = useOutletContext<IClient>();
@@ -87,14 +87,14 @@ const ShopListingPage = () => {
 			const amenity = filter.split(": ")[1];
 			setAmenities((prev) => prev.filter((item) => item !== amenity));
 		} else if (filter.startsWith("Sort:")) {
-			setSortRules([{ sortBy: "rating", sortOrder: "desc" }]);
+			setSortRules([{ sortBy: "", sortOrder: "" }]);
 		}
 	}, []);
 
 	const clearAllFilters = useCallback(() => {
 		setSearchTerm("");
 		setAmenities([]);
-		setSortRules([{ sortBy: "rating", sortOrder: "desc" }]);
+		setSortRules([{ sortBy: "", sortOrder: "" }]);
 		refetch();
 	}, [refetch]);
 
