@@ -1,6 +1,5 @@
 import { inject, injectable } from "tsyringe";
 import { Request, Response } from "express";
-import { IWalletController } from "../../entities/controllerInterfaces/finance/wallet-controller.interface.js";
 import { handleErrorResponse } from "../../shared/utils/error.handler.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
 import {
@@ -14,11 +13,15 @@ import { ITopUpWalletUseCase } from "../../entities/useCaseInterfaces/finance/wa
 import { generateUniqueId } from "../../shared/utils/unique-uuid.helper.js";
 import { IVerifyTopUpPaymentUseCase } from "../../entities/useCaseInterfaces/finance/wallet/verify-topup-payment-usecase.interface.js";
 import { IUpdateWalletBalanceUseCase } from "../../entities/useCaseInterfaces/finance/wallet/update-wallet-balance-usecase.interface.js";
-import { IWithdrawFromWalletUseCase } from "../../entities/controllerInterfaces/finance/withdraw-from-wallet-usecase.interface.js";
 import { IHandleTopUpPaymentFailureUseCase } from "../../entities/useCaseInterfaces/finance/wallet/handle-topup-failure-payment-usecase.interface.js";
+import { IFinanceController } from "./../../entities/controllerInterfaces/finance/finance-controller.interface.js";
+import { IWithdrawFromWalletUseCase } from "../../entities/useCaseInterfaces/finance/withdrawal/withdraw-from-wallet-usecase.interface.js";
+import { IGetAllUserWithdrawalsUseCase } from "../../entities/useCaseInterfaces/finance/withdrawal/get-all-user-withdrawals-usecase.interface.js";
+import { IRejectWithdrawalUseCase } from "../../entities/useCaseInterfaces/finance/withdrawal/reject-withdrawal-usecase.interface.js";
+import { IApproveWithdrawalUseCase } from "../../entities/useCaseInterfaces/finance/withdrawal/approve-withdrawal-usecase.interface.js";
 
 @injectable()
-export class WalletController implements IWalletController {
+export class FinanceController implements IFinanceController {
 	constructor(
 		@inject("IGetWalletOverviewUseCase")
 		private _getWalletOverviewUseCase: IGetWalletOverviewUseCase,
@@ -31,7 +34,13 @@ export class WalletController implements IWalletController {
 		@inject("IWithdrawFromWalletUseCase")
 		private _withdrawFromWalletUseCase: IWithdrawFromWalletUseCase,
 		@inject("IHandleTopUpPaymentFailureUseCase")
-		private _handleTopUpPaymentFailureUseCase: IHandleTopUpPaymentFailureUseCase
+		private _handleTopUpPaymentFailureUseCase: IHandleTopUpPaymentFailureUseCase,
+		@inject("IGetAllUserWithdrawalsUseCase")
+		private _getAllUserWithdrawalsUseCase: IGetAllUserWithdrawalsUseCase,
+		@inject("IRejectWithdrawalUseCase")
+		private _rejectWithdrawalUseCase: IRejectWithdrawalUseCase,
+		@inject("IApproveWithdrawalUseCase")
+		private _approveWithdrawalUseCase: IApproveWithdrawalUseCase
 	) {}
 
 	//* ─────────────────────────────────────────────────────────────
@@ -205,6 +214,74 @@ export class WalletController implements IWalletController {
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
 				message: SUCCESS_MESSAGES.WITHDRAWAL_SUCCESS,
+			});
+		} catch (error) {
+			handleErrorResponse(req, res, error);
+		}
+	}
+
+	//* ─────────────────────────────────────────────────────────────
+	//*            🛠️  Get All User Withdrawals (For Admin)
+	//* ─────────────────────────────────────────────────────────────
+	async getAllUserWithdrawals(req: Request, res: Response): Promise<void> {
+		try {
+			const {
+				page = "1",
+				limit = "10",
+				status,
+				method,
+				search,
+				sortField,
+				sortDirection,
+			} = req.query;
+
+			const result = await this._getAllUserWithdrawalsUseCase.execute({
+				page: parseInt(page as string, 10),
+				limit: parseInt(limit as string, 10),
+				status: status as string,
+				method: method as string,
+				search: search as string,
+				sortField: sortField as string,
+				sortDirection: sortDirection as "asc" | "desc",
+			});
+
+			console.log(result);
+
+			res.status(200).json(result);
+		} catch (error) {
+			handleErrorResponse(req, res, error);
+		}
+	}
+
+	//* ─────────────────────────────────────────────────────────────
+	//*             🛠️  Approve Withdrawal (For Admin)
+	//* ─────────────────────────────────────────────────────────────
+	async approveWithdrawal(req: Request, res: Response): Promise<void> {
+		try {
+			const { withdrawalId } = req.body;
+			await this._approveWithdrawalUseCase.execute({ withdrawalId });
+			res.status(HTTP_STATUS.ACCEPTED).json({
+				success: true,
+				message: SUCCESS_MESSAGES.WITHDRAWAL_APPROVED_SUCCESS,
+			});
+		} catch (error) {
+			handleErrorResponse(req, res, error);
+		}
+	}
+
+	//* ─────────────────────────────────────────────────────────────
+	//*             🛠️  Approve Withdrawal (For Admin)
+	//* ─────────────────────────────────────────────────────────────
+	async rejectWithdrawal(req: Request, res: Response): Promise<void> {
+		try {
+			const { withdrawalId, remarks } = req.body;
+			await this._rejectWithdrawalUseCase.execute({
+				withdrawalId,
+				remarks,
+			});
+			res.status(HTTP_STATUS.ACCEPTED).json({
+				success: true,
+				message: SUCCESS_MESSAGES.WITHDRAWAL_REJECTED_SUCCESS,
 			});
 		} catch (error) {
 			handleErrorResponse(req, res, error);

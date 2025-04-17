@@ -95,7 +95,6 @@ import { IVerifyTopUpPaymentUseCase } from "../../entities/useCaseInterfaces/fin
 import { VerifyTopUpPaymentUseCase } from "../../useCases/finance/wallet/verify-topup-payment.usecase.js";
 import { IUpdateWalletBalanceUseCase } from "../../entities/useCaseInterfaces/finance/wallet/update-wallet-balance-usecase.interface.js";
 import { UpdateWalletBalanceUseCase } from "../../useCases/finance/wallet/update-wallet-balance.usecase.js";
-import { IWithdrawFromWalletUseCase } from "../../entities/controllerInterfaces/finance/withdraw-from-wallet-usecase.interface.js";
 import { WithdrawFromWalletUseCase } from "../../useCases/finance/withdrawal/withdraw-from-wallet.usecase.js";
 import { IHandleTopUpPaymentFailureUseCase } from "../../entities/useCaseInterfaces/finance/wallet/handle-topup-failure-payment-usecase.interface.js";
 import { HandleTopUpPaymentFailureUseCase } from "../../useCases/finance/wallet/handle-topup-failure-payment.usecase.js";
@@ -129,6 +128,13 @@ import { IIncrementWalletBalanceUseCase } from "../../entities/useCaseInterfaces
 import { IncrementWalletBalanceUseCase } from "./../../useCases/finance/wallet/increment-wallet-balance.usecase.js";
 import { IDecrementWalletBalanceUseCase } from "../../entities/useCaseInterfaces/finance/wallet/decrement-wallet-balance-usecase.interface.js";
 import { DecrementWalletBalanceUseCase } from "../../useCases/finance/wallet/decrement-wallet-balance.usecase.js";
+import { IWithdrawFromWalletUseCase } from "../../entities/useCaseInterfaces/finance/withdrawal/withdraw-from-wallet-usecase.interface.js";
+import { IGetAllUserWithdrawalsUseCase } from "../../entities/useCaseInterfaces/finance/withdrawal/get-all-user-withdrawals-usecase.interface.js";
+import { GetAllUserWithdrawalsUseCase } from "../../useCases/finance/withdrawal/get-all-user-withdrawals.usecase.js";
+import { IApproveWithdrawalUseCase } from "../../entities/useCaseInterfaces/finance/withdrawal/approve-withdrawal-usecase.interface.js";
+import { ApproveWithdrawalUseCase } from "../../useCases/finance/withdrawal/approve-withdrawal.usecase.js";
+import { IRejectWithdrawalUseCase } from "../../entities/useCaseInterfaces/finance/withdrawal/reject-withdrawal-usecase.interface.js";
+import { RejectWithdrawalUseCase } from "../../useCases/finance/withdrawal/reject-withdrawal.usecase.js";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -420,6 +426,27 @@ export class UseCaseRegistry {
 			"IDecrementWalletBalanceUseCase",
 			{
 				useClass: DecrementWalletBalanceUseCase,
+			}
+		);
+
+		container.register<IGetAllUserWithdrawalsUseCase>(
+			"IGetAllUserWithdrawalsUseCase",
+			{
+				useClass: GetAllUserWithdrawalsUseCase,
+			}
+		);
+
+		container.register<IApproveWithdrawalUseCase>(
+			"IApproveWithdrawalUseCase",
+			{
+				useClass: ApproveWithdrawalUseCase,
+			}
+		);
+		
+		container.register<IRejectWithdrawalUseCase>(
+			"IRejectWithdrawalUseCase",
+			{
+				useClass: RejectWithdrawalUseCase,
 			}
 		);
 

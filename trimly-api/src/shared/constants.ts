@@ -57,6 +57,10 @@ export const SUCCESS_MESSAGES = {
   ACTION_SUCCESS: "Action successful",
   WITHDRAWAL_SUCCESS:
     "Your withdrawal request has been processed successfully.",
+  WITHDRAWAL_APPROVED_SUCCESS:
+    "Withdrawal approved successfully.",
+  WITHDRAWAL_REJECTED_SUCCESS:
+    "Withdrawal rejected successfully.",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
   REQUEST_SUBMITTED: "Request submitted waiting for admin approval",
   APPLICATION_SUBMITTED: "Application submitted waiting for admin approval",

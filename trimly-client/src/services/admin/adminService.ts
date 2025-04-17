@@ -6,8 +6,10 @@ import {
 	IAllBarberShopsResponse,
 	IAuthResponse,
 	IAxiosResponse,
+	WithdrawalResponse,
 } from "@/types/Response";
 import { IAdmin, IBarber, IClient, UpdatePasswordData } from "@/types/User";
+import { WithdrawalQueryParams } from "@/types/Wallet";
 
 export type IUpdateAdminData = Pick<
 	IAdmin,
@@ -112,12 +114,32 @@ export const updateAdminProfile = async (
 	return response.data;
 };
 
-// export const updateShopStatus = async (
-// 	data: Partial<IBarberShopData>
-// ): Promise<IAxiosResponse> => {
-// 	const response = await adminAxiosInstance.put<IAxiosResponse>(
-// 		"/admin/shop",
-// 		data
-// 	);
-// 	return response.data;
-// };
+export const fetchUserWithdrawals = async (
+	params: WithdrawalQueryParams
+): Promise<WithdrawalResponse> => {
+	const response = await adminAxiosInstance.get<WithdrawalResponse>(
+		"/admin/withdrawals",
+		{ params }
+	);
+	return response.data;
+};
+
+export const rejectWithdrawal = async (
+	withdrawalId: string,
+	remarks: string
+) => {
+	const response = await adminAxiosInstance.put("/admin/withdrawals", {
+		withdrawalId,
+		remarks,
+	});
+
+	return response.data;
+};
+
+export const approveWithdrawal = async (withdrawalId: string) => {
+	const response = await adminAxiosInstance.patch("/admin/withdrawals", {
+		withdrawalId,
+	});
+
+	return response.data;
+};

@@ -17,12 +17,12 @@ import { ShopController } from "../../interfaceAdapters/controllers/shop.control
 import { IShopController } from "../../entities/controllerInterfaces/shop/shop-controller.interface.js";
 import { IBookingController } from "../../entities/controllerInterfaces/booking/booking-controller.interface.js";
 import { BookingController } from "../../interfaceAdapters/controllers/booking.controller.js";
-import { IWalletController } from "../../entities/controllerInterfaces/finance/wallet-controller.interface.js";
-import { WalletController } from "../../interfaceAdapters/controllers/wallet.controller.js";
 import { ReviewController } from "../../interfaceAdapters/controllers/review.controller.js";
 import { IReviewController } from "../../entities/controllerInterfaces/review/review-controller.interface.js";
 import { IFeedController } from "../../entities/controllerInterfaces/feed/feed-controller.interface.js";
 import { FeedController } from "../../interfaceAdapters/controllers/feed.controller.js";
+import { FinanceController } from "../../interfaceAdapters/controllers/finance.controller.js";
+import { IFinanceController } from "../../entities/controllerInterfaces/finance/finance-controller.interface.js";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -46,8 +46,8 @@ export const shopController =
 export const bookingController =
   container.resolve<IBookingController>(BookingController);
 
-export const walletController =
-  container.resolve<IWalletController>(WalletController);
+export const financeController =
+  container.resolve<IFinanceController>(FinanceController);
 
 export const reviewController =
   container.resolve<IReviewController>(ReviewController);

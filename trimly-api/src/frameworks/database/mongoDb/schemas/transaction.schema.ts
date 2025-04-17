@@ -40,7 +40,6 @@ export const transactionSchema = new Schema<ITransactionModel>(
     },
     referenceId: {
       type: String,
-      required: false,
     },
   },
   {

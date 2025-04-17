@@ -15,10 +15,10 @@ import {
   blockStatusMiddleware,
   bookingController,
   feedController,
+  financeController,
   reviewController,
   shopController,
   userController,
-  walletController,
 } from "../di/resolver.js";
 
 export class ClientRoutes extends BaseRoute {
@@ -113,7 +113,7 @@ export class ClientRoutes extends BaseRoute {
         authorizeRole(["client"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
-          walletController.getWalletPageData(req, res);
+          financeController.getWalletPageData(req, res);
         }
       )
       .post(
@@ -121,7 +121,7 @@ export class ClientRoutes extends BaseRoute {
         authorizeRole(["client"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
-          walletController.topUpWallet(req, res);
+          financeController.topUpWallet(req, res);
         }
       )
       // handling payment verification
@@ -130,7 +130,7 @@ export class ClientRoutes extends BaseRoute {
         authorizeRole(["client"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
-          walletController.verifyTopUpPayment(req, res);
+          financeController.verifyTopUpPayment(req, res);
         }
       )
       // handling payment failure
@@ -139,7 +139,7 @@ export class ClientRoutes extends BaseRoute {
         authorizeRole(["client"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
-          walletController.handleTopUpPaymentFailure(req, res);
+          financeController.handleTopUpPaymentFailure(req, res);
         }
       );
 
@@ -149,7 +149,7 @@ export class ClientRoutes extends BaseRoute {
       authorizeRole(["client"]),
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
-        walletController.withdrawFromWallet(req, res);
+        financeController.withdrawFromWallet(req, res);
       }
     );
 

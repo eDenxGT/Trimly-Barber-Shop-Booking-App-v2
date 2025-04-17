@@ -182,21 +182,19 @@ export function PrivateHeader({
 				{/* Right Section */}
 				<div className="ml-8 flex items-center space-x-6">
 					{/* User Info */}
-					{isClient ||
-						(isBarber && (
-							<div className="hidden md:flex items-center space-x-4">
-								<div className="flex flex-col items-end">
-									<span className="text-sm font-medium text-white">
-										{displayName}
-									</span>
-									<div className="flex items-center text-xs text-gray-400">
-										<MapPin className="mr-1 h-3 w-3" />
-										{locationName?.slice(0, 50) ||
-											"Location"}
-									</div>
+					{(isClient || isBarber) && (
+						<div className="hidden md:flex items-center space-x-4">
+							<div className="flex flex-col items-end">
+								<span className="text-sm font-medium text-white">
+									{displayName}
+								</span>
+								<div className="flex items-center text-xs text-gray-400">
+									<MapPin className="mr-1 h-3 w-3" />
+									{locationName?.slice(0, 50) || "Location"}
 								</div>
 							</div>
-						))}
+						</div>
+					 )}
 
 					{/* Notifications */}
 					<Tooltip title="Notifications" arrow placement="bottom">

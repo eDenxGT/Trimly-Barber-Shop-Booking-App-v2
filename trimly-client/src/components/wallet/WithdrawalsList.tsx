@@ -8,14 +8,14 @@ export const WithdrawalsList = ({
   withdrawals: IWithdrawal[];
 }) => {
   return (
-    <div>
-      {withdrawals.length > 0 ? (
-        <Card className="h-full">
-          <CardHeader>
-            <CardTitle>Withdrawal Requests</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4 max-h-[300px] overflow-auto">
+    <div className="h-full"> {/* Full height container */}
+      <Card className="h-full flex flex-col">
+        <CardHeader>
+          <CardTitle>Withdrawal Requests</CardTitle>
+        </CardHeader>
+        <CardContent className="max-h-50 overflow-y-scroll flex-1 p-4">
+          {withdrawals.length > 0 ? (
+            <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
               {withdrawals.map((withdrawal) => (
                 <WithdrawalStatus
                   key={withdrawal.withdrawalId}
@@ -23,20 +23,13 @@ export const WithdrawalsList = ({
                 />
               ))}
             </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="h-full">
-          <CardHeader>
-            <CardTitle>Withdrawal Requests</CardTitle>
-          </CardHeader>
-          <CardContent>
+          ) : (
             <div className="flex items-center justify-center h-[200px] text-muted-foreground">
               No withdrawal requests yet
             </div>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

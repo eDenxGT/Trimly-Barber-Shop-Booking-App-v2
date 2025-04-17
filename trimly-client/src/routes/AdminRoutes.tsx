@@ -4,6 +4,7 @@ import { AdminLayout } from "@/components/layouts/AdminLayout";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { AdminDashBoardPage } from "@/pages/admin/AdminDashboardPage";
 import { AdminBarberShopApplicationPage } from "@/pages/admin/applications/AdminBarberApplicationPage";
+import { AdminUserWithdrawalsPage } from "@/pages/admin/applications/AdminUserWithdrawalsPage";
 import { AdminBarberManagementPage } from "@/pages/admin/managementPages/AdminBarberShopManagementPage";
 import { AdminClientManagementPage } from "@/pages/admin/managementPages/AdminClientManagementPage";
 import { AdminChangePasswordPage } from "@/pages/admin/settings/AdminChangePasswordPage";
@@ -26,16 +27,19 @@ export const AdminRoutes = () => {
 					/>
 				}>
 				<Route path="dashboard" element={<AdminDashBoardPage />} />
-				{/* 
-				<Route path="clients" element={<AdminClientManagement />} />
-				<Route path="barbers" element={<AdminBarberManagement />} />
-				*/}
+
 				<Route path="shops" element={<AdminBarberManagementPage />} />
 				<Route path="clients" element={<AdminClientManagementPage />} />
 				<Route
 					path="shop-applications"
 					element={<AdminBarberShopApplicationPage />}
 				/>
+
+				<Route
+					path="withdrawal-requests"
+					element={<AdminUserWithdrawalsPage />}
+				/>
+
 				<Route path="settings" element={<AdminSettingsPage />} />
 				<Route
 					path="settings/change-password"

@@ -17,9 +17,9 @@ import {
   blockStatusMiddleware,
   bookingController,
   feedController,
+  financeController,
   serviceController,
   userController,
-  walletController,
 } from "../di/resolver.js";
 
 export class BarberRoutes extends BaseRoute {
@@ -211,7 +211,7 @@ export class BarberRoutes extends BaseRoute {
         authorizeRole(["barber"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
-          walletController.getWalletPageData(req, res);
+          financeController.getWalletPageData(req, res);
         }
       )
       .post(
@@ -219,7 +219,7 @@ export class BarberRoutes extends BaseRoute {
         authorizeRole(["barber"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
-          walletController.topUpWallet(req, res);
+          financeController.topUpWallet(req, res);
         }
       )
       // handling payment verification
@@ -228,7 +228,7 @@ export class BarberRoutes extends BaseRoute {
         authorizeRole(["barber"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
-          walletController.verifyTopUpPayment(req, res);
+          financeController.verifyTopUpPayment(req, res);
         }
       )
       // handling payment failure
@@ -237,7 +237,7 @@ export class BarberRoutes extends BaseRoute {
         authorizeRole(["barber"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
-          walletController.handleTopUpPaymentFailure(req, res);
+          financeController.handleTopUpPaymentFailure(req, res);
         }
       );
 
@@ -247,7 +247,7 @@ export class BarberRoutes extends BaseRoute {
       authorizeRole(["barber"]),
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
-        walletController.withdrawFromWallet(req, res);
+        financeController.withdrawFromWallet(req, res);
       }
     );
 

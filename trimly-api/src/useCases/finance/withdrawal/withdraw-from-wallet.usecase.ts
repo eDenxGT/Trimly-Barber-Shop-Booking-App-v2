@@ -1,5 +1,4 @@
 import { inject, injectable } from "tsyringe";
-import { IWithdrawFromWalletUseCase } from "../../../entities/controllerInterfaces/finance/withdraw-from-wallet-usecase.interface.js";
 import { IWalletRepository } from "../../../entities/repositoryInterfaces/finance/wallet-repository.interface.js";
 import { CustomError } from "../../../entities/utils/custom.error.js";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants.js";
@@ -7,6 +6,7 @@ import { IWithdrawalRepository } from "../../../entities/repositoryInterfaces/fi
 import { generateUniqueId } from "../../../shared/utils/unique-uuid.helper.js";
 import { ITransactionRepository } from "../../../entities/repositoryInterfaces/finance/transaction-repository.interface.js";
 import { IGetWalletByUserUseCase } from "../../../entities/useCaseInterfaces/finance/wallet/get-wallet-by-user-usecase.interface.js";
+import { IWithdrawFromWalletUseCase } from "../../../entities/useCaseInterfaces/finance/withdrawal/withdraw-from-wallet-usecase.interface.js";
 
 @injectable()
 export class WithdrawFromWalletUseCase implements IWithdrawFromWalletUseCase {
@@ -47,9 +47,10 @@ export class WithdrawFromWalletUseCase implements IWithdrawFromWalletUseCase {
 				HTTP_STATUS.BAD_REQUEST
 			);
 		}
+		const withdrawalId = generateUniqueId("withdrawal");
 
 		await this._withdrawalRepository.save({
-			withdrawalId: generateUniqueId("withdrawal"),
+			withdrawalId,
 			walletId: wallet.walletId,
 			userId,
 			userType: role,
@@ -70,6 +71,7 @@ export class WithdrawFromWalletUseCase implements IWithdrawFromWalletUseCase {
 			source: "withdrawal",
 			amount,
 			status: "pending",
+			referenceId: withdrawalId,
 		});
 	}
 }
