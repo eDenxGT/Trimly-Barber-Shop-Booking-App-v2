@@ -15,8 +15,9 @@ export class AddServiceUseCase implements IAddServiceUseCase {
 	async execute(data: Partial<IServiceEntity>): Promise<void> {
 		const isServiceExisting = await this._serviceRepository.findOne({
 			barberId: data.barberId,
-			name: data.name,
+			name: { $regex: `^${data.name?.trim()}$`, $options: "i" }, 
 		});
+		
 		if (isServiceExisting) {
 			throw new CustomError(
 				ERROR_MESSAGES.SERVICE_EXISTS,
