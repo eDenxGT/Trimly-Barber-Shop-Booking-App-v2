@@ -7,4 +7,5 @@ export interface IBookingController {
 	handlePaymentFailure(req: Request, res: Response): Promise<void>;
 	updateBookingComplete(req: Request, res: Response): Promise<void>;
 	cancelBooking(req: Request, res: Response): Promise<void>;
+	handleBookWithWallet(req: Request, res: Response): Promise<void>;
 }

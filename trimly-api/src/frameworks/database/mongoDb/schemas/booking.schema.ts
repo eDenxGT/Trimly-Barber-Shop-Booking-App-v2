@@ -13,7 +13,6 @@ export const bookingSchema = new Schema<IBookingModel>(
 		},
 		orderId: {
 			type: String,
-			required: true,
 		},
 		clientId: {
 			type: String,

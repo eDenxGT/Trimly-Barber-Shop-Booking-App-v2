@@ -161,7 +161,7 @@ export function BookingStatus({
                 allowFullScreen
                 loading="lazy"
                 src={`https://www.google.com/maps?q=${bookingData?.shopDetails?.location?.coordinates[1]},${bookingData?.shopDetails?.location?.coordinates[0]}&output=embed`}
-              ></iframe>
+              />
             ) : (
               <div className="h-full bg-gray-200 flex items-center justify-center rounded-lg">
                 <MapPin className="h-6 w-6 text-gray-400" />

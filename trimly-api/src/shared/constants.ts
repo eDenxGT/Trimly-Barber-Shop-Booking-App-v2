@@ -51,6 +51,7 @@ export const SUCCESS_MESSAGES = {
   UPDATE_SUCCESS: "Updated Successfully",
   DELETE_SUCCESS: "Deleted Successfully",
   OPERATION_SUCCESS: "Action completed",
+  WALLET_BOOKING_SUCCESS: "Booking successful using wallet.",
   PASSWORD_RESET_SUCCESS: "Password reset",
   VERIFICATION_SUCCESS: "Verification done",
   DATA_RETRIEVED: "Data loaded",

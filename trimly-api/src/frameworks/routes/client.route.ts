@@ -103,6 +103,16 @@ export class ClientRoutes extends BaseRoute {
         }
       );
 
+    this.router.post(
+      "/client/booking/wallet",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        bookingController.handleBookWithWallet(req, res);
+      }
+    );
+
     //* ─────────────────────────────────────────────────────────────
     //*                   🛠️ Wallet Endpoints
     //* ─────────────────────────────────────────────────────────────

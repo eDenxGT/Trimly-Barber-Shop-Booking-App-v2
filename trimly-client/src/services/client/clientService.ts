@@ -266,3 +266,22 @@ export const clientToggleCommentLike = async ({
   );
   return response.data;
 };
+
+export const handleWalletPayment = async ({
+  orderId,
+  status,
+}: {
+  orderId: string;
+  status: string;
+}) => {
+  await clientAxiosInstance.patch("/client/wallet", {
+    orderId,
+    status,
+  });
+};
+
+export const paymentWithWallet = async (payload: IBookingPayload) => {
+  const res = await clientAxiosInstance.post("/client/booking/wallet", payload);
+
+  return res.data;
+};

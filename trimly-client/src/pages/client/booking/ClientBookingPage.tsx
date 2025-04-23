@@ -24,6 +24,9 @@ import { useBarberShopById } from "@/hooks/barber/useBarberShopById";
 import { generateSlots } from "@/utils/helpers/generateTimeSlots";
 import { IClient } from "@/types/User";
 import { RazorpayButton } from "@/services/payment/RazorPay";
+import { WalletPaymentModal } from "@/components/modals/WalletPaymentModal";
+import { useWalletPaymentMutation } from "@/hooks/client/useWalletPayment";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 export interface TimeSlot {
   time: string;
@@ -60,7 +63,7 @@ export function ClientBookingPage() {
   const navigate = useNavigate();
   const initialSlotsProcessed = useRef(false);
   const existingBookingsProcessed = useRef(false);
-
+  const { mutate: payWithWallet } = useWalletPaymentMutation();
   const user: IClient = useOutletContext();
   const { data, isLoading, error } = useBarberShopById(
     getBarberShopDetailsById,
@@ -68,6 +71,8 @@ export function ClientBookingPage() {
     "active"
   );
   const shopData = data?.user;
+
+  const { successToast, errorToast } = useToaster();
 
   const existingBookings = shopData?.bookings;
   const minBookingDate = startOfDay(new Date());
@@ -277,6 +282,30 @@ export function ClientBookingPage() {
 
   const handlePaymentSuccess = () => {
     navigate("/my-bookings");
+  };
+
+  const handleWalletPaymentSuccess = () => {
+    payWithWallet(
+      {
+        bookedTimeSlots,
+        clientId: user.userId || "",
+        date: (selectedDate as Date) || "",
+        duration: totals.totalDuration,
+        services: selectedServices.map((s) => s.serviceId),
+        shopId: shopId || "",
+        startTime: selectedTime || "",
+        total: totals.total,
+      },
+      {
+        onSuccess: (data) => {
+          successToast(data.message);
+          navigate("/my-bookings");
+        },
+        onError: (error: any) => {
+          errorToast(error.response.data.message);
+        },
+      }
+    );
   };
 
   if (isLoading) {
@@ -499,44 +528,34 @@ export function ClientBookingPage() {
                   {selectedDate &&
                     selectedTime &&
                     bookedTimeSlots.length > 0 && (
-                      // <RazorpayButton
-                      // 	clientId={user.userId as string}
-                      // 	total={totals.total}
-                      // 	className="w-full"
-                      // 	handleSuccess={
-                      // 		handlePaymentSuccess
-                      // 	}
-                      // 	shopId={shopId as string}
-                      // 	services={selectedServices.map(
-                      // 		(s) => s.serviceId
-                      // 	)}
-                      // 	date={selectedDate}
-                      // 	startTime={selectedTime}
-                      // 	bookedTimeSlots={
-                      // 		bookedTimeSlots
-                      // 	}
-                      // 	duration={totals.totalDuration}
-                      // />
-                      <RazorpayButton
-                        onSuccess={handlePaymentSuccess}
-                        className="w-full"
-                        amount={totals.total}
-                        description="Slot Booking Payment"
-                        onCreateOrder={() =>
-                          createBooking({
-                            bookedTimeSlots,
-                            clientId: user.userId || "",
-                            date: selectedDate || "",
-                            duration: totals.totalDuration,
-                            services: selectedServices.map((s) => s.serviceId),
-                            shopId: shopId || "",
-                            startTime: selectedTime || "",
-                            total: totals.total,
-                          })
-                        }
-                        onVerifyPayment={verifyPayment}
-                        onFailure={handleFailureBookingPayment}
-                      />
+                      <div className="flex flex-col gap-4">
+                        <WalletPaymentModal
+                          amount={totals.total}
+                          onPaymentConfirm={handleWalletPaymentSuccess}
+                        />
+                        <RazorpayButton
+                          onSuccess={handlePaymentSuccess}
+                          className="w-full"
+                          amount={totals.total}
+                          description="Slot Booking Payment"
+                          onCreateOrder={() =>
+                            createBooking({
+                              bookedTimeSlots,
+                              clientId: user.userId || "",
+                              date: selectedDate || "",
+                              duration: totals.totalDuration,
+                              services: selectedServices.map(
+                                (s) => s.serviceId
+                              ),
+                              shopId: shopId || "",
+                              startTime: selectedTime || "",
+                              total: totals.total,
+                            })
+                          }
+                          onVerifyPayment={verifyPayment}
+                          onFailure={handleFailureBookingPayment}
+                        />
+                      </div>
                     )}
                 </CardContent>
               </Card>

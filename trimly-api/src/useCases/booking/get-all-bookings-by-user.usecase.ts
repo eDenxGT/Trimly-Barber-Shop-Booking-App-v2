@@ -13,12 +13,6 @@ export class GetAllBookingsByUserUseCase
 	constructor(
 		@inject("IBookingRepository")
 		private _bookingRepository: IBookingRepository,
-		@inject("IBarberRepository")
-		private _barberRepository: IBarberRepository,
-		@inject("IClientRepository")
-		private _clientRepository: IClientRepository,
-		@inject("IServiceRepository")
-		private _serviceRepository: IServiceRepository
 	) {}
 	async execute(userId: string, role: string): Promise<IBookingEntity[]> {
 		let bookings = [] as IBookingEntity[];
@@ -35,7 +29,6 @@ export class GetAllBookingsByUserUseCase
 					userId
 				);
 		}
-		console.log(bookings);
 		return bookings;
 	}
 }
