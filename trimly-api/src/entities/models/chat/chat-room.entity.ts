@@ -1,4 +1,4 @@
-export interface IChatRoom {
+export interface IChatRoomEntity {
   chatRoomId?: string;
   clientId: string;
   barberId: string;

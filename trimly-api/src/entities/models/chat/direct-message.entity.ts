@@ -1,4 +1,4 @@
-export interface IDirectMessage {
+export interface IDirectMessageEntity {
     messageId: string;
     chatRoomId: string; 
     senderId: string;

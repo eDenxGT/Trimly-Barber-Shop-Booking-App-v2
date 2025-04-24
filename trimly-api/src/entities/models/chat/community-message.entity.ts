@@ -1,4 +1,4 @@
-export interface ICommunityMessage {
+export interface ICommunityMessageEntity {
     messageId: string;
     communityId: string;  
     senderId: string;  
