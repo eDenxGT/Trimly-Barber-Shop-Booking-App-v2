@@ -189,6 +189,7 @@ export class BookingController implements IBookingController {
         startTime,
         total,
       } = req.body;
+
       await this._bookWithWalletUseCase.execute({
         bookedTimeSlots,
         clientId,

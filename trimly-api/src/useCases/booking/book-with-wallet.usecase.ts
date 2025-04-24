@@ -105,21 +105,22 @@ export class BookWithWalletUseCase implements IBookWithWalletUseCase {
     const bookingId = generateUniqueId("booking");
     const transactionId = generateUniqueId("transaction");
 
-    await this._walletRepository.decrementBalance(clientId, total);
-
+    
     await this._bookingRepository.save({
-      bookedTimeSlots,
-      bookingId,
-      clientId,
-      date: bookingDateTime,
-      duration,
-      services,
-      shopId,
-      status: "confirmed",
-      startTime,
-      total,
+        bookedTimeSlots,
+        bookingId,
+        clientId,
+        date: bookingDateTime,
+        duration,
+        services,
+        shopId,
+        status: "confirmed",
+        startTime,
+        total,
     });
-
+    
+    await this._walletRepository.decrementBalance(clientId, total);
+    
     await this._transactionRepository.save({
       transactionId,
       userId: clientId,
