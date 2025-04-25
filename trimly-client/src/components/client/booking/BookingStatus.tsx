@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Phone, Search } from "lucide-react";
+import { MapPin, MessageCircle, Phone, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -7,6 +7,7 @@ import { IBooking } from "./../../../types/Booking";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { openInGoogleMap } from "@/utils/helpers/googleMapRedirect";
 import { ReviewModal } from "@/components/modals/ReviewModal";
+import { useNavigate } from "react-router-dom";
 
 export function BookingStatus({
   bookingData,
@@ -24,6 +25,8 @@ export function BookingStatus({
       ? "finished"
       : bookingData?.status === "confirmed" && "in-process"
   );
+
+  const navigate = useNavigate();
 
   const steps = [
     { id: "booked", label: "Booked", icon: "📋" },
@@ -112,10 +115,19 @@ export function BookingStatus({
                     <span className="text-xs mt-1">Navigate</span>
                   </div>
                   <div className="flex flex-col items-center">
-                    <button className="w-8 h-8 rounded-full bg-indigo-100 hover:bg-indigo-200 flex items-center justify-center">
-                      <Phone className="h-4 w-4 text-indigo-600" />
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/chat?userId=${
+                            bookingData?.shopDetails?.userId || ""
+                          }`
+                        )
+                      }
+                      className="w-8 h-8 rounded-full cursor-pointer bg-indigo-100 hover:bg-indigo-200 flex items-center justify-center"
+                    >
+                      <MessageCircle className="h-4 w-4 text-indigo-600" />
                     </button>
-                    <span className="text-xs mt-1">Call</span>
+                    <span className="text-xs mt-1">Chat</span>
                   </div>
                 </div>
 

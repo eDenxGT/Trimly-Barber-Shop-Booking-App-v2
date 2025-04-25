@@ -3,7 +3,7 @@ import { ICommunityChatRoomModel } from "./../../models/chat/community-chat-room
 
 export const communityChatRoomSchema = new Schema<ICommunityChatRoomModel>(
   {
-    chatRoomId: {
+    communityId: {
       type: String,
       required: true,
     },

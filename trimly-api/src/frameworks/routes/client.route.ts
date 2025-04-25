@@ -14,6 +14,7 @@ import {
   authController,
   blockStatusMiddleware,
   bookingController,
+  chatController,
   feedController,
   financeController,
   reviewController,
@@ -162,6 +163,20 @@ export class ClientRoutes extends BaseRoute {
         financeController.withdrawFromWallet(req, res);
       }
     );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                   🛠️ Chat Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router
+      .route("/client/chat")
+      .get(
+        verifyAuth,
+        authorizeRole(["client"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          chatController.getChatById(req, res);
+        }
+      );
 
     //* ─────────────────────────────────────────────────────────────
     //*                   🛠️ Shop Endpoints

@@ -137,6 +137,10 @@ import { IRejectWithdrawalUseCase } from "../../entities/useCaseInterfaces/finan
 import { RejectWithdrawalUseCase } from "../../useCases/finance/withdrawal/reject-withdrawal.usecase.js";
 import { IBookWithWalletUseCase } from "../../entities/useCaseInterfaces/booking/book-with-wallet-usecase.interface.js";
 import { BookWithWalletUseCase } from "../../useCases/booking/book-with-wallet.usecase.js";
+import { IGetChatByUserUseCase } from "../../entities/useCaseInterfaces/chat/get-chat-by-user-usecase.interface.js";
+import { GetChatByUserUseCase } from "../../useCases/chat/get-chat-by-user.interface.js";
+import { CreateChatRoomUseCase } from "../../useCases/chat/create-chat-room.usecase.interface.js";
+import { ICreateChatRoomUseCase } from "../../entities/useCaseInterfaces/chat/create-chat-room-usecase.interface.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -430,6 +434,14 @@ export class UseCaseRegistry {
 
     container.register<IBookWithWalletUseCase>("IBookWithWalletUseCase", {
       useClass: BookWithWalletUseCase,
+    });
+
+    container.register<IGetChatByUserUseCase>("IGetChatByUserUseCase", {
+      useClass: GetChatByUserUseCase,
+    });
+
+    container.register<ICreateChatRoomUseCase>("ICreateChatRoomUseCase", {
+      useClass: CreateChatRoomUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//

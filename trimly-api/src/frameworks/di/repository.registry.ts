@@ -30,6 +30,8 @@ import { IPostRepository } from "../../entities/repositoryInterfaces/feed/post-r
 import { PostRepository } from "../../interfaceAdapters/repositories/feed/post.repository.js";
 import { ICommentRepository } from "../../entities/repositoryInterfaces/feed/comment-repository.interface.js";
 import { CommentRepository } from "../../interfaceAdapters/repositories/feed/comment.repository.js";
+import { IChatRoomRepository } from "../../entities/repositoryInterfaces/chat/chat-room-repository.interface.js";
+import { ChatRoomRepository } from "../../interfaceAdapters/repositories/chat/chat-room.repository.js";
 
 export class RepositoryRegistry {
   static registerRepositories(): void {
@@ -89,5 +91,9 @@ export class RepositoryRegistry {
     container.register<ICommentRepository>("ICommentRepository", {
       useClass: CommentRepository,
     });
+
+    container.register<IChatRoomRepository>("IChatRoomRepository", {
+      useClass: ChatRoomRepository,
+    }); 
   }
 }

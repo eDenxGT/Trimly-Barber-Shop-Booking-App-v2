@@ -1,0 +1,83 @@
+export interface ICommunity {
+  communityId: string;
+  name: string;
+  description?: string;
+  avatar?: string;
+  createdBy: string;
+  createdAt: Date;
+  members: string[];
+}
+
+export interface ICommunityMessage {
+  messageId: string;
+  groupId: string;
+  senderId: string;
+  messageType: "text" | "image";
+  content: string | null;
+  mediaUrl?: string;
+  timestamp: Date;
+  status: "sent" | "delivered" | "read";
+  readBy: string[];
+  senderName: string;
+  senderAvatar: string;
+}
+
+// export interface IChat {
+//   chatRoomId?: string;
+//   clientId: string;
+//   barberId: string;
+//   messages: IDirectMessage[];
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// }
+
+export interface IUserPreview {
+  userId: string;
+  name: string;
+  profileImageUrl?: string;
+  role: "client" | "barber";
+}
+
+// * Direct chat preview
+export interface IDirectChatPreview {
+  chatRoomId: string;
+  user: IUserPreview;
+  lastMessage: {
+    content: string | null;
+    mediaUrl?: string;
+    messageType: "text" | "image";
+    timestamp: Date;
+  };
+  unreadCount: number;
+}
+
+export interface IDirectMessage {
+  messageId: string;
+  chatRoomId: string;
+  senderId: string;
+  receiverId: string;
+  messageType: "text" | "image";
+  content: string | null;
+  mediaUrl?: string;
+  timestamp: Date;
+  status: "sent" | "delivered" | "read";
+}
+
+export interface IDirectChat {
+  chatRoomId: string;
+  participant: IUserPreview;
+  messages: IDirectMessage[];
+}
+
+// * Community chat preview
+export interface ICommunityChatPreview {
+  communityId: string;
+  community: ICommunity;
+  lastMessage: {
+    content: string | null;
+    mediaUrl?: string;
+    messageType: "text" | "image";
+    timestamp: Date;
+  };
+  unreadCount: number;
+}

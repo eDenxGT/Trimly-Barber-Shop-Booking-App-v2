@@ -1,5 +1,5 @@
 export interface ICommunityChatRoomEntity {
-  chatRoomId: string;
+  communityId: string;
   members: string[];
   createdAt: Date;
   updatedAt: Date;

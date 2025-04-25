@@ -13,7 +13,6 @@ import {
   Car,
   X,
   Check,
-  StarHalf,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -207,6 +206,11 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
               <span className="text-xs">Place</span>
             </Button>
             <Button
+              onClick={() =>
+                navigate(
+                  `/chat?userId=${shop.userId || ""}`
+                )
+              }
               variant="ghost"
               className="flex flex-col items-center p-2 h-auto text-gray-600 transition-colors hover:text-[var(--yellow-hover)]"
             >

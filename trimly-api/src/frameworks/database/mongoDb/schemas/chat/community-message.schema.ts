@@ -6,13 +6,12 @@ export const communityMessageSchema = new Schema<ICommunityMessageModel>(
     messageId: { type: String, required: true },
     communityId: {
       type: String,
-      ref: "CommunityChatRoom",
       required: true,
     },
-    senderId: { type: String, ref: "Barber", required: true },
+    senderId: { type: String, required: true },
     messageType: {
       type: String,
-      enum: ["text", "image", "video", "audio"],
+      enum: ["text", "image"],
       required: true,
     },
     content: { type: String, default: null },
@@ -24,8 +23,7 @@ export const communityMessageSchema = new Schema<ICommunityMessageModel>(
     },
     readBy: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Barber",
+        type: String
       },
     ],
   },

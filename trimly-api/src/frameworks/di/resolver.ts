@@ -23,6 +23,8 @@ import { IFeedController } from "../../entities/controllerInterfaces/feed/feed-c
 import { FeedController } from "../../interfaceAdapters/controllers/feed.controller.js";
 import { FinanceController } from "../../interfaceAdapters/controllers/finance.controller.js";
 import { IFinanceController } from "../../entities/controllerInterfaces/finance/finance-controller.interface.js";
+import { IChatController } from "../../entities/controllerInterfaces/chat/chat-controller.interface.js";
+import { ChatController } from "../../interfaceAdapters/controllers/chat.controller.js";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -54,3 +56,6 @@ export const reviewController =
 
 export const feedController =
   container.resolve<IFeedController>(FeedController);
+
+export const chatController =
+  container.resolve<IChatController>(ChatController);

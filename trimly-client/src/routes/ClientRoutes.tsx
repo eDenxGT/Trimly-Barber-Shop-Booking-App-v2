@@ -1,8 +1,10 @@
 import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
+import { ChatLayout } from "@/components/chat/ChatLayout";
 import { ClientLayout } from "@/components/layouts/ClientLayout";
 import { ClientBookingPage } from "@/pages/client/booking/ClientBookingPage";
 import { ClientMyBookingsPage } from "@/pages/client/booking/ClientMyBookingsPage";
+import { ClientChatPage } from "@/pages/client/chat/ClientChatPage";
 import { ClientAuth } from "@/pages/client/ClientAuth";
 import { ClientHomePage } from "@/pages/client/ClientHomePage";
 import { ClientPostDetailsPage } from "@/pages/client/feed/ClientPostDetailsPage";
@@ -33,7 +35,7 @@ export const ClientRoutes = () => {
         <Route path="home" element={<ClientHomePage />} />
 
         <Route path="shops" element={<ShopListingPage />} />
-
+        <Route path="chat" element={<ClientChatPage />} />
         <Route
           path="shops/:shopId"
           element={<ClientShopDetailsPage role="client" />}

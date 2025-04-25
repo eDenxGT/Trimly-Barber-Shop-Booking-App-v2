@@ -12,7 +12,7 @@ export const directMessageSchema = new Schema<IDirectMessageModel>(
     receiverId: { type: String, required: true },
     messageType: {
       type: String,
-      enum: ["text", "image", "video", "audio"],
+      enum: ["text", "image"],
       required: true,
     },
     content: { type: String, default: null },
