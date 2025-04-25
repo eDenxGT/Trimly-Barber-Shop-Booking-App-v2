@@ -1,5 +1,5 @@
 import { IBooking } from "./Booking";
-import { IDirectChat } from "./Chat";
+import { ICommunityChatPreview, IDirectChat, IDirectChatPreview } from "./Chat";
 import { IPost } from "./Feed";
 import { IService } from "./Service";
 import { IAdmin, IBarber, IClient, UserDTO } from "./User";
@@ -84,5 +84,10 @@ export interface WithdrawalResponse {
 
 export interface IChatResponse extends IAxiosResponse {
   chat: IDirectChat;
+  success: boolean;
+}
+
+export interface IAllChatResponse extends IAxiosResponse {
+  chats: IDirectChatPreview[] | ICommunityChatPreview[];
   success: boolean;
 }

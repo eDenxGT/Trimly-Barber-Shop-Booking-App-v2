@@ -1,6 +1,5 @@
 import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
-import { ChatLayout } from "@/components/chat/ChatLayout";
 import { ClientLayout } from "@/components/layouts/ClientLayout";
 import { ClientBookingPage } from "@/pages/client/booking/ClientBookingPage";
 import { ClientMyBookingsPage } from "@/pages/client/booking/ClientMyBookingsPage";

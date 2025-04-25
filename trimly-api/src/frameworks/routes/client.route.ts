@@ -178,6 +178,16 @@ export class ClientRoutes extends BaseRoute {
         }
       );
 
+    this.router.get(
+      "/client/chats",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        chatController.getAllChatsByUserId(req, res);
+      }
+    );
+
     //* ─────────────────────────────────────────────────────────────
     //*                   🛠️ Shop Endpoints
     //* ─────────────────────────────────────────────────────────────

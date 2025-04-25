@@ -5,20 +5,32 @@ import { ArrowLeft } from "lucide-react";
 import { useIsMobile } from "@/hooks/common/useMobile";
 import { ChatSidebar } from "./ChatSidebar";
 import { ChatArea } from "./ChatArea";
-import { IDirectChat } from "@/types/Chat";
+import {
+  ICommunityChatPreview,
+  IDirectChat,
+  IDirectChatPreview,
+} from "@/types/Chat";
+import { useNavigate } from "react-router-dom";
 
 interface ChatLayoutProps {
   userRole: "barber" | "client";
-  chat?: IDirectChat | null;
+  activeChat: IDirectChat | null;
+  onTypeChange?: (type: "dm" | "community") => void;
+  chatType: "dm" | "community";
+  allChats: IDirectChatPreview[] | ICommunityChatPreview[];
 }
 
-export function ChatLayout({ userRole, chat }: ChatLayoutProps) {
-  const [activeChat, setActiveChat] = useState<IDirectChat | null>(
-    chat || null
-  );
-  const [chatType, setChatType] = useState<"dm" | "community">("dm");
+export function ChatLayout({
+  userRole,
+  activeChat,
+  onTypeChange,
+  chatType,
+  allChats,
+}: ChatLayoutProps) {
   const [showChatArea, setShowChatArea] = useState(false);
   const isMobile = useIsMobile();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isMobile) {
@@ -26,16 +38,15 @@ export function ChatLayout({ userRole, chat }: ChatLayoutProps) {
     }
   }, [isMobile, activeChat]);
 
-  const handleChatSelect = (chat: any) => {
-    setActiveChat(chat);
+  const handleChatSelect = (chatId: string) => {
+    navigate(`${userRole === "barber" ? "/barber" : ""}/chat?chatId=${chatId}`);
     if (isMobile) {
       setShowChatArea(true);
     }
   };
 
   const handleChangeType = (value: "dm" | "community") => {
-    setActiveChat(null);
-    setChatType(value);
+    onTypeChange?.(value);
   };
 
   const handleBackToList = () => {
@@ -73,7 +84,7 @@ export function ChatLayout({ userRole, chat }: ChatLayoutProps) {
         {(!isMobile || !showChatArea) && (
           <div className={`${isMobile ? "w-full" : "w-1/4 border-r"}`}>
             <ChatSidebar
-              chats={[]}
+              chats={allChats || []}
               onSelectChat={handleChatSelect}
               activeChat={activeChat}
             />

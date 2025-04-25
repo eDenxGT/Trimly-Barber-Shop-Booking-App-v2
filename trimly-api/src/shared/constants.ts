@@ -101,6 +101,7 @@ export const ERROR_MESSAGES = {
   SERVICE_NOT_FOUND: "Service not found",
   INVALID_TOKEN: "Invalid session please login again",
   INVALID_ROLE: "Access denied",
+  CHAT_NOT_FOUND: "Chat not found",
   INVALID_TRANSACTION: "Invalid transaction",
   INVALID_OTP: "Invalid or expired otp",
   INVALID_CREDENTIALS: "Wrong email or password",

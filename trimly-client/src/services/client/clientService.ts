@@ -3,6 +3,7 @@ import { ForType } from "@/hooks/barber/useAllBarberShops";
 import { FetchNearestShopsParams } from "@/hooks/client/useNearestBarberShops";
 import { IBookingPayload } from "@/types/Booking";
 import {
+  IAllChatResponse,
   IAuthResponse,
   IAxiosResponse,
   IBarberResponse,
@@ -297,5 +298,12 @@ export const getChatByChatId = async (chatId: string) => {
   const response = await clientAxiosInstance.get("/client/chat", {
     params: { chatId },
   });
+  return response.data;
+};
+
+export const getAllChatsByClientId = async (): Promise<IAllChatResponse> => {
+  const response = await clientAxiosInstance.get<IAllChatResponse>(
+    "/client/chats"
+  );
   return response.data;
 };

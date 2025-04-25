@@ -1,26 +1,25 @@
-import { IChatResponse } from "@/types/Response";
+import { IAllChatResponse, IChatResponse } from "@/types/Response";
 import { useQuery } from "@tanstack/react-query";
 
-export const useFetchChatByChatId = (
-  queryFunc: (chatId: string) => Promise<IChatResponse>,
-  chatId: string
+export const useFetchChatById = (
+  queryFunc: (id: string) => Promise<IChatResponse>,
+  id: string,
 ) => {
   return useQuery<IChatResponse>({
-    queryKey: ["chat", chatId],
-    queryFn: () => queryFunc(chatId),
+    queryKey: ["chat", id],
+    queryFn: () => queryFunc(id),
+    enabled: !!id,
     placeholderData: (prev) => prev ?? undefined,
+    retry: false,
   });
 };
 
-export const useFetchChatByUserId = (
-  queryFunc: (userId: string) => Promise<IChatResponse>,
-  userId: string
+export const useFetchAllChatByUserId = (
+  queryFunc: () => Promise<IAllChatResponse>
 ) => {
-  return useQuery<IChatResponse>({
-    queryKey: ["chat", userId],
-    queryFn: () => queryFunc(userId),
-    enabled: !!userId,
+  return useQuery<IAllChatResponse>({
+    queryKey: ["all-chats"],
+    queryFn: () => queryFunc(),
     placeholderData: (prev) => prev ?? undefined,
-    retry: false,
   });
 };

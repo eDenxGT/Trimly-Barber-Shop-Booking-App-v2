@@ -5,6 +5,8 @@ import {
   IDirectChat,
   IDirectChatPreview,
 } from "@/types/Chat";
+import { getSmartDate } from "@/utils/helpers/timeFormatter";
+import { Badge } from "@/components/ui/badge";
 
 interface ChatSidebarProps {
   chats: IDirectChatPreview[] | ICommunityChatPreview[];
@@ -17,30 +19,27 @@ export function ChatSidebar({
   onSelectChat,
   activeChat,
 }: ChatSidebarProps) {
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
-
   return (
-    <div className="h-full flex flex-col">
-      <div className="p-4 border-b">
-        <h2 className="text-lg font-semibold text-[var(--darkblue)]">Chats</h2>
+    <div className="h-full flex flex-col bg-white shadow-sm">
+      <div className="py-4 px-6 border-b border-gray-200">
+        <h2 className="text-xl font-bold text-[var(--darkblue)]">Chats</h2>
       </div>
-      <ScrollArea className="flex-1">
-        <div className="p-2">
+      <ScrollArea className="flex-1 px-2">
+        <div className="py-2 space-y-1">
           {chats.map((chat) => {
             const isCommunity = "communityId" in chat;
             const id = isCommunity ? chat.communityId : chat.chatRoomId;
+            const isActive = activeChat?.chatRoomId === id;
 
             return (
               <div
                 key={id}
-                className={`... ${
-                  activeChat?.chatRoomId === id ? "bg-yellow-100" : ""
+                className={`flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-200 ${
+                  isActive ? "bg-yellow-100 border-l-4 border-yellow-400" : ""
                 }`}
                 onClick={() => onSelectChat(id)}
               >
-                <Avatar className="...">
+                <Avatar className="h-12 w-12 mr-3 flex-shrink-0">
                   <AvatarImage
                     src={
                       isCommunity
@@ -49,29 +48,33 @@ export function ChatSidebar({
                     }
                     alt={isCommunity ? chat.community.name : chat.user.name}
                   />
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-gray-200 text-gray-700 font-medium">
                     {isCommunity
                       ? chat.community.name.substring(0, 2)
                       : chat.user.name.substring(0, 2)}
                   </AvatarFallback>
                 </Avatar>
 
-                <div className="...">
-                  <div className="flex justify-between items-center">
-                    <h3 className="...">
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-center mb-1">
+                    <h3 className="font-semibold text-gray-900 truncate">
                       {isCommunity ? chat.community.name : chat.user.name}
                     </h3>
-                    <span className="text-xs text-gray-500">
-                      {formatTime(chat.lastMessage.timestamp)}
+                    <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
+                      {chat.lastMessage.timestamp
+                        ? getSmartDate(chat.lastMessage.timestamp.toString())
+                        : ""}
                     </span>
                   </div>
-                  <p className="...">
-                    {chat.lastMessage.content?.slice(0, 36)}...
+                  <p className="text-sm text-gray-600 truncate">
+                    {chat.lastMessage.content || ""}
                   </p>
                 </div>
 
-                {chat.unreadCount > 0 && (
-                  <span className="...">{chat.unreadCount}</span>
+                {chat.unreadCount == 0 && (
+                  <Badge className="ml-2 bg-yellow-400 text-white rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0">
+                    {chat.unreadCount}
+                  </Badge>
                 )}
               </div>
             );

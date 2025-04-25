@@ -138,9 +138,13 @@ import { RejectWithdrawalUseCase } from "../../useCases/finance/withdrawal/rejec
 import { IBookWithWalletUseCase } from "../../entities/useCaseInterfaces/booking/book-with-wallet-usecase.interface.js";
 import { BookWithWalletUseCase } from "../../useCases/booking/book-with-wallet.usecase.js";
 import { IGetChatByUserUseCase } from "../../entities/useCaseInterfaces/chat/get-chat-by-user-usecase.interface.js";
-import { GetChatByUserUseCase } from "../../useCases/chat/get-chat-by-user.interface.js";
-import { CreateChatRoomUseCase } from "../../useCases/chat/create-chat-room.usecase.interface.js";
+import { GetChatByUserUseCase } from "../../useCases/chat/get-chat-by-user.usecase.js";
+import { CreateChatRoomUseCase } from "../../useCases/chat/create-chat-room.usecase.js";
 import { ICreateChatRoomUseCase } from "../../entities/useCaseInterfaces/chat/create-chat-room-usecase.interface.js";
+import { IGetAllChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat/get-all-chats-by-user.usecase.interface.js";
+import { GetAllChatsByUserUseCase } from "../../useCases/chat/get-all-chats-by-user.usecase.js";
+import { GetChatByChatIdUseCase } from "../../useCases/chat/get-chat-by-chatid.usecase.js";
+import { IGetChatByChatIdUseCase } from "../../entities/useCaseInterfaces/chat/get-chat-by-chatid.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -442,6 +446,14 @@ export class UseCaseRegistry {
 
     container.register<ICreateChatRoomUseCase>("ICreateChatRoomUseCase", {
       useClass: CreateChatRoomUseCase,
+    });
+
+    container.register<IGetAllChatsByUserUseCase>("IGetAllChatsByUserUseCase", {
+      useClass: GetAllChatsByUserUseCase,
+    });
+
+    container.register<IGetChatByChatIdUseCase>("IGetChatByChatIdUseCase", {
+      useClass: GetChatByChatIdUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//
