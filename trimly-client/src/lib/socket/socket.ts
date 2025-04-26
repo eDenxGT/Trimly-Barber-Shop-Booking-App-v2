@@ -1,13 +1,8 @@
 import { io, Socket } from "socket.io-client";
-
-export interface ServerToClientEvents {
-  RECEIVE_MESSAGE: (data: any) => void;
-  "receive-notification": (notificationData: { message: string }) => void;
-}
-
-export interface ClientToServerEvents {
-  SEND_MESSAGE: (data: any) => void;
-}
+import type {
+  ServerToClientEvents,
+  ClientToServerEvents,
+} from "@/types/SocketEvent";
 
 const URL = import.meta.env.VITE_SOCKET_SERVER_URL || "http://localhost:5000";
 

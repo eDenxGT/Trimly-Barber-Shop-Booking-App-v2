@@ -32,10 +32,16 @@ const socketServer = new SocketServer(httpServer);
 //* ====== Socket Events Setup ====== *//
 socketServer.onConnection((socket) => {
   console.log(chalk.green.bold("⚡ New Socket connected:", socket.id));
-  socketLogger.info("New socket connected", { socketId: socket.id });
+  socketLogger.info("New socket connected", {
+    socketId: socket.id,
+    event: "connect",
+  });
   socket.on("disconnect", () => {
     console.log(chalk.red.bold("❌ Socket disconnected:", socket.id));
-    socketLogger.info("Socket disconnected", { socketId: socket.id });
+    socketLogger.info("Socket disconnected", {
+      socketId: socket.id,
+      event: "disconnect",
+    });
   });
 });
 

@@ -9,10 +9,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { IDirectChat, IDirectMessage, ICommunityMessage, ICommunityChat } from "@/types/Chat";
+import {
+  IDirectChat,
+  IDirectMessage,
+  ICommunityMessage,
+  ICommunityChat,
+} from "@/types/Chat";
 import { MessageBubble } from "./MessageBubble";
 import { MessageInput } from "./MessageInput";
-import { v4 as uuidv4 } from "uuid";
+import { generateUniqueId } from "@/utils/helpers/generateUniqueId";
+import { useOutletContext } from "react-router-dom";
+import { IBarber, IClient } from "@/types/User";
+import { useSocket } from "@/contexts/SocketContext";
 
 type ChatProps = {
   chat: IDirectChat | ICommunityChat;
@@ -20,6 +28,8 @@ type ChatProps = {
 };
 
 export function ChatArea({ chat, chatType }: ChatProps) {
+  const user = useOutletContext<IBarber | IClient>();
+  const socket = useSocket();
   const [messages, setMessages] = useState<
     IDirectMessage[] | ICommunityMessage[]
   >(chat.messages);
@@ -35,12 +45,17 @@ export function ChatArea({ chat, chatType }: ChatProps) {
 
   const handleSendMessage = (content: string, imageUrl?: string) => {
     const messageType: "text" | "image" = imageUrl ? "image" : "text";
-    const currentUserId = "currentUserId";
+    const currentUserId = user.userId || "";
+    const senderName =
+      user.role === "barber"
+        ? (user as IBarber).shopName
+        : (user as IClient).fullName;
+    const senderAvatar = user.avatar || "/placeholder.svg";
 
     if (chatType === "dm") {
       const directChat = chat as IDirectChat;
       const newMessage: IDirectMessage = {
-        messageId: uuidv4(),
+        messageId: generateUniqueId("direct-message"),
         chatRoomId: directChat.chatRoomId,
         senderId: currentUserId,
         receiverId: directChat.participant.userId || "",
@@ -51,14 +66,14 @@ export function ChatArea({ chat, chatType }: ChatProps) {
         status: "sent",
       };
 
-      setMessages([...messages, newMessage] as
-        | IDirectMessage[]
-        | ICommunityMessage[]);
+      socket.emit("direct-chat:send-message", newMessage);
+
+      setMessages([...messages, newMessage] as IDirectMessage[]);
     } else {
       const communityChat = chat as ICommunityChat;
       const newMessage: ICommunityMessage = {
-        messageId: uuidv4(),
-        groupId: communityChat.communityId,
+        messageId: generateUniqueId("community-message"),
+        communityId: communityChat.communityId,
         senderId: currentUserId,
         messageType,
         content,
@@ -66,11 +81,13 @@ export function ChatArea({ chat, chatType }: ChatProps) {
         timestamp: new Date(),
         status: "sent",
         readBy: [currentUserId],
-        senderName: "Current User",
-        senderAvatar: "/placeholder.svg",
+        senderName: senderName || "User",
+        senderAvatar,
       };
 
-      setMessages([...messages, newMessage as any]);
+      socket.emit("community-chat:send-message", newMessage);
+
+      setMessages([...messages, newMessage] as ICommunityMessage[]);
     }
   };
 
@@ -96,7 +113,7 @@ export function ChatArea({ chat, chatType }: ChatProps) {
             <AvatarFallback>{chatName?.substring(0, 2)}</AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-medium text-[--darkblue]">{chatName}</h3>
+            <h3 className="font-medium text-[var(--darkblue)]">{chatName}</h3>
             <p className="text-xs text-muted-foreground">
               {chatType === "dm"
                 ? "Active now"
@@ -112,7 +129,7 @@ export function ChatArea({ chat, chatType }: ChatProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-[--darkblue] rounded-full h-9 w-9"
+                  className="text-[var(--darkblue)] rounded-full h-9 w-9"
                 >
                   <Phone className="h-5 w-5" />
                 </Button>
@@ -129,7 +146,7 @@ export function ChatArea({ chat, chatType }: ChatProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-[--darkblue] rounded-full h-9 w-9"
+                  className="text-[var(--darkblue)] rounded-full h-9 w-9"
                 >
                   <Video className="h-5 w-5" />
                 </Button>
@@ -146,7 +163,7 @@ export function ChatArea({ chat, chatType }: ChatProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-[--darkblue] rounded-full h-9 w-9"
+                  className="text-[var(--darkblue)] rounded-full h-9 w-9"
                 >
                   <MoreVertical className="h-5 w-5" />
                 </Button>

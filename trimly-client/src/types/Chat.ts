@@ -11,7 +11,7 @@ export interface ICommunityChat {
 
 export interface ICommunityMessage {
   messageId: string;
-  groupId: string;
+  communityId: string;
   senderId: string;
   messageType: "text" | "image";
   content: string | null;
