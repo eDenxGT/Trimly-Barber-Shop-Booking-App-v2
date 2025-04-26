@@ -11,40 +11,59 @@ import chalk from "chalk";
 //* ====== Other Imports ====== *//
 import { config } from "./shared/config.js";
 import { MongoConnect } from "./frameworks/database/mongoDb/mongoConnect.js";
-import { Server } from "./frameworks/http/server.js";
+import { ExpressServer } from "./frameworks/http/server.js";
+import { createServer } from "http";
+import { SocketServer } from "./frameworks/websockets/socket.server.js";
+import socketLogger from "./shared/utils/socket.logger.js";
 
 //* ====== Instance Creation ====== *//
-const server = new Server();
+const expressServer = new ExpressServer();
 const mongoConnect = new MongoConnect();
 
 //* ====== Database Connection ====== *//
 mongoConnect.connectDB();
 
+//* ====== Create HTTP Server from Express App ====== *//
+const httpServer = createServer(expressServer.getApp());
+
+//* ====== Setup Socket Server ====== *//
+const socketServer = new SocketServer(httpServer);
+
+//* ====== Socket Events Setup ====== *//
+socketServer.onConnection((socket) => {
+  console.log(chalk.green.bold("⚡ New Socket connected:", socket.id));
+  socketLogger.info("New socket connected", { socketId: socket.id });
+  socket.on("disconnect", () => {
+    console.log(chalk.red.bold("❌ Socket disconnected:", socket.id));
+    socketLogger.info("Socket disconnected", { socketId: socket.id });
+  });
+});
+
 //* ====== Server Startup ====== *//
-server.getApp().listen(config.server.PORT, () => {
-	console.log(
-		chalk.yellowBright.bold(
-			`\n\t-------------------------------------------------------`
-		)
-	);
-	console.log(
-		chalk.yellowBright.bold(
-			`\t|                                                     |`
-		)
-	);
-	console.log(
-		chalk.yellowBright.bold(
-			`\t|        🌐 Server is running on Port =>` +
-				chalk.cyanBright.bold(` ${config.server.PORT}`) +
-				`         |`
-		)
-	);
-	// console.log(`\n\t-------------------------------------------------------`);
-	// console.log(`\t|                                                     |`);
-	// console.log(
-	// 	`\t|        🌐 Server is running on Port =>` +
-	// 		` ${config.server.PORT}` +
-	// 		`         |`
-	// );
-	// console.log(`Server is running on port ${config.server.PORT} ⚡`);
+httpServer.listen(config.server.PORT, () => {
+  console.log(
+    chalk.yellowBright.bold(
+      `\n\t-------------------------------------------------------`
+    )
+  );
+  console.log(
+    chalk.yellowBright.bold(
+      `\t|                                                     |`
+    )
+  );
+  console.log(
+    chalk.yellowBright.bold(
+      `\t|        🌐 Server is running on Port =>` +
+        chalk.cyanBright.bold(` ${config.server.PORT}`) +
+        `         |`
+    )
+  );
+  // console.log(`\n\t-------------------------------------------------------`);
+  // console.log(`\t|                                                     |`);
+  // console.log(
+  // 	`\t|        🌐 Server is running on Port =>` +
+  // 		` ${config.server.PORT}` +
+  // 		`         |`
+  // );
+  // console.log(`Server is running on port ${config.server.PORT} ⚡`);
 });

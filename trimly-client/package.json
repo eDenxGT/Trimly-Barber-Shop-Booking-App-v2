@@ -65,6 +65,7 @@
     "recharts": "^2.15.1",
     "redux-persist": "^6.0.0",
     "rrule": "^2.8.1",
+    "socket.io-client": "^4.8.1",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.17",
     "tw-animate-css": "^1.2.4",

@@ -19,7 +19,7 @@ import { PrivateRoutes } from "../routes/private/private.route.js";
 import morganLogger from "../../shared/utils/morgan.logger.js";
 
 //* ====== Express App ====== *//
-export class Server {
+export class ExpressServer {
 	private _app: Application;
 
 	constructor() {

@@ -58,10 +58,8 @@ export const SUCCESS_MESSAGES = {
   ACTION_SUCCESS: "Action successful",
   WITHDRAWAL_SUCCESS:
     "Your withdrawal request has been processed successfully.",
-  WITHDRAWAL_APPROVED_SUCCESS:
-    "Withdrawal approved successfully.",
-  WITHDRAWAL_REJECTED_SUCCESS:
-    "Withdrawal rejected successfully.",
+  WITHDRAWAL_APPROVED_SUCCESS: "Withdrawal approved successfully.",
+  WITHDRAWAL_REJECTED_SUCCESS: "Withdrawal rejected successfully.",
   EMAIL_SENT_SUCCESSFULLY: "Email sent",
   REQUEST_SUBMITTED: "Request submitted waiting for admin approval",
   APPLICATION_SUBMITTED: "Application submitted waiting for admin approval",
@@ -144,6 +142,16 @@ export const ERROR_MESSAGES = {
   UNSUPPORTED_FILE_TYPE: "Unsupported file type",
   FILE_SIZE_EXCEEDED: "File size is too large",
   RATE_LIMIT_EXCEEDED: "Too many requests try again later",
+} as const;
+
+export const DIRECT_CHAT_EVENTS = {
+  SEND_MESSAGE: "direct-chat:send-message",
+  RECEIVE_MESSAGE: "direct-chat:receive-message",
+} as const;
+
+export const COMMUNITY_CHAT_EVENTS = {
+  SEND_MESSAGE: "community-chat:send-message",
+  RECEIVE_MESSAGE: "community-chat:receive-message",
 } as const;
 
 export const VERIFICATION_MAIL_CONTENT = (

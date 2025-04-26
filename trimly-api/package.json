@@ -44,6 +44,7 @@
 		"razorpay": "^2.9.6",
 		"redis": "^4.7.0",
 		"reflect-metadata": "^0.2.2",
+		"socket.io": "^4.8.1",
 		"tsyringe": "^4.8.0",
 		"uuid": "^11.1.0",
 		"winston": "^3.17.0",

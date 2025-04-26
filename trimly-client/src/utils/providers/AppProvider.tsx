@@ -5,21 +5,26 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "@/store/store";
 import { ToastContainer } from "./ToastContainer";
 import { LoadingProvider } from "@/hooks/common/useLoading";
+import { SocketProvider } from "@/contexts/SocketContext";
+import { NotificationListener } from "@/utils/providers/NotificationListener";
 
 const queryClient = new QueryClient();
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-	return (
-		<StrictMode>
-			<Provider store={store}>
-				<PersistGate persistor={persistor}>
-					<QueryClientProvider client={queryClient}>
-						<LoadingProvider>
-							<ToastContainer>{children}</ToastContainer>
-						</LoadingProvider>
-					</QueryClientProvider>
-				</PersistGate>
-			</Provider>
-		</StrictMode>
-	);
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <QueryClientProvider client={queryClient}>
+            <SocketProvider>
+              <NotificationListener />
+              <LoadingProvider>
+                <ToastContainer>{children}</ToastContainer>
+              </LoadingProvider>
+            </SocketProvider>
+          </QueryClientProvider>
+        </PersistGate>
+      </Provider>
+    </StrictMode>
+  );
 }

@@ -25,6 +25,8 @@ import { FinanceController } from "../../interfaceAdapters/controllers/finance.c
 import { IFinanceController } from "../../entities/controllerInterfaces/finance/finance-controller.interface.js";
 import { IChatController } from "../../entities/controllerInterfaces/chat/chat-controller.interface.js";
 import { ChatController } from "../../interfaceAdapters/controllers/chat.controller.js";
+import { DirectChatSocketHandler } from "../../interfaceAdapters/websockets/handlers/direct-chat.handler.js";
+import { IDirectChatSocketHandler } from "../../entities/socketHandlerInterfaces/direct-chat-handler.interface.js";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -59,3 +61,7 @@ export const feedController =
 
 export const chatController =
   container.resolve<IChatController>(ChatController);
+
+//* ====== Socket Handler Resolving ====== *//
+export const directChatSocketHandler =
+  container.resolve<IDirectChatSocketHandler>(DirectChatSocketHandler);
