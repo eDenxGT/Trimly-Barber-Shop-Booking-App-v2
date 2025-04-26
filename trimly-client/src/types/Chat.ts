@@ -1,11 +1,12 @@
-export interface ICommunity {
+export interface ICommunityChat {
   communityId: string;
   name: string;
   description?: string;
-  avatar?: string;
+  imageUrl?: string;
+  members: string[];
   createdBy: string;
   createdAt: Date;
-  members: string[];
+  messages: ICommunityMessage[];
 }
 
 export interface ICommunityMessage {
@@ -72,7 +73,7 @@ export interface IDirectChat {
 // * Community chat preview
 export interface ICommunityChatPreview {
   communityId: string;
-  community: ICommunity;
+  community: ICommunityChat;
   lastMessage: {
     content: string | null;
     mediaUrl?: string;

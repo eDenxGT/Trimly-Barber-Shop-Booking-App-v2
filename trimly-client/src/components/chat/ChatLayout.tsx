@@ -6,6 +6,7 @@ import { useIsMobile } from "@/hooks/common/useMobile";
 import { ChatSidebar } from "./ChatSidebar";
 import { ChatArea } from "./ChatArea";
 import {
+  ICommunityChat,
   ICommunityChatPreview,
   IDirectChat,
   IDirectChatPreview,
@@ -14,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 interface ChatLayoutProps {
   userRole: "barber" | "client";
-  activeChat: IDirectChat | null;
+  activeChat: IDirectChat | ICommunityChat | null;
   onTypeChange?: (type: "dm" | "community") => void;
   chatType: "dm" | "community";
   allChats: IDirectChatPreview[] | ICommunityChatPreview[];

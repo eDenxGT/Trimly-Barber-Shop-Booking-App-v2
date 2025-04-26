@@ -1,6 +1,7 @@
 import { barberAxiosInstance } from "@/api/barber.axios";
 import { IPostFormData } from "@/types/Feed";
 import {
+  IAllChatResponse,
   IAuthResponse,
   IAxiosResponse,
   IBarberHoursResponse,
@@ -256,6 +257,27 @@ export const barberToggleCommentLike = async ({
 }) => {
   const response = await barberAxiosInstance.patch(
     `/barber/posts/comment/${commentId}/like`
+  );
+  return response.data;
+};
+
+export const getChatByUserIdForBarber = async (userId: string) => {
+  const response = await barberAxiosInstance.get("/barber/chat", {
+    params: { userId },
+  });
+  return response.data;
+};
+
+export const getChatByChatIdForBarber = async (chatId: string) => {
+  const response = await barberAxiosInstance.get("/barber/chat", {
+    params: { chatId },
+  });
+  return response.data;
+};
+
+export const getAllChatsByBarberId = async (): Promise<IAllChatResponse> => {
+  const response = await barberAxiosInstance.get<IAllChatResponse>(
+    "/barber/chats"
   );
   return response.data;
 };

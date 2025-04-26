@@ -1,6 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
+  ICommunityChat,
   ICommunityChatPreview,
   IDirectChat,
   IDirectChatPreview,
@@ -11,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 interface ChatSidebarProps {
   chats: IDirectChatPreview[] | ICommunityChatPreview[];
   onSelectChat: (chatId: string) => void;
-  activeChat: IDirectChat | null;
+  activeChat: IDirectChat | ICommunityChat | null;
 }
 
 export function ChatSidebar({
@@ -29,7 +30,9 @@ export function ChatSidebar({
           {chats.map((chat) => {
             const isCommunity = "communityId" in chat;
             const id = isCommunity ? chat.communityId : chat.chatRoomId;
-            const isActive = activeChat?.chatRoomId === id;
+            const isActive = isCommunity
+              ? (activeChat as ICommunityChat)?.communityId === id
+              : (activeChat as IDirectChat)?.chatRoomId === id;
 
             return (
               <div
@@ -43,7 +46,7 @@ export function ChatSidebar({
                   <AvatarImage
                     src={
                       isCommunity
-                        ? chat.community.avatar
+                        ? chat.community.imageUrl
                         : chat.user.profileImageUrl || "/placeholder.svg"
                     }
                     alt={isCommunity ? chat.community.name : chat.user.name}

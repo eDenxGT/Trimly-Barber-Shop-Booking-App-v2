@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { IDirectChat, IDirectMessage, ICommunityMessage } from "@/types/Chat";
+import { IDirectChat, IDirectMessage, ICommunityMessage, ICommunityChat } from "@/types/Chat";
 import { MessageBubble } from "./MessageBubble";
 import { MessageInput } from "./MessageInput";
 import { v4 as uuidv4 } from "uuid";
@@ -18,16 +18,6 @@ type ChatProps = {
   chat: IDirectChat | ICommunityChat;
   chatType: "dm" | "community";
 };
-
-// Define ICommunityChat interface based on your data model
-interface ICommunityChat {
-  communityId: string;
-  community: {
-    name: string;
-    imageUrl?: string;
-  };
-  messages: ICommunityMessage[];
-}
 
 export function ChatArea({ chat, chatType }: ChatProps) {
   const [messages, setMessages] = useState<
@@ -87,12 +77,12 @@ export function ChatArea({ chat, chatType }: ChatProps) {
   const chatName =
     chatType === "dm"
       ? (chat as IDirectChat).participant.name
-      : (chat as ICommunityChat).community.name;
+      : (chat as ICommunityChat).name;
 
   const chatAvatar =
     chatType === "dm"
       ? (chat as IDirectChat).participant.profileImageUrl
-      : (chat as ICommunityChat).community.imageUrl;
+      : (chat as ICommunityChat).imageUrl;
 
   return (
     <div className="flex flex-col h-full">

@@ -16,6 +16,7 @@ import {
   authController,
   blockStatusMiddleware,
   bookingController,
+  chatController,
   feedController,
   financeController,
   serviceController,
@@ -156,6 +157,30 @@ export class BarberRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         feedController.toggleCommentLike(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                   🛠️ Chat Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router
+      .route("/barber/chat")
+      .get(
+        verifyAuth,
+        authorizeRole(["barber"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          chatController.getChatById(req, res);
+        }
+      );
+
+    this.router.get(
+      "/barber/chats",
+      verifyAuth,
+      authorizeRole(["barber"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        chatController.getAllChatsByUserId(req, res);
       }
     );
 

@@ -287,14 +287,14 @@ export const paymentWithWallet = async (payload: IBookingPayload) => {
   return res.data;
 };
 
-export const getChatByUserId = async (userId: string) => {
+export const getChatByUserIdForClient = async (userId: string) => {
   const response = await clientAxiosInstance.get("/client/chat", {
     params: { userId },
   });
   return response.data;
 };
 
-export const getChatByChatId = async (chatId: string) => {
+export const getChatByChatIdForClient = async (chatId: string) => {
   const response = await clientAxiosInstance.get("/client/chat", {
     params: { chatId },
   });

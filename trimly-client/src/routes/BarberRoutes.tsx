@@ -16,7 +16,7 @@ import { BarberWalletPage } from "@/pages/barber/wallet/BarberWalletPage";
 import { BarberAddPostPage } from "@/pages/barber/feed/BarberAddPostPage";
 import { BarberMyPostsListPage } from "@/pages/barber/feed/BarberMyPostsListPage";
 import { BarberEditPostPage } from "@/pages/barber/feed/BarberEditPostPage";
-import { ChatLayout } from "@/components/chat/ChatLayout";
+import { BarberChatPage } from "@/pages/barber/chat/BarberChatPage";
 
 export const BarberRoutes = () => {
   return (
@@ -47,9 +47,9 @@ export const BarberRoutes = () => {
           path="settings/change-password"
           element={<BarberChangePasswordPage />}
         />
-        
-        <Route path="chat" element={<ChatLayout userRole="barber" />} />
-        
+
+        <Route path="chat" element={<BarberChatPage />} />
+
         <Route path="settings/profile" element={<BarberProfileEditPage />} />
         <Route path="wallet" element={<BarberWalletPage />} />
         <Route path="my-posts" element={<BarberMyPostsListPage />} />

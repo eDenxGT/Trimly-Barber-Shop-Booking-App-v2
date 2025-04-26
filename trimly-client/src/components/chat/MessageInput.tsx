@@ -124,7 +124,7 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
                 type="button"
                 size="icon"
                 variant="ghost"
-                className="text-[--darkblue] hover:bg-gray-100 rounded-full h-10 w-10"
+                className="text-[var(--darkblue)] hover:bg-gray-100 rounded-full h-10 w-10"
               >
                 <Smile className="h-5 w-5" />
                 <span className="sr-only">Add emoji</span>
@@ -156,7 +156,7 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
                 size="icon"
                 variant="ghost"
                 onClick={handleImageClick}
-                className="text-[--darkblue] hover:bg-gray-100 rounded-full h-10 w-10"
+                className="text-[var(--darkblue)] hover:bg-gray-100 rounded-full h-10 w-10"
               >
                 <ImageIcon className="h-5 w-5" />
                 <span className="sr-only">Attach image</span>
@@ -181,7 +181,7 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type a message..."
-          className="flex-1 mx-1 focus-visible:ring-[--yellow] bg-gray-50 border-0 rounded-full py-6"
+          className="flex-1 mx-1 bg-gray-50 border-1 rounded-full py-6"
         />
 
         {!message.trim() ? (
@@ -209,7 +209,7 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
             size="icon"
             onClick={handleSend}
             disabled={!message.trim() && !imageUrl}
-            className="bg-[var(--darkblue)] hover:bg-[--darkblue-hover] rounded-sm h-10 w-10"
+            className="bg-[var(--darkblue)] hover:bg-[var(--darkblue-hover)] rounded-sm h-10 w-10"
           >
             <Send className="h-5 w-5" />
             <span className="sr-only">Send</span>
