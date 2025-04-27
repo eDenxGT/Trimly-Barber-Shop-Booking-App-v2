@@ -5,7 +5,8 @@ import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { AdminDashBoardPage } from "@/pages/admin/AdminDashboardPage";
 import { AdminBarberShopApplicationPage } from "@/pages/admin/applications/AdminBarberApplicationPage";
 import { AdminUserWithdrawalsPage } from "@/pages/admin/applications/AdminUserWithdrawalsPage";
-import { AdminCommunityListPage } from "@/pages/admin/community/CommunityList";
+import { AdminCommunityListPage } from "@/pages/admin/community/AdminCommunityList";
+import { AdminCreateCommunityPage } from "@/pages/admin/community/AdminCreateCommunityPage";
 import { AdminBarberManagementPage } from "@/pages/admin/managementPages/AdminBarberShopManagementPage";
 import { AdminClientManagementPage } from "@/pages/admin/managementPages/AdminClientManagementPage";
 import { AdminChangePasswordPage } from "@/pages/admin/settings/AdminChangePasswordPage";
@@ -30,6 +31,7 @@ export const AdminRoutes = () => {
         <Route path="shops" element={<AdminBarberManagementPage />} />
         <Route path="clients" element={<AdminClientManagementPage />} />
         <Route path="communities" element={<AdminCommunityListPage />} />
+        <Route path="communities/create" element={<AdminCreateCommunityPage />} />
         <Route
           path="shop-applications"
           element={<AdminBarberShopApplicationPage />}

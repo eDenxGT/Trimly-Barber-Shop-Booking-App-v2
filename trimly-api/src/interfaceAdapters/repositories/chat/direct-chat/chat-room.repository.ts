@@ -1,11 +1,11 @@
 import { injectable } from "tsyringe";
-import { IChatRoomRepository } from "../../../entities/repositoryInterfaces/chat/chat-room-repository.interface.js";
-import { BaseRepository } from "../base.repository.js";
+import { IChatRoomRepository } from "../../../../entities/repositoryInterfaces/chat/direct-chat/chat-room-repository.interface.js";
+import { BaseRepository } from "../../base.repository.js";
 import {
   ChatRoomModel,
   IChatRoomModel,
-} from "./../../../frameworks/database/mongoDb/models/chat/chat-room.model.js";
-import { IChatRoomEntity } from "../../../entities/models/chat/chat-room.entity.js";
+} from "../../../../frameworks/database/mongoDb/models/chat/chat-room.model.js";
+import { IChatRoomEntity } from "../../../../entities/models/chat/chat-room.entity.js";
 
 @injectable()
 export class ChatRoomRepository

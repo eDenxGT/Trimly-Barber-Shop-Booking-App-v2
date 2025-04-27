@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { IChatRoomRepository } from "../../entities/repositoryInterfaces/chat/chat-room-repository.interface.js";
-import { IChatRoomEntity } from "../../entities/models/chat/chat-room.entity.js";
-import { IGetAllChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat/get-all-chats-by-user.usecase.interface.js";
+import { IChatRoomRepository } from "../../../entities/repositoryInterfaces/chat/direct-chat/chat-room-repository.interface.js";
+import { IChatRoomEntity } from "../../../entities/models/chat/chat-room.entity.js";
+import { IGetAllChatsByUserUseCase } from "../../../entities/useCaseInterfaces/chat/direct-chat/get-all-chats-by-user.usecase.interface.js";
 
 @injectable()
 export class GetAllChatsByUserUseCase implements IGetAllChatsByUserUseCase {

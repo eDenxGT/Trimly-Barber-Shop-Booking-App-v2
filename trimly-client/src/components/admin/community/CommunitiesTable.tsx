@@ -1,3 +1,4 @@
+import MuiButton from "@/components/common/buttons/MuiButton";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -35,13 +36,12 @@ export const CommunitiesTable = ({
             Manage your barber communities
           </p>
         </div>
-        <Button
+        <MuiButton
           onClick={() => navigate("/admin/communities/create")}
-          className="bg-yellow hover:bg-yellow/90 text-white transition-colors"
         >
           <Plus className="w-4 h-4 mr-2" />
           Create Community
-        </Button>
+        </MuiButton>
       </div>
 
       <div className="bg-white rounded-lg border border-zinc-200 shadow-sm">

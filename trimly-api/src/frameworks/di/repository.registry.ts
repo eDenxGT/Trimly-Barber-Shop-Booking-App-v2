@@ -30,10 +30,14 @@ import { IPostRepository } from "../../entities/repositoryInterfaces/feed/post-r
 import { PostRepository } from "../../interfaceAdapters/repositories/feed/post.repository.js";
 import { ICommentRepository } from "../../entities/repositoryInterfaces/feed/comment-repository.interface.js";
 import { CommentRepository } from "../../interfaceAdapters/repositories/feed/comment.repository.js";
-import { IChatRoomRepository } from "../../entities/repositoryInterfaces/chat/chat-room-repository.interface.js";
-import { ChatRoomRepository } from "../../interfaceAdapters/repositories/chat/chat-room.repository.js";
-import { IDirectMessageRepository } from "../../entities/repositoryInterfaces/chat/direct-message.repository.js";
-import { DirectMessageRepository } from "../../interfaceAdapters/repositories/chat/direct-message.repository.js";
+import { IChatRoomRepository } from "../../entities/repositoryInterfaces/chat/direct-chat/chat-room-repository.interface.js";
+import { ChatRoomRepository } from "../../interfaceAdapters/repositories/chat/direct-chat/chat-room.repository.js";
+import { IDirectMessageRepository } from "../../entities/repositoryInterfaces/chat/direct-chat/direct-message.repository.js";
+import { DirectMessageRepository } from "../../interfaceAdapters/repositories/chat/direct-chat/direct-message.repository.js";
+import { ICommunityRepository } from "../../entities/repositoryInterfaces/chat/community/community-respository.interface.js";
+import { CommunityRepository } from "../../interfaceAdapters/repositories/chat/community/community.repository.js";
+import { ICommunityMessageRepository } from "../../entities/repositoryInterfaces/chat/community/community-message-respository.interface.js";
+import { CommunityMessageRepository } from "../../interfaceAdapters/repositories/chat/community/community-message.repository.js";
 
 export class RepositoryRegistry {
   static registerRepositories(): void {
@@ -101,5 +105,16 @@ export class RepositoryRegistry {
     container.register<IDirectMessageRepository>("IDirectMessageRepository", {
       useClass: DirectMessageRepository,
     });
+
+    container.register<ICommunityRepository>("ICommunityRepository", {
+      useClass: CommunityRepository,
+    });
+
+    container.register<ICommunityMessageRepository>(
+      "ICommunityMessageRepository",
+      {
+        useClass: CommunityMessageRepository,
+      }
+    );
   }
 }

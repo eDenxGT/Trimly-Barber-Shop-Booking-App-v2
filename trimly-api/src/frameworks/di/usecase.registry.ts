@@ -137,16 +137,18 @@ import { IRejectWithdrawalUseCase } from "../../entities/useCaseInterfaces/finan
 import { RejectWithdrawalUseCase } from "../../useCases/finance/withdrawal/reject-withdrawal.usecase.js";
 import { IBookWithWalletUseCase } from "../../entities/useCaseInterfaces/booking/book-with-wallet-usecase.interface.js";
 import { BookWithWalletUseCase } from "../../useCases/booking/book-with-wallet.usecase.js";
-import { IGetChatByUserUseCase } from "../../entities/useCaseInterfaces/chat/get-chat-by-user-usecase.interface.js";
-import { GetChatByUserUseCase } from "../../useCases/chat/get-chat-by-user.usecase.js";
-import { CreateChatRoomUseCase } from "../../useCases/chat/create-chat-room.usecase.js";
-import { ICreateChatRoomUseCase } from "../../entities/useCaseInterfaces/chat/create-chat-room-usecase.interface.js";
-import { IGetAllChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat/get-all-chats-by-user.usecase.interface.js";
-import { GetAllChatsByUserUseCase } from "../../useCases/chat/get-all-chats-by-user.usecase.js";
-import { GetChatByChatIdUseCase } from "../../useCases/chat/get-chat-by-chatid.usecase.js";
-import { IGetChatByChatIdUseCase } from "../../entities/useCaseInterfaces/chat/get-chat-by-chatid.usecase.js";
-import { SendDirectMessageUseCase } from "../../useCases/chat/send-direct-messsage.usecase.js";
-import { ISendDirectMessageUseCase } from "../../entities/useCaseInterfaces/chat/send-direct-messsage-usecase.interface.js";
+import { IGetChatByUserUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/get-chat-by-user-usecase.interface.js";
+import { GetChatByUserUseCase } from "../../useCases/chat/direct-chat/get-chat-by-user.usecase.js";
+import { CreateChatRoomUseCase } from "../../useCases/chat/direct-chat/create-chat-room.usecase.js";
+import { ICreateChatRoomUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/create-chat-room-usecase.interface.js";
+import { IGetAllChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/get-all-chats-by-user.usecase.interface.js";
+import { GetAllChatsByUserUseCase } from "../../useCases/chat/direct-chat/get-all-chats-by-user.usecase.js";
+import { GetChatByChatIdUseCase } from "../../useCases/chat/direct-chat/get-chat-by-chatid.usecase.js";
+import { IGetChatByChatIdUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/get-chat-by-chatid.usecase.js";
+import { SendDirectMessageUseCase } from "../../useCases/chat/direct-chat/send-direct-messsage.usecase.js";
+import { ISendDirectMessageUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/send-direct-messsage-usecase.interface.js";
+import { ICreateCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/create-community-usecase.interface.js";
+import { CreateCommunityUseCase } from "../../useCases/chat/community/create-community.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -460,6 +462,10 @@ export class UseCaseRegistry {
 
     container.register<ISendDirectMessageUseCase>("ISendDirectMessageUseCase", {
       useClass: SendDirectMessageUseCase,
+    });
+
+    container.register<ICreateCommunityUseCase>("ICreateCommunityUseCase", {
+      useClass: CreateCommunityUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//

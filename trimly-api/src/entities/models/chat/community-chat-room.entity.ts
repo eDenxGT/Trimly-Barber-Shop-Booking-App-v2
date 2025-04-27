@@ -5,6 +5,7 @@ export interface ICommunityChatRoomEntity {
   imageUrl?: string;
   members: string[];
   createdBy: string;
+  status: "active" | "blocked";
   createdAt: Date;
   updatedAt: Date;
 }

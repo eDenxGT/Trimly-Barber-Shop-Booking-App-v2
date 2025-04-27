@@ -1,4 +1,4 @@
-import { IChatRoomEntity } from "../../models/chat/chat-room.entity.js";
+import { IChatRoomEntity } from "../../../models/chat/chat-room.entity.js";
 
 export interface ICreateChatRoomUseCase {
   execute({

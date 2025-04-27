@@ -1,7 +1,4 @@
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { v4 as uuidv4 } from "uuid";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -11,50 +8,63 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Plus, Image } from "lucide-react";
+import { Plus } from "lucide-react";
 import { ICommunityChat } from "@/types/Chat";
-
-const validationSchema = Yup.object({
-  name: Yup.string()
-    .required("Community name is required")
-    .min(3, "Name must be at least 3 characters")
-    .max(50, "Name must be less than 50 characters"),
-  description: Yup.string().max(
-    200,
-    "Description must be less than 200 characters"
-  ),
-  imageUrl: Yup.string().url("Must be a valid URL").nullable(),
-});
+import { generateUniqueId } from "@/utils/helpers/generateUniqueId";
+import { ImageUploadField } from "@/components/common/fields/ImageUploadField";
+import { useCallback, useRef } from "react";
+import { addCommunitySchema } from "@/utils/validations/community.validator";
+import MuiButton from "@/components/common/buttons/MuiButton";
+import { uploadImageToCloudinary } from "@/services/cloudinary/cloudinary";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 interface CommunityCreationFormProps {
   onSubmit: (values: Partial<ICommunityChat>) => void;
-  adminId: string;
+  isLoading: boolean;
 }
 
 export const CommunityCreationForm = ({
   onSubmit,
-  adminId,
+  isLoading,
 }: CommunityCreationFormProps) => {
+  const imageRef = useRef<Blob | null>(null);
+
+  const { errorToast } = useToaster();
+
   const formik = useFormik({
     initialValues: {
       name: "",
       description: "",
       imageUrl: "",
     },
-    validationSchema,
-    onSubmit: (values) => {
+    validationSchema: addCommunitySchema,
+    onSubmit: async (values) => {
+      if (!imageRef.current) {
+        errorToast("Image is required");
+        return;
+      }
+      isLoading = true;
+      const uploadedAvatarUrl = await uploadImageToCloudinary(imageRef.current);
+      if (!uploadedAvatarUrl) {
+        errorToast("Image upload failed");
+        return;
+      }
+      isLoading = false;
+
       const newCommunity: Partial<ICommunityChat> = {
-        communityId: gneerate,
+        communityId: generateUniqueId("community"),
         name: values.name,
         description: values.description || undefined,
-        imageUrl: values.imageUrl || undefined,
-        createdBy: adminId,
+        imageUrl: uploadedAvatarUrl || undefined,
         createdAt: new Date(),
-        members: [adminId],
       };
       onSubmit(newCommunity);
     },
   });
+
+  const handleImageChange = useCallback((file: Blob | null) => {
+    imageRef.current = file;
+  }, []);
 
   return (
     <Card className="w-full max-w-lg mx-auto bg-white shadow-lg animate-fade-in">
@@ -115,47 +125,30 @@ export const CommunityCreationForm = ({
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label
-              htmlFor="imageUrl"
-              className="text-sm font-medium text-zinc-700"
-            >
-              Community Image URL (Optional)
-            </Label>
-            <div className="relative">
-              <Input
-                id="imageUrl"
-                name="imageUrl"
-                type="text"
-                placeholder="https://example.com/image.jpg"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.imageUrl}
-                className="pl-10 transition-all duration-200 focus:ring-yellow focus:border-yellow"
-              />
-              <Image className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
-            </div>
-            {formik.touched.imageUrl && formik.errors.imageUrl && (
-              <p className="text-sm text-red-500">{formik.errors.imageUrl}</p>
-            )}
+          <div className="mb-6">
+            <h3 className="text-sm font-medium mb-3">Community Picture</h3>
+            <ImageUploadField
+              handleRemove={() => formik.setFieldValue("avatar", null)}
+              onImageChange={handleImageChange}
+              aspectRatio="square"
+              label="Upload Community Picture"
+              maxSizeMB={5}
+            />
+            <p className="text-xs text-gray-500 text-center mt-2">
+              Image size should be under 1MB and image ratio needs to be 1:1
+            </p>
           </div>
         </CardContent>
 
         <CardFooter className="flex justify-end space-x-4 bg-zinc-50/50 rounded-b-lg">
-          <Button
+          <MuiButton
             type="submit"
-            className="bg-yellow hover:bg-yellow/90 text-white transition-all duration-200"
-            disabled={!formik.isValid || formik.isSubmitting}
+            loading={isLoading}
+            disabled={!formik.isValid || formik.isSubmitting || isLoading}
           >
-            {formik.isSubmitting ? (
-              "Creating..."
-            ) : (
-              <>
-                <Plus className="w-4 h-4 mr-2" />
-                Create Community
-              </>
-            )}
-          </Button>
+            <Plus className="w-4 h-4 mr-2" />
+            Create Community
+          </MuiButton>
         </CardFooter>
       </form>
     </Card>

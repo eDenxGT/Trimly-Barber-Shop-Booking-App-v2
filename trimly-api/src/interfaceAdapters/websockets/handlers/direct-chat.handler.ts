@@ -2,7 +2,7 @@ import { Socket, Server } from "socket.io";
 import { inject, injectable } from "tsyringe";
 import { DIRECT_CHAT_EVENTS } from "../../../shared/constants.js";
 import socketLogger from "../../../shared/utils/socket.logger.js";
-import { ISendDirectMessageUseCase } from "../../../entities/useCaseInterfaces/chat/send-direct-messsage-usecase.interface.js";
+import { ISendDirectMessageUseCase } from "../../../entities/useCaseInterfaces/chat/direct-chat/send-direct-messsage-usecase.interface.js";
 import { SocketUserStore } from "../socket-user.store.js";
 
 @injectable()

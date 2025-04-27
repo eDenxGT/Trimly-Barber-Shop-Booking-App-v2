@@ -2,11 +2,16 @@ import { Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import { IChatController } from "../../entities/controllerInterfaces/chat/chat-controller.interface.js";
 import { handleErrorResponse } from "../../shared/utils/error.handler.js";
-import { IGetChatByUserUseCase } from "../../entities/useCaseInterfaces/chat/get-chat-by-user-usecase.interface.js";
-import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
+import { IGetChatByUserUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/get-chat-by-user-usecase.interface.js";
+import {
+  ERROR_MESSAGES,
+  HTTP_STATUS,
+  SUCCESS_MESSAGES,
+} from "../../shared/constants.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
-import { IGetAllChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat/get-all-chats-by-user.usecase.interface.js";
-import { IGetChatByChatIdUseCase } from "../../entities/useCaseInterfaces/chat/get-chat-by-chatid.usecase.js";
+import { IGetAllChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/get-all-chats-by-user.usecase.interface.js";
+import { IGetChatByChatIdUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/get-chat-by-chatid.usecase.js";
+import { ICreateCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/create-community-usecase.interface.js";
 
 @injectable()
 export class ChatController implements IChatController {
@@ -16,7 +21,9 @@ export class ChatController implements IChatController {
     @inject("IGetAllChatsByUserUseCase")
     private _getAllChatsByUserUseCase: IGetAllChatsByUserUseCase,
     @inject("IGetChatByChatIdUseCase")
-    private _getChatByChatIdUseCase: IGetChatByChatIdUseCase
+    private _getChatByChatIdUseCase: IGetChatByChatIdUseCase,
+    @inject("ICreateCommunityUseCase")
+    private _createCommunityUseCase: ICreateCommunityUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -85,6 +92,47 @@ export class ChatController implements IChatController {
       res.status(HTTP_STATUS.OK).json({
         success: true,
         chats,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*               🛠️  Create Community (For Admin)
+  //* ─────────────────────────────────────────────────────────────
+  async createCommunity(req: Request, res: Response) {
+    try {
+      const { userId } = (req as CustomRequest).user;
+      const { communityId, name, description, imageUrl, createdAt } = req.body;
+
+      if (
+        !userId ||
+        !communityId ||
+        !name ||
+        !description ||
+        !imageUrl ||
+        !createdAt
+      ) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      await this._createCommunityUseCase.execute({
+        communityId,
+        name,
+        description,
+        imageUrl,
+        createdAt,
+        createdBy: userId,
+      });
+
+      res.status(HTTP_STATUS.CREATED).json({
+        success: true,
+        message: SUCCESS_MESSAGES.COMMUNITY_CREATED,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { ICreateChatRoomUseCase } from "../../entities/useCaseInterfaces/chat/create-chat-room-usecase.interface.js";
-import { IChatRoomRepository } from "../../entities/repositoryInterfaces/chat/chat-room-repository.interface.js";
-import { IChatRoomEntity } from "../../entities/models/chat/chat-room.entity.js";
-import { generateUniqueId } from "../../shared/utils/unique-uuid.helper.js";
+import { ICreateChatRoomUseCase } from "../../../entities/useCaseInterfaces/chat/direct-chat/create-chat-room-usecase.interface.js";
+import { IChatRoomRepository } from "../../../entities/repositoryInterfaces/chat/direct-chat/chat-room-repository.interface.js";
+import { IChatRoomEntity } from "../../../entities/models/chat/chat-room.entity.js";
+import { generateUniqueId } from "../../../shared/utils/unique-uuid.helper.js";
 
 @injectable()
 export class CreateChatRoomUseCase implements ICreateChatRoomUseCase {
