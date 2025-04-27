@@ -21,6 +21,7 @@ import { generateUniqueId } from "@/utils/helpers/generateUniqueId";
 import { useOutletContext } from "react-router-dom";
 import { IBarber, IClient } from "@/types/User";
 import { useSocket } from "@/contexts/SocketContext";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 type ChatProps = {
   chat: IDirectChat | ICommunityChat;
@@ -30,6 +31,7 @@ type ChatProps = {
 export function ChatArea({ chat, chatType }: ChatProps) {
   const user = useOutletContext<IBarber | IClient>();
   const socket = useSocket();
+  const { infoToast } = useToaster();
   const [messages, setMessages] = useState<
     IDirectMessage[] | ICommunityMessage[]
   >(chat.messages);
@@ -42,6 +44,28 @@ export function ChatArea({ chat, chatType }: ChatProps) {
   useEffect(() => {
     setMessages(chat.messages);
   }, [chat]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleReceiveMessage = (newMessage: IDirectMessage) => {
+      const currentChatRoomId = (chat as IDirectChat).chatRoomId;
+
+      if (newMessage.chatRoomId !== currentChatRoomId) {
+        infoToast(`Message received: ${newMessage.content}`);
+      } else {
+        setMessages(
+          (prevMessages) => [...prevMessages, newMessage] as IDirectMessage[]
+        );
+      }
+    };
+
+    socket.on("direct-chat:receive-message", handleReceiveMessage);
+
+    return () => {
+      socket.off("direct-chat:receive-message", handleReceiveMessage);
+    };
+  }, [socket, chat]);
 
   const handleSendMessage = (content: string, imageUrl?: string) => {
     const messageType: "text" | "image" = imageUrl ? "image" : "text";

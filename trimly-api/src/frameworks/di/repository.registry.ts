@@ -32,6 +32,8 @@ import { ICommentRepository } from "../../entities/repositoryInterfaces/feed/com
 import { CommentRepository } from "../../interfaceAdapters/repositories/feed/comment.repository.js";
 import { IChatRoomRepository } from "../../entities/repositoryInterfaces/chat/chat-room-repository.interface.js";
 import { ChatRoomRepository } from "../../interfaceAdapters/repositories/chat/chat-room.repository.js";
+import { IDirectMessageRepository } from "../../entities/repositoryInterfaces/chat/direct-message.repository.js";
+import { DirectMessageRepository } from "../../interfaceAdapters/repositories/chat/direct-message.repository.js";
 
 export class RepositoryRegistry {
   static registerRepositories(): void {
@@ -94,6 +96,10 @@ export class RepositoryRegistry {
 
     container.register<IChatRoomRepository>("IChatRoomRepository", {
       useClass: ChatRoomRepository,
-    }); 
+    });
+
+    container.register<IDirectMessageRepository>("IDirectMessageRepository", {
+      useClass: DirectMessageRepository,
+    });
   }
 }

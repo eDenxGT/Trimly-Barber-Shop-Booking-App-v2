@@ -15,6 +15,7 @@ import { ExpressServer } from "./frameworks/http/server.js";
 import { createServer } from "http";
 import { SocketServer } from "./frameworks/websockets/socket.server.js";
 import socketLogger from "./shared/utils/socket.logger.js";
+import { SocketUserStore } from "./interfaceAdapters/websockets/socket-user.store.js";
 
 //* ====== Instance Creation ====== *//
 const expressServer = new ExpressServer();
@@ -31,13 +32,25 @@ const socketServer = new SocketServer(httpServer);
 
 //* ====== Socket Events Setup ====== *//
 socketServer.onConnection((socket) => {
-  console.log(chalk.green.bold("⚡ New Socket connected:", socket.id));
+  // set user id in socket data
+  const userStore = SocketUserStore.getInstance();
+
+  socket.on("registerUser", ({ userId }) => {
+    console.log("Received userId:", userId);
+    socket.data.userId = userId;
+    userStore.addUser(userId, socket.id);
+  });
+
   socketLogger.info("New socket connected", {
     socketId: socket.id,
     event: "connect",
   });
+  console.log("Connected users:", userStore.getAllUsers());
   socket.on("disconnect", () => {
     console.log(chalk.red.bold("❌ Socket disconnected:", socket.id));
+    if (socket.data.userId) {
+      userStore.removeUser(socket.data.userId); 
+    }
     socketLogger.info("Socket disconnected", {
       socketId: socket.id,
       event: "disconnect",

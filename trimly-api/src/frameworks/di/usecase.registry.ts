@@ -145,6 +145,8 @@ import { IGetAllChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat
 import { GetAllChatsByUserUseCase } from "../../useCases/chat/get-all-chats-by-user.usecase.js";
 import { GetChatByChatIdUseCase } from "../../useCases/chat/get-chat-by-chatid.usecase.js";
 import { IGetChatByChatIdUseCase } from "../../entities/useCaseInterfaces/chat/get-chat-by-chatid.usecase.js";
+import { SendDirectMessageUseCase } from "../../useCases/chat/send-direct-messsage.usecase.js";
+import { ISendDirectMessageUseCase } from "../../entities/useCaseInterfaces/chat/send-direct-messsage-usecase.interface.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -454,6 +456,10 @@ export class UseCaseRegistry {
 
     container.register<IGetChatByChatIdUseCase>("IGetChatByChatIdUseCase", {
       useClass: GetChatByChatIdUseCase,
+    });
+
+    container.register<ISendDirectMessageUseCase>("ISendDirectMessageUseCase", {
+      useClass: SendDirectMessageUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//
