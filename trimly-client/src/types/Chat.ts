@@ -4,7 +4,12 @@ export interface ICommunityChat {
   description?: string;
   imageUrl?: string;
   members: string[];
-  createdBy: string;
+  membersCount?: number;
+  createdBy: {
+    userId: string;
+    name: string;
+    avatar?: string;
+  };
   createdAt: Date;
   updatedAt: Date;
   messages?: ICommunityMessage[];

@@ -12,6 +12,7 @@ import { CustomRequest } from "../middlewares/auth.middleware.js";
 import { IGetAllChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/get-all-chats-by-user.usecase.interface.js";
 import { IGetChatByChatIdUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/get-chat-by-chatid.usecase.js";
 import { ICreateCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/create-community-usecase.interface.js";
+import { IGetAllCommunitiesForAdminUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-communities-for-admin-usecase.interface.js";
 
 @injectable()
 export class ChatController implements IChatController {
@@ -23,7 +24,9 @@ export class ChatController implements IChatController {
     @inject("IGetChatByChatIdUseCase")
     private _getChatByChatIdUseCase: IGetChatByChatIdUseCase,
     @inject("ICreateCommunityUseCase")
-    private _createCommunityUseCase: ICreateCommunityUseCase
+    private _createCommunityUseCase: ICreateCommunityUseCase,
+    @inject("IGetAllCommunitiesForAdminUseCase")
+    private _getAllCommunitiesForAdminUseCase: IGetAllCommunitiesForAdminUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -133,6 +136,40 @@ export class ChatController implements IChatController {
       res.status(HTTP_STATUS.CREATED).json({
         success: true,
         message: SUCCESS_MESSAGES.COMMUNITY_CREATED,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*               🛠️  Get All Communities (For Admin)
+  //* ─────────────────────────────────────────────────────────────
+  async getAllCommunitiesForAdmin(req: Request, res: Response) {
+    try {
+      const { userId } = (req as CustomRequest).user;
+
+      const { page, limit } = req.query;
+      console.log(req.query)
+
+      if (!userId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      const communitiesData = await this._getAllCommunitiesForAdminUseCase.execute({
+        page: Number(page),
+        limit: Number(limit),
+      });
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        communities: communitiesData.communities,
+        totalPages: communitiesData.totalPages,
+        currentPage: communitiesData.currentPage,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

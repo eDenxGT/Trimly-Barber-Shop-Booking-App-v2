@@ -57,7 +57,6 @@ import {
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
 import { WithdrawalDetailModal } from "@/components/modals/WithdrawDetailsModal";
 import { formatDateTime } from "@/utils/helpers/timeFormatter";
-import { error } from "console";
 
 const ITEMS_PER_PAGE = 10;
 

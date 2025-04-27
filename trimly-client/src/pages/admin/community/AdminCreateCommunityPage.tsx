@@ -1,11 +1,13 @@
 import { CommunityCreationForm } from "@/components/admin/community/CommunityCreationForm";
 import { ICommunityChat } from "@/types/Chat";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCreateCommunityMutation } from "./../../../hooks/admin/useCommunityMutation";
+import { useCreateCommunityMutation } from "../../../hooks/admin/useCommunity";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { useNavigate } from "react-router-dom";
 
 export const AdminCreateCommunityPage = () => {
   const { successToast, errorToast } = useToaster();
+  const navigate = useNavigate();
 
   const {
     mutate: createCommunity,
@@ -16,6 +18,7 @@ export const AdminCreateCommunityPage = () => {
     createCommunity(values, {
       onSuccess: (data) => {
         successToast(data.message);
+        navigate("/admin/communities");
       },
       onError: (error: any) => {
         errorToast(error.response.data.message);

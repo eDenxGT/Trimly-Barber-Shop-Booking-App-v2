@@ -5,6 +5,7 @@ import { ICommunityChat } from "@/types/Chat";
 import {
   IAdminResponse,
   IAllBarberShopsResponse,
+  IAllCommunitiesResponse,
   IAuthResponse,
   IAxiosResponse,
   WithdrawalResponse,
@@ -149,6 +150,20 @@ export const adminCreateCommunity = async (data: Partial<ICommunityChat>) => {
   const response = await adminAxiosInstance.post<IAxiosResponse>(
     "/admin/community",
     data
+  );
+  return response.data;
+};
+
+export const adminGetAllCommunities = async ({
+  page,
+  limit,
+}: {
+  page: number;
+  limit: number;
+}) => {
+  const response = await adminAxiosInstance.get<IAllCommunitiesResponse>(
+    "/admin/communities",
+    { params: { page, limit } }
   );
   return response.data;
 };

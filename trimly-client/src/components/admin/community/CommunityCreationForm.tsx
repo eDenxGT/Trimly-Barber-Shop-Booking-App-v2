@@ -134,9 +134,6 @@ export const CommunityCreationForm = ({
               label="Upload Community Picture"
               maxSizeMB={5}
             />
-            <p className="text-xs text-gray-500 text-center mt-2">
-              Image size should be under 1MB and image ratio needs to be 1:1
-            </p>
           </div>
         </CardContent>
 

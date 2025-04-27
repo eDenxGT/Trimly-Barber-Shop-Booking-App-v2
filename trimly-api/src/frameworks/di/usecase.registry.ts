@@ -149,6 +149,8 @@ import { SendDirectMessageUseCase } from "../../useCases/chat/direct-chat/send-d
 import { ISendDirectMessageUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/send-direct-messsage-usecase.interface.js";
 import { ICreateCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/create-community-usecase.interface.js";
 import { CreateCommunityUseCase } from "../../useCases/chat/community/create-community.usecase.js";
+import { IGetAllCommunitiesForAdminUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-communities-for-admin-usecase.interface.js";
+import { GetAllCommunitiesForAdminUseCase } from "../../useCases/chat/community/get-all-communities-for-admin.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -467,6 +469,13 @@ export class UseCaseRegistry {
     container.register<ICreateCommunityUseCase>("ICreateCommunityUseCase", {
       useClass: CreateCommunityUseCase,
     });
+
+    container.register<IGetAllCommunitiesForAdminUseCase>(
+      "IGetAllCommunitiesForAdminUseCase",
+      {
+        useClass: GetAllCommunitiesForAdminUseCase,
+      }
+    );
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

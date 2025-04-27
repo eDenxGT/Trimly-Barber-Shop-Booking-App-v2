@@ -96,3 +96,10 @@ export interface IAllChatResponse extends IAxiosResponse {
   chats: IDirectChatPreview[] | ICommunityChatPreview[];
   success: boolean;
 }
+
+export interface IAllCommunitiesResponse {
+  communities: ICommunityChat[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+}

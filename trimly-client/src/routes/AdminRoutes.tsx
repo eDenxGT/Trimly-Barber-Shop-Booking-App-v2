@@ -5,7 +5,7 @@ import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { AdminDashBoardPage } from "@/pages/admin/AdminDashboardPage";
 import { AdminBarberShopApplicationPage } from "@/pages/admin/applications/AdminBarberApplicationPage";
 import { AdminUserWithdrawalsPage } from "@/pages/admin/applications/AdminUserWithdrawalsPage";
-import { AdminCommunityListPage } from "@/pages/admin/community/AdminCommunityList";
+import { AdminCommunityListPage } from "@/pages/admin/community/AdminCommunityListPage";
 import { AdminCreateCommunityPage } from "@/pages/admin/community/AdminCreateCommunityPage";
 import { AdminBarberManagementPage } from "@/pages/admin/managementPages/AdminBarberShopManagementPage";
 import { AdminClientManagementPage } from "@/pages/admin/managementPages/AdminClientManagementPage";

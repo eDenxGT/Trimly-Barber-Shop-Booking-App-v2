@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ICommunityChatPreview } from "@/types/Chat";
+import { ICommunityChat } from "@/types/Chat";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +18,7 @@ export const CommunitiesTable = ({
   onDelete,
   getSmartDate,
 }: {
-  communities: ICommunityChatPreview[];
+  communities: ICommunityChat[];
   onEdit: (communityId: string) => void;
   onDelete: (communityId: string) => void;
   getSmartDate: (date: string) => string;
