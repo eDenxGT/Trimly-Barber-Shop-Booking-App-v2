@@ -1,7 +1,12 @@
-
 // ... keep existing code (MOCK_CHATS, MOCK_MESSAGES)
 
-import { IChat, ICommunity, ICommunityMessage, IDirectMessage } from "@/types/Chat";
+import {
+  IChat,
+  ICommunity,
+  ICommunityChatPreview,
+  ICommunityMessage,
+  IDirectMessage,
+} from "@/types/Chat";
 
 export const MOCK_CHATS: IChat[] = [
   {
@@ -11,7 +16,7 @@ export const MOCK_CHATS: IChat[] = [
     lastMessage: "When will you be available for a haircut?",
     timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
     unread: 2,
-    online: true
+    online: true,
   },
   {
     id: "chat2",
@@ -20,7 +25,7 @@ export const MOCK_CHATS: IChat[] = [
     lastMessage: "Thanks for the great service!",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
     unread: 0,
-    online: false
+    online: false,
   },
   {
     id: "chat3",
@@ -29,7 +34,7 @@ export const MOCK_CHATS: IChat[] = [
     lastMessage: "Can I book an appointment for tomorrow?",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
     unread: 1,
-    online: true
+    online: true,
   },
   {
     id: "chat4",
@@ -38,7 +43,7 @@ export const MOCK_CHATS: IChat[] = [
     lastMessage: "Do you have any availability this weekend?",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
     unread: 0,
-    online: false
+    online: false,
   },
   {
     id: "chat5",
@@ -47,13 +52,13 @@ export const MOCK_CHATS: IChat[] = [
     lastMessage: "I'll see you at 3pm tomorrow!",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
     unread: 0,
-    online: true
-  }
+    online: true,
+  },
 ];
 
 // Sample messages data
 export const MOCK_MESSAGES: Record<string, IDirectMessage[]> = {
-  "chat1": [
+  chat1: [
     {
       messageId: "msg1",
       senderId: "chat1",
@@ -63,21 +68,23 @@ export const MOCK_MESSAGES: Record<string, IDirectMessage[]> = {
     {
       messageId: "msg2",
       senderId: "current-user",
-      content: "Hi there! I'd be happy to help you with that. What kind of haircut are you looking for?",
+      content:
+        "Hi there! I'd be happy to help you with that. What kind of haircut are you looking for?",
       timestamp: new Date(Date.now() - 1000 * 60 * 55), // 55 minutes ago
     },
     {
       messageId: "msg3",
       senderId: "chat1",
-      content: "I'm thinking of something short on the sides and a bit longer on top.",
+      content:
+        "I'm thinking of something short on the sides and a bit longer on top.",
       timestamp: new Date(Date.now() - 1000 * 60 * 50), // 50 minutes ago
       media: [
         {
           type: "image",
           url: "https://images.unsplash.com/photo-1614465000772-1b302f406c47?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-          caption: "Something like this"
-        }
-      ]
+          caption: "Something like this",
+        },
+      ],
     },
     {
       id: "msg4",
@@ -90,9 +97,9 @@ export const MOCK_MESSAGES: Record<string, IDirectMessage[]> = {
       senderId: "chat1",
       text: "Great! When will you be available for a haircut?",
       timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-    }
+    },
   ],
-  "chat2": [
+  chat2: [
     {
       id: "msg1",
       senderId: "chat2",
@@ -122,29 +129,45 @@ export const MOCK_MESSAGES: Record<string, IDirectMessage[]> = {
       senderId: "chat2",
       text: "Thanks for the great service!",
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    }
-  ]
+    },
+  ],
 };
 
-export const MOCK_COMMUNITY_GROUPS: ICommunity[] = [
+export const MOCK_COMMUNITY_GROUPS: ICommunityChatPreview[] = [
   {
-    groupId: "barbers-group-1",
+    communityId: "barbers-group-1",
     name: "Elite Barbers Hub",
-    description: "A group for professional barbers to share tips and techniques",
-    avatar: "/placeholder.svg",
+    description:
+      "A group for professional barbers to share tips and techniques",
+    imageUrl: "/placeholder.svg",
     createdBy: "user1",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 7 days ago
-    members: ["user1", "user2", "user3", "user4"]
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+    lastMessage: {
+      content: "When will you be available for a haircut?",
+      messageType: "text",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    },
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    membersCount: 4,
+    members: ["user1", "user2", "user3", "user4"],
   },
   {
-    groupId: "barbers-group-2",
+    communityId: "barbers-group-2",
     name: "Barber Masters",
-    description: "Advanced cutting techniques and business discussions",
-    avatar: "/placeholder.svg",
-    createdBy: "user2",
+    description:
+      "A group for professional barbers to share tips and techniques",
+    imageUrl: "/placeholder.svg",
+    createdBy: "admin",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
-    members: ["user2", "user3"]
-  }
+    lastMessage: {
+      content: "When will you be available for a haircut?",
+      messageType: "text",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    },
+    membersCount: 4,
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    members: ["user1", "user2", "user3", "user4"],
+  },
 ];
 
 export const MOCK_COMMUNITY_MESSAGES: Record<string, ICommunityMessage[]> = {
@@ -156,10 +179,11 @@ export const MOCK_COMMUNITY_MESSAGES: Record<string, ICommunityMessage[]> = {
       senderName: "Robert Smith",
       senderAvatar: "/placeholder.svg",
       messageType: "text",
-      content: "Hey everyone! I wanted to share some new techniques I learned at the barber convention last week.",
+      content:
+        "Hey everyone! I wanted to share some new techniques I learned at the barber convention last week.",
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
       status: "read",
-      readBy: ["user2", "user3"]
+      readBy: ["user2", "user3"],
     },
     {
       messageId: "comm2",
@@ -171,8 +195,8 @@ export const MOCK_COMMUNITY_MESSAGES: Record<string, ICommunityMessage[]> = {
       content: "That sounds great Robert! What was your favorite technique?",
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 23),
       status: "read",
-      readBy: ["user1", "user3"]
-    }
+      readBy: ["user1", "user3"],
+    },
   ],
-  "barbers-group-2": []
+  "barbers-group-2": [],
 };

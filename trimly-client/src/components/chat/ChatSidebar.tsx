@@ -2,24 +2,20 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ICommunityChat,
-  ICommunityChatPreview,
   IDirectChat,
   IDirectChatPreview,
 } from "@/types/Chat";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import { Badge } from "@/components/ui/badge";
+import { useChat } from "@/contexts/ChatContext";
 
 interface ChatSidebarProps {
-  chats: IDirectChatPreview[] | ICommunityChatPreview[];
   onSelectChat: (chatId: string) => void;
-  activeChat: IDirectChat | ICommunityChat | null;
 }
 
-export function ChatSidebar({
-  chats,
-  onSelectChat,
-  activeChat,
-}: ChatSidebarProps) {
+export function ChatSidebar({ onSelectChat }: ChatSidebarProps) {
+  const { allChats, currentChat } = useChat();
+;
   return (
     <div className="h-full flex flex-col bg-white shadow-sm">
       <div className="py-4 px-6 border-b border-gray-200">
@@ -27,12 +23,12 @@ export function ChatSidebar({
       </div>
       <ScrollArea className="flex-1 px-2">
         <div className="py-2 space-y-1">
-          {chats.map((chat) => {
+          {allChats.map((chat) => {
             const isCommunity = "communityId" in chat;
             const id = isCommunity ? chat.communityId : chat.chatRoomId;
             const isActive = isCommunity
-              ? (activeChat as ICommunityChat)?.communityId === id
-              : (activeChat as IDirectChat)?.chatRoomId === id;
+              ? (currentChat as ICommunityChat)?.communityId === id
+              : (currentChat as IDirectChat)?.chatRoomId === id;
 
             return (
               <div
@@ -46,14 +42,14 @@ export function ChatSidebar({
                   <AvatarImage
                     src={
                       isCommunity
-                        ? chat.community.imageUrl
+                        ? chat.imageUrl
                         : chat.user.profileImageUrl || "/placeholder.svg"
                     }
-                    alt={isCommunity ? chat.community.name : chat.user.name}
+                    alt={isCommunity ? chat.name : chat.user.name}
                   />
                   <AvatarFallback className="bg-gray-200 text-gray-700 font-medium">
                     {isCommunity
-                      ? chat.community.name.substring(0, 2)
+                      ? chat.name.substring(0, 2)
                       : chat.user.name.substring(0, 2)}
                   </AvatarFallback>
                 </Avatar>
@@ -61,7 +57,7 @@ export function ChatSidebar({
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center mb-1">
                     <h3 className="font-semibold text-gray-900 truncate">
-                      {isCommunity ? chat.community.name : chat.user.name}
+                      {isCommunity ? chat.name : chat.user.name}
                     </h3>
                     <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
                       {chat.lastMessage.timestamp
@@ -74,9 +70,9 @@ export function ChatSidebar({
                   </p>
                 </div>
 
-                {chat.unreadCount == 0 && (
+                {(chat as IDirectChatPreview)?.unreadCount == 0 && (
                   <Badge className="ml-2 bg-yellow-400 text-white rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0">
-                    {chat.unreadCount}
+                    {(chat as IDirectChatPreview)?.unreadCount}
                   </Badge>
                 )}
               </div>

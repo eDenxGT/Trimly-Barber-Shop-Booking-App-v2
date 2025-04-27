@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Phone, Video, MoreVertical } from "lucide-react";
@@ -9,121 +9,36 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  IDirectChat,
-  IDirectMessage,
-  ICommunityMessage,
-  ICommunityChat,
-} from "@/types/Chat";
+import { IDirectChat, ICommunityChat } from "@/types/Chat";
 import { MessageBubble } from "./MessageBubble";
 import { MessageInput } from "./MessageInput";
-import { generateUniqueId } from "@/utils/helpers/generateUniqueId";
-import { useOutletContext } from "react-router-dom";
-import { IBarber, IClient } from "@/types/User";
-import { useSocket } from "@/contexts/SocketContext";
-import { useToaster } from "@/hooks/ui/useToaster";
+import { useChat } from "@/contexts/ChatContext";
 
-type ChatProps = {
-  chat: IDirectChat | ICommunityChat;
-  chatType: "dm" | "community";
-};
-
-export function ChatArea({ chat, chatType }: ChatProps) {
-  const user = useOutletContext<IBarber | IClient>();
-  const socket = useSocket();
-  const { infoToast } = useToaster();
-  const [messages, setMessages] = useState<
-    IDirectMessage[] | ICommunityMessage[]
-  >(chat.messages);
+export function ChatArea() {
+  const { messages, sendMessage, currentChat, chatType } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    setMessages(chat.messages);
-  }, [chat]);
-
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleReceiveMessage = (newMessage: IDirectMessage) => {
-      const currentChatRoomId = (chat as IDirectChat).chatRoomId;
-
-      if (newMessage.chatRoomId !== currentChatRoomId) {
-        infoToast(`Message received: ${newMessage.content}`);
-      } else {
-        setMessages(
-          (prevMessages) => [...prevMessages, newMessage] as IDirectMessage[]
-        );
-      }
-    };
-
-    socket.on("direct-chat:receive-message", handleReceiveMessage);
-
-    return () => {
-      socket.off("direct-chat:receive-message", handleReceiveMessage);
-    };
-  }, [socket, chat]);
-
-  const handleSendMessage = (content: string, imageUrl?: string) => {
-    const messageType: "text" | "image" = imageUrl ? "image" : "text";
-    const currentUserId = user.userId || "";
-    const senderName =
-      user.role === "barber"
-        ? (user as IBarber).shopName
-        : (user as IClient).fullName;
-    const senderAvatar = user.avatar || "/placeholder.svg";
-
-    if (chatType === "dm") {
-      const directChat = chat as IDirectChat;
-      const newMessage: IDirectMessage = {
-        messageId: generateUniqueId("direct-message"),
-        chatRoomId: directChat.chatRoomId,
-        senderId: currentUserId,
-        receiverId: directChat.participant.userId || "",
-        messageType,
-        content,
-        mediaUrl: imageUrl,
-        timestamp: new Date(),
-        status: "sent",
-      };
-
-      socket.emit("direct-chat:send-message", newMessage);
-
-      setMessages([...messages, newMessage] as IDirectMessage[]);
-    } else {
-      const communityChat = chat as ICommunityChat;
-      const newMessage: ICommunityMessage = {
-        messageId: generateUniqueId("community-message"),
-        communityId: communityChat.communityId,
-        senderId: currentUserId,
-        messageType,
-        content,
-        mediaUrl: imageUrl,
-        timestamp: new Date(),
-        status: "sent",
-        readBy: [currentUserId],
-        senderName: senderName || "User",
-        senderAvatar,
-      };
-
-      socket.emit("community-chat:send-message", newMessage);
-
-      setMessages([...messages, newMessage] as ICommunityMessage[]);
-    }
-  };
+  if (!currentChat) {
+    return (
+      <div className="flex items-center justify-center h-full text-gray-500">
+        Select a chat to start messaging
+      </div>
+    );
+  }
 
   const chatName =
     chatType === "dm"
-      ? (chat as IDirectChat).participant.name
-      : (chat as ICommunityChat).name;
+      ? (currentChat as IDirectChat).participant.name
+      : (currentChat as ICommunityChat).name;
 
   const chatAvatar =
     chatType === "dm"
-      ? (chat as IDirectChat).participant.profileImageUrl
-      : (chat as ICommunityChat).imageUrl;
+      ? (currentChat as IDirectChat).participant.profileImageUrl
+      : (currentChat as ICommunityChat).imageUrl;
 
   return (
     <div className="flex flex-col h-full">
@@ -208,6 +123,10 @@ export function ChatArea({ chat, chatType }: ChatProps) {
             </span>
             {messages.map((message) => (
               <MessageBubble
+                senderData={{
+                  name: chatName,
+                  avatar: chatAvatar || "/placeholder.svg",
+                }}
                 key={message.messageId}
                 message={message}
                 chatType={chatType}
@@ -218,7 +137,7 @@ export function ChatArea({ chat, chatType }: ChatProps) {
         </ScrollArea>
       </div>
 
-      <MessageInput onSendMessage={handleSendMessage} />
+      <MessageInput onSendMessage={sendMessage} />
     </div>
   );
 }

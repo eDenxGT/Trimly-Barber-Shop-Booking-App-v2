@@ -8,12 +8,13 @@ import {
   getChatByChatIdForClient,
   getChatByUserIdForClient,
 } from "@/services/client/clientService";
-import { IDirectChat, IDirectChatPreview } from "@/types/Chat";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useChat } from "@/contexts/ChatContext";
 
 export const ClientChatPage = () => {
+  const { setAllChats, setCurrentChat } = useChat();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const userIdFromUrl = params.get("userId");
@@ -28,7 +29,6 @@ export const ClientChatPage = () => {
     data: allChatsData,
     isLoading: allChatsLoading,
     isError: allChatsError,
-    refetch: refetchAllChats,
   } = useFetchAllChatByUserId(getAllChatsByClientId);
 
   const {
@@ -38,17 +38,16 @@ export const ClientChatPage = () => {
   } = useFetchChatById(queryFunc, id || "");
 
   useEffect(() => {
-    if (
-      chatRes?.chat &&
-      !allChatsData?.chats?.some(
-        (c) =>
-          (c as IDirectChatPreview).chatRoomId ===
-          (chatRes.chat as IDirectChat).chatRoomId
-      )
-    ) {
-      refetchAllChats();
+    if (allChatsData?.chats) {
+      setAllChats(allChatsData.chats);
     }
-  }, [chatRes, allChatsData]);
+  }, [allChatsData, setAllChats]);
+
+  useEffect(() => {
+    if (chatRes?.chat) {
+      setCurrentChat(chatRes.chat);
+    }
+  }, [chatRes, setCurrentChat]);
 
   const isOverallLoading = allChatsLoading || chatByIdLoading;
   const isOverallError = allChatsError || chatByIdError;
@@ -65,12 +64,7 @@ export const ClientChatPage = () => {
         {isOverallLoading && !isOverallError ? (
           <div className="text-center text-gray-500 py-10">Loading chat...</div>
         ) : (
-          <ChatLayout
-            activeChat={chatRes?.chat || null}
-            chatType="dm"
-            allChats={allChatsData?.chats || []}
-            userRole="client"
-          />
+          <ChatLayout userRole="client" />
         )}
       </motion.div>
     </AnimatePresence>

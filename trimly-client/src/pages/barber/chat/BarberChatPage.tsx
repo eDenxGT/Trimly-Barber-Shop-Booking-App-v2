@@ -1,4 +1,5 @@
 import { ChatLayout } from "@/components/chat/ChatLayout";
+import { useChat } from "@/contexts/ChatContext";
 import {
   useFetchAllChatByUserId,
   useFetchChatById,
@@ -8,17 +9,16 @@ import {
   getChatByChatIdForBarber,
   getChatByUserIdForBarber,
 } from "@/services/barber/barberService";
-import { ICommunityChat, ICommunityChatPreview, IDirectChat, IDirectChatPreview } from "@/types/Chat";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 export const BarberChatPage = () => {
+  const { setAllChats, setCurrentChat } = useChat();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const userIdFromUrl = params.get("userId");
   const chatIdFromUrl = params.get("chatId");
-  const [chatType, setChatType] = useState<"dm" | "community">("dm");
 
   const id = chatIdFromUrl || userIdFromUrl;
   const queryFunc = chatIdFromUrl
@@ -29,7 +29,6 @@ export const BarberChatPage = () => {
     data: allChatsData,
     isLoading: allChatsLoading,
     isError: allChatsError,
-    refetch: refetchAllChats,
   } = useFetchAllChatByUserId(getAllChatsByBarberId);
 
   const {
@@ -39,30 +38,16 @@ export const BarberChatPage = () => {
   } = useFetchChatById(queryFunc, id || "");
 
   useEffect(() => {
-    if (!chatRes?.chat) return;
-  
-    const chatRoomId =
-      chatType === "dm"
-        ? (chatRes.chat as IDirectChat).chatRoomId
-        : (chatRes.chat as ICommunityChat).communityId;
-  
-    const existsInSidebar = allChatsData?.chats?.some((c) => {
-      const cId =
-        chatType === "dm"
-          ? (c as IDirectChatPreview).chatRoomId
-          : (c as ICommunityChatPreview).communityId;
-      return cId === chatRoomId;
-    });
-  
-    if (!existsInSidebar) {
-      refetchAllChats();
+    if (allChatsData?.chats) {
+      setAllChats(allChatsData.chats);
     }
-  }, [chatRes, allChatsData, chatType]);
-  
+  }, [allChatsData, setAllChats]);
 
-  const handleChangeType = (value: "dm" | "community") => {
-    setChatType(value);
-  };
+  useEffect(() => {
+    if (chatRes?.chat) {
+      setCurrentChat(chatRes.chat);
+    }
+  }, [chatRes, setCurrentChat]);
 
   const isOverallLoading = allChatsLoading || chatByIdLoading;
   const isOverallError = allChatsError || chatByIdError;
@@ -79,13 +64,7 @@ export const BarberChatPage = () => {
         {isOverallLoading && !isOverallError ? (
           <div className="text-center text-gray-500 py-10">Loading chat...</div>
         ) : (
-          <ChatLayout
-            onTypeChange={handleChangeType}
-            activeChat={chatRes?.chat || null}
-            chatType={chatType}
-            allChats={allChatsData?.chats || []}
-            userRole="barber"
-          />
+          <ChatLayout userRole="barber" />
         )}
       </motion.div>
     </AnimatePresence>

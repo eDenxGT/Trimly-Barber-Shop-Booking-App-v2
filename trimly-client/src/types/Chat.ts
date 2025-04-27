@@ -6,7 +6,8 @@ export interface ICommunityChat {
   members: string[];
   createdBy: string;
   createdAt: Date;
-  messages: ICommunityMessage[];
+  updatedAt: Date;
+  messages?: ICommunityMessage[];
 }
 
 export interface ICommunityMessage {
@@ -44,6 +45,7 @@ export interface IDirectChatPreview {
   chatRoomId: string;
   user: IUserPreview;
   lastMessage: {
+    senderId: string;
     content: string | null;
     mediaUrl?: string;
     messageType: "text" | "image";
@@ -71,14 +73,12 @@ export interface IDirectChat {
 }
 
 // * Community chat preview
-export interface ICommunityChatPreview {
-  communityId: string;
-  community: ICommunityChat;
+export interface ICommunityChatPreview extends ICommunityChat {
+  membersCount: number;
   lastMessage: {
     content: string | null;
     mediaUrl?: string;
     messageType: "text" | "image";
     timestamp: Date;
   };
-  unreadCount: number;
 }

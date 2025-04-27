@@ -5,42 +5,29 @@ import { ArrowLeft } from "lucide-react";
 import { useIsMobile } from "@/hooks/common/useMobile";
 import { ChatSidebar } from "./ChatSidebar";
 import { ChatArea } from "./ChatArea";
-import {
-  ICommunityChat,
-  ICommunityChatPreview,
-  IDirectChat,
-  IDirectChatPreview,
-} from "@/types/Chat";
 import { useNavigate } from "react-router-dom";
+import { useChat } from "@/contexts/ChatContext";
 
 interface ChatLayoutProps {
   userRole: "barber" | "client";
-  activeChat: IDirectChat | ICommunityChat | null;
-  onTypeChange?: (type: "dm" | "community") => void;
-  chatType: "dm" | "community";
-  allChats: IDirectChatPreview[] | ICommunityChatPreview[];
 }
 
-export function ChatLayout({
-  userRole,
-  activeChat,
-  onTypeChange,
-  chatType,
-  allChats,
-}: ChatLayoutProps) {
+export function ChatLayout({ userRole }: ChatLayoutProps) {
   const [showChatArea, setShowChatArea] = useState(false);
   const isMobile = useIsMobile();
+  const { currentChat, onTypeChange, handleChangeChat } = useChat();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isMobile) {
-      setShowChatArea(!!activeChat);
+      setShowChatArea(!!currentChat);
     }
-  }, [isMobile, activeChat]);
+  }, [isMobile, currentChat]);
 
   const handleChatSelect = (chatId: string) => {
     navigate(`${userRole === "barber" ? "/barber" : ""}/chat?chatId=${chatId}`);
+    handleChangeChat();
     if (isMobile) {
       setShowChatArea(true);
     }
@@ -84,11 +71,7 @@ export function ChatLayout({
       <div className="flex flex-1 overflow-hidden">
         {(!isMobile || !showChatArea) && (
           <div className={`${isMobile ? "w-full" : "w-1/4 border-r"}`}>
-            <ChatSidebar
-              chats={allChats || []}
-              onSelectChat={handleChatSelect}
-              activeChat={activeChat}
-            />
+            <ChatSidebar onSelectChat={handleChatSelect} />
           </div>
         )}
 
@@ -107,8 +90,8 @@ export function ChatLayout({
                 </Button>
               </div>
             )}
-            {activeChat ? (
-              <ChatArea chat={activeChat} chatType={chatType} />
+            {currentChat ? (
+              <ChatArea />
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500">
                 Select a chat to start messaging

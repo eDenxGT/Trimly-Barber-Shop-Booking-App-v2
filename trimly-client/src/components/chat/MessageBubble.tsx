@@ -7,9 +7,14 @@ import { IBarber, IClient } from "@/types/User";
 interface MessageBubbleProps {
   message: IDirectMessage | ICommunityMessage;
   chatType: "dm" | "community";
+  senderData: { name: string; avatar: string };
 }
 
-export function MessageBubble({ message, chatType }: MessageBubbleProps) {
+export function MessageBubble({
+  message,
+  chatType,
+  senderData,
+}: MessageBubbleProps) {
   const user = useOutletContext<IBarber | IClient>();
   const isSent = message.senderId === user?.userId;
 
@@ -28,22 +33,19 @@ export function MessageBubble({ message, chatType }: MessageBubbleProps) {
   };
 
   const senderName =
-    chatType === "community" ? (message as ICommunityMessage).senderName : "";
+    chatType === "community"
+      ? (message as ICommunityMessage).senderName
+      : senderData?.name;
 
   const senderAvatar =
-    chatType === "community" ? (message as ICommunityMessage).senderAvatar : "";
+    chatType === "community"
+      ? (message as ICommunityMessage).senderAvatar
+      : senderData?.avatar;
 
-  const avatarSrc = isSent
-    ? user?.avatar
-    : chatType === "community"
-    ? senderAvatar
-    : "/placeholder.svg";
-
+  const avatarSrc = isSent ? user?.avatar : senderAvatar || "/placeholder.svg";
   const avatarFallback = isSent
     ? "U"
-    : chatType === "community"
-    ? senderName.substring(0, 2).toUpperCase()
-    : "OT";
+    : senderName?.substring(0, 2).toUpperCase();
 
   return (
     <div
