@@ -34,7 +34,7 @@ export const CommunityForm = ({
   formType,
 }: CommunityCreationFormProps) => {
   const imageRef = useRef<Blob | null>(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { errorToast } = useToaster();
 
@@ -45,6 +45,7 @@ export const CommunityForm = ({
       imageUrl: formType === "edit" ? initialData?.imageUrl || "" : "",
     },
     validationSchema: addCommunitySchema,
+    enableReinitialize: true,
     onSubmit: async (values) => {
       try {
         if (formType === "create" && !imageRef.current) {

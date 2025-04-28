@@ -15,6 +15,8 @@ import { ICreateCommunityUseCase } from "../../entities/useCaseInterfaces/chat/c
 import { IGetAllCommunitiesForAdminUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-communities-for-admin-usecase.interface.js";
 import { IGetCommunityForEditUseCase } from "../../entities/useCaseInterfaces/chat/community/get-community-for-edit-usecase.interface.js";
 import { IEditCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/edit-community-usecase.interface.js";
+import { IUpdateCommunityStatusUseCase } from "../../entities/useCaseInterfaces/chat/community/update-community-status-usecase.interface.js";
+import { IDeleteCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/delete-community-usecase.interface.js";
 
 @injectable()
 export class ChatController implements IChatController {
@@ -27,6 +29,10 @@ export class ChatController implements IChatController {
     private _getChatByChatIdUseCase: IGetChatByChatIdUseCase,
     @inject("ICreateCommunityUseCase")
     private _createCommunityUseCase: ICreateCommunityUseCase,
+    @inject("IUpdateCommunityStatusUseCase")
+    private _updateCommunityStatusUseCase: IUpdateCommunityStatusUseCase,
+    @inject("IDeleteCommunityUseCase")
+    private _deleteCommunityUseCase: IDeleteCommunityUseCase,
     @inject("IEditCommunityUseCase")
     private _editCommunityUseCase: IEditCommunityUseCase,
     @inject("IGetAllCommunitiesForAdminUseCase")
@@ -237,6 +243,59 @@ export class ChatController implements IChatController {
       res.status(HTTP_STATUS.CREATED).json({
         success: true,
         message: SUCCESS_MESSAGES.COMMUNITY_CREATED,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*            🛠️  Update Community Status (For ADMIN)
+  //* ─────────────────────────────────────────────────────────────
+  async updateCommunityStatus(req: Request, res: Response) {
+    try {
+      const { communityId } = req.body;
+
+      if (!communityId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      await this._updateCommunityStatusUseCase.execute(communityId);
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*            🛠️  Delete Community (For ADMIN)
+  //* ─────────────────────────────────────────────────────────────
+  async deleteCommunity(req: Request, res: Response) {
+    try {
+      const { communityId } = req.query;
+      console.log(req.query)
+
+      if (!communityId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      await this._deleteCommunityUseCase.execute(String(communityId));
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.DELETE_SUCCESS,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

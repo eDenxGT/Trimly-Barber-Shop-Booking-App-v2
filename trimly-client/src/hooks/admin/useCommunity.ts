@@ -1,11 +1,17 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { IAllCommunitiesResponse, IAxiosResponse, ICommunityChatResponse } from "@/types/Response";
+import {
+  IAllCommunitiesResponse,
+  IAxiosResponse,
+  ICommunityChatResponse,
+} from "@/types/Response";
 import { ICommunityChat } from "@/types/Chat";
 import {
   adminCreateCommunity,
+  adminDeleteCommunity,
   adminEditCommunity,
   adminGetAllCommunities,
   adminGetCommunityById,
+  adminToggleCommunityStatus,
 } from "@/services/admin/adminService";
 
 export const useCreateCommunityMutation = () => {
@@ -24,6 +30,18 @@ export const useGetCommunityForEdit = (communityId: string) => {
   return useQuery<ICommunityChatResponse>({
     queryKey: ["community", communityId],
     queryFn: () => adminGetCommunityById(communityId),
+  });
+};
+
+export const useCommunityStatusToggle = () => {
+  return useMutation<IAxiosResponse, Error, { communityId: string }>({
+    mutationFn: adminToggleCommunityStatus,
+  });
+};
+
+export const useDeleteCommunity = () => {
+  return useMutation<IAxiosResponse, Error, { communityId: string }>({
+    mutationFn: adminDeleteCommunity,
   });
 };
 

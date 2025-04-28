@@ -1,22 +1,57 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { CommunitiesTable } from "@/components/admin/community/CommunitiesTable";
-import { useGetAllCommunities } from "@/hooks/admin/useCommunity";
+import {
+  useCommunityStatusToggle,
+  useDeleteCommunity,
+  useGetAllCommunities,
+} from "@/hooks/admin/useCommunity";
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
 import { useState } from "react";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 const ITEMS_PER_PAGE = 2;
 
 export const AdminCommunityListPage = () => {
   const [page, setPage] = useState(1);
+  const { successToast, errorToast } = useToaster();
 
-  const { data } = useGetAllCommunities({ page, limit: ITEMS_PER_PAGE });
+  const { data, refetch: refetchAllCommunities } = useGetAllCommunities({
+    page,
+    limit: ITEMS_PER_PAGE,
+  });
 
-  const handleDelete = (groupId: string) => {
-    console.log("Delete community:", groupId);
+  const { mutate: toggleStatus } = useCommunityStatusToggle();
+
+  const { mutate: deleteCommunity } = useDeleteCommunity();
+
+  const handleDelete = (communityId: string) => {
+    deleteCommunity(
+      { communityId },
+      {
+        onSuccess: (data) => {
+          successToast(data.message);
+          refetchAllCommunities();
+        },
+        onError: (error: any) => {
+          errorToast(error.response.data.message);
+        },
+      }
+    );
   };
 
-  const handleStatusChange = (groupId: string) => {
-    console.log("Delete community:", groupId);
+  const handleStatusChange = (communityId: string) => {
+    toggleStatus(
+      { communityId },
+      {
+        onSuccess: (data) => {
+          successToast(data.message);
+          refetchAllCommunities();
+        },
+        onError: (error: any) => {
+          errorToast(error.response.data.message);
+        },
+      }
+    );
   };
 
   const handlePageChange = (newPage: number) => {

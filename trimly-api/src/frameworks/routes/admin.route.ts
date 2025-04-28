@@ -120,6 +120,20 @@ export class AdminRoutes extends BaseRoute {
           chatController.editCommunity(req, res);
         }
       )
+      .patch(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        (req: Request, res: Response) => {
+          chatController.updateCommunityStatus(req, res);
+        }
+      )
+      .delete(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        (req: Request, res: Response) => {
+          chatController.deleteCommunity(req, res);
+        }
+      )
       .post(
         verifyAuth,
         authorizeRole(["admin"]),

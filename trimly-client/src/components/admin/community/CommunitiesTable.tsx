@@ -15,6 +15,7 @@ import { ICommunityChat } from "@/types/Chat";
 import { CommunityDetailsModal } from "@/components/modals/AdminCommunityDetailsModal";
 import { MdBlock } from "react-icons/md";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
+import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
 
 export const CommunitiesTable = ({
   communities,
@@ -28,6 +29,10 @@ export const CommunitiesTable = ({
   const navigate = useNavigate();
   const [selectedCommunity, setSelectedCommunity] =
     useState<ICommunityChat | null>(null);
+  const [communityToDelete, setCommunityToDelete] = useState<string | null>(
+    null
+  );
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   return (
     <div className="container mx-auto p-6 mt-16 max-w-7xl">
@@ -126,7 +131,10 @@ export const CommunitiesTable = ({
                     <Button
                       variant="outline"
                       size="icon"
-                      onClick={() => onDelete(community.communityId)}
+                      onClick={() => {
+                        setCommunityToDelete(community.communityId);
+                        setIsConfirmModalOpen(true);
+                      }}
                       className="text-red-600 hover:text-red-900"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -143,6 +151,20 @@ export const CommunitiesTable = ({
         community={selectedCommunity}
         isOpen={!!selectedCommunity}
         onClose={() => setSelectedCommunity(null)}
+      />
+
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => {
+          setCommunityToDelete(null);
+          setIsConfirmModalOpen(false);
+        }}
+        title="Delete Community"
+        description="Are you sure you want to delete this community?"
+        onConfirm={() => {
+          onDelete(communityToDelete || "");
+          setCommunityToDelete(null);
+        }}
       />
     </div>
   );

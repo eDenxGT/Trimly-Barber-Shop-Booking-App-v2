@@ -170,6 +170,31 @@ export const adminEditCommunity = async (data: Partial<ICommunityChat>) => {
   return response.data;
 };
 
+export const adminDeleteCommunity = async ({
+  communityId,
+}: {
+  communityId: string;
+}) => {
+  console.log(communityId);
+  const response = await adminAxiosInstance.delete<IAxiosResponse>(
+    "/admin/community",
+    { params: { communityId } }
+  );
+  return response.data;
+};
+
+export const adminToggleCommunityStatus = async ({
+  communityId,
+}: {
+  communityId: string;
+}) => {
+  const response = await adminAxiosInstance.patch<IAxiosResponse>(
+    "/admin/community",
+    { communityId }
+  );
+  return response.data;
+};
+
 export const adminGetAllCommunities = async ({
   page,
   limit,

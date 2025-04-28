@@ -155,6 +155,10 @@ import { GetCommunityForEditUseCase } from "../../useCases/chat/community/get-co
 import { IGetCommunityForEditUseCase } from "../../entities/useCaseInterfaces/chat/community/get-community-for-edit-usecase.interface.js";
 import { IEditCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/edit-community-usecase.interface.js";
 import { EditCommunityUseCase } from "../../useCases/chat/community/edit-community.usecase.js";
+import { IUpdateCommunityStatusUseCase } from "../../entities/useCaseInterfaces/chat/community/update-community-status-usecase.interface.js";
+import { UpdateCommunityStatusUseCase } from "../../useCases/chat/community/update-community-status.usecase.js";
+import { IDeleteCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/delete-community-usecase.interface.js";
+import { DeleteCommunityUseCase } from "../../useCases/chat/community/delete-community.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -490,6 +494,17 @@ export class UseCaseRegistry {
 
     container.register<IEditCommunityUseCase>("IEditCommunityUseCase", {
       useClass: EditCommunityUseCase,
+    });
+
+    container.register<IUpdateCommunityStatusUseCase>(
+      "IUpdateCommunityStatusUseCase",
+      {
+        useClass: UpdateCommunityStatusUseCase,
+      }
+    );
+
+    container.register<IDeleteCommunityUseCase>("IDeleteCommunityUseCase", {
+      useClass: DeleteCommunityUseCase,
     });
 
     //* ====== Register Bcrypts ====== *//
