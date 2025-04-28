@@ -14,4 +14,6 @@ export interface IChatController {
   updateCommunityStatus: (req: Request, res: Response) => Promise<void>;
   deleteCommunity: (req: Request, res: Response) => Promise<void>;
   barberJoinCommunity: (req: Request, res: Response) => Promise<void>;
+  getCommunityChatByChatIdForBarber: (req: Request, res: Response) => Promise<void>;
+  getAllCommunityChatsByBarberId: (req: Request, res: Response) => Promise<void>;
 }

@@ -131,31 +131,48 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [socket, currentChat, chatType]);
 
+  // const setAllChats = (
+  //   chats: IDirectChatPreview[] | ICommunityChatPreview[]
+  // ) => {
+  //   if (allChats.length === 0 || allChats.length !== chats.length) {
+  //     setAllChatsData(chats);
+  //   }
+  // };
+
   const setAllChats = (
     chats: IDirectChatPreview[] | ICommunityChatPreview[]
   ) => {
-    if (allChats.length === 0 || allChats.length !== chats.length) {
-      setAllChatsData(chats);
-    }
+    console.log("Setting all chats:", chats);
+    // Always update the chats instead of checking lengths
+    setAllChatsData(chats);
   };
+
+  // const setCurrentChat = (chat: IDirectChat | ICommunityChat) => {
+  //   setCurrentChatData(chat);
+  //   if (
+  //     messages.length === 0 ||
+  //     (chat.messages && chat.messages.length > messages.length)
+  //   ) {
+  //     setMessages(chat.messages || []);
+  //   }
+  // };
 
   const setCurrentChat = (chat: IDirectChat | ICommunityChat) => {
     setCurrentChatData(chat);
-    if (
-      messages.length === 0 ||
-      (chat.messages && chat.messages.length > messages.length)
-    ) {
-      setMessages(chat.messages || []);
-    }
-    // setChatType(type);
+    // Always update messages when changing chats
+    setMessages(chat.messages || []);
   };
 
   const onTypeChange = (type: "dm" | "community") => {
     setChatType(type);
+    setCurrentChatData(null);
+    setAllChatsData([]);
+    setMessages([]);
   };
 
   const sendMessage = (content: string, imageUrl?: string) => {
     if (!socket || !currentChat || !chatType || !user) return;
+    console.log("Sending message:", content, imageUrl);
 
     const currentUserId = user.userId || "";
     const senderName =
@@ -219,6 +236,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         senderName: senderName || "User",
         senderAvatar,
       };
+      console.log(newMessage);
 
       socket.emit("community-chat:send-message", newMessage);
       setMessages((prev) => [...prev, newMessage]);

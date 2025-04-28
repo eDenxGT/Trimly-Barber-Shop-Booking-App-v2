@@ -18,7 +18,7 @@ export const useFetchAllChatByUserId = (
   queryFunc: () => Promise<IAllChatResponse>
 ) => {
   return useQuery<IAllChatResponse>({
-    queryKey: ["all-chats"],
+    queryKey: ["all-chats", queryFunc.name],
     queryFn: () => queryFunc(),
     placeholderData: (prev) => prev ?? undefined,
   });

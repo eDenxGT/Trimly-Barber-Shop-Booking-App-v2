@@ -163,6 +163,10 @@ import { GetAllCommunitiesForBarberUseCase } from "../../useCases/chat/community
 import { IGetAllCommunitiesForBarberUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-communities-for-barber-usecase.interface.js";
 import { IBarberJoinCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/barber-join-community-usecase.interface.js";
 import { BarberJoinCommunityUseCase } from "../../useCases/chat/community/barber-join-community.usecase.js";
+import { IGetAllCommunityChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-community-chats-by-user-usecase.interface.js";
+import { GetAllCommunityChatsByUserUseCase } from "../../useCases/chat/community/get-all-community-chats-by-user.usecase.js";
+import { IGetCommunityChatUseCase } from "../../entities/useCaseInterfaces/chat/community/get-community-chat-usecase.interface.js";
+import { GetCommunityChatUseCase } from "../../useCases/chat/community/get-community-chat-by-user.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -524,6 +528,17 @@ export class UseCaseRegistry {
         useClass: BarberJoinCommunityUseCase,
       }
     );
+
+    container.register<IGetAllCommunityChatsByUserUseCase>(
+      "IGetAllCommunityChatsByUserUseCase",
+      {
+        useClass: GetAllCommunityChatsByUserUseCase,
+      }
+    );
+
+    container.register<IGetCommunityChatUseCase>("IGetCommunityChatUseCase", {
+      useClass: GetCommunityChatUseCase,
+    });
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

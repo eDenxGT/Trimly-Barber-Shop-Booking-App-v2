@@ -275,6 +275,12 @@ export const getChatByChatIdForBarber = async (chatId: string) => {
   });
   return response.data;
 };
+export const getCommunityChatByChatIdForBarber = async (chatId: string) => {
+  const response = await barberAxiosInstance.get("/barber/community-chat", {
+    params: { chatId },
+  });
+  return response.data;
+};
 
 export const getAllChatsByBarberId = async (): Promise<IAllChatResponse> => {
   const response = await barberAxiosInstance.get<IAllChatResponse>(
@@ -282,6 +288,14 @@ export const getAllChatsByBarberId = async (): Promise<IAllChatResponse> => {
   );
   return response.data;
 };
+
+export const getAllCommunityChatsByBarberId =
+  async (): Promise<IAllChatResponse> => {
+    const response = await barberAxiosInstance.get<IAllChatResponse>(
+      "/barber/community-chats"
+    );
+    return response.data;
+  };
 
 export const barberGetAllCommunitiesForListing = async ({
   search,

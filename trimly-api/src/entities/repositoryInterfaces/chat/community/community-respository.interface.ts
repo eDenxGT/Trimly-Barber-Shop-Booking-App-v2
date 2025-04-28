@@ -12,7 +12,7 @@ export interface ICommunityRepository
   }: {
     filter: Partial<ICommunityChatRoomEntity>;
     search: string;
-    userId: string;
+    userId?: string;
     page: number;
     limit: number;
   }): Promise<{
@@ -20,4 +20,18 @@ export interface ICommunityRepository
     totalPages: number;
     currentPage: number;
   }>;
+
+  getAllCommunityChatsByUser({
+    userId,
+  }: {
+    userId: string;
+  }): Promise<Partial<ICommunityChatRoomEntity>[]>;
+
+  getCommunityChat({
+    userId,
+    chatId,
+  }: {
+    userId: string;
+    chatId: string;
+  }): Promise<ICommunityChatRoomEntity | null>;
 }

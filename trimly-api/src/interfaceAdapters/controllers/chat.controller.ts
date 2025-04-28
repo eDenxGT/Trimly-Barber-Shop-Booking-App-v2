@@ -19,6 +19,10 @@ import { IUpdateCommunityStatusUseCase } from "../../entities/useCaseInterfaces/
 import { IDeleteCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/delete-community-usecase.interface.js";
 import { IGetAllCommunitiesForBarberUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-communities-for-barber-usecase.interface.js";
 import { IBarberJoinCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/barber-join-community-usecase.interface.js";
+import { IGetAllCommunityChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-community-chats-by-user-usecase.interface.js";
+import {
+  IGetCommunityChatUseCase,
+} from "../../entities/useCaseInterfaces/chat/community/get-community-chat-usecase.interface.js";
 
 @injectable()
 export class ChatController implements IChatController {
@@ -44,7 +48,11 @@ export class ChatController implements IChatController {
     @inject("IGetCommunityForEditUseCase")
     private _getCommunityForEditUseCase: IGetCommunityForEditUseCase,
     @inject("IGetAllCommunitiesForBarberUseCase")
-    private _getAllCommunitiesForBarberUseCase: IGetAllCommunitiesForBarberUseCase
+    private _getAllCommunitiesForBarberUseCase: IGetAllCommunitiesForBarberUseCase,
+    @inject("IGetAllCommunityChatsByUserUseCase")
+    private _getAllCommunityChatsByUserUseCase: IGetAllCommunityChatsByUserUseCase,
+    @inject("IGetCommunityChatUseCase")
+    private _getCommunityChatUseCase: IGetCommunityChatUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -369,6 +377,63 @@ export class ChatController implements IChatController {
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.JOIN_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*            🛠️  Get All Community Chats By Barber Id
+  //* ─────────────────────────────────────────────────────────────
+  async getAllCommunityChatsByBarberId(req: Request, res: Response) {
+    try {
+      const { userId } = (req as CustomRequest).user;
+
+      if (!userId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      const communityChats =
+        await this._getAllCommunityChatsByUserUseCase.execute({ userId });
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        chats: communityChats,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*            🛠️  Get Community Chat By Chat Id For Barber
+  //* ─────────────────────────────────────────────────────────────
+  async getCommunityChatByChatIdForBarber(req: Request, res: Response) {
+    try {
+      const { userId } = (req as CustomRequest).user;
+      const { chatId } = req.query;
+
+      if (!chatId || !userId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      const chat = await this._getCommunityChatUseCase.execute({
+        userId,
+        chatId: String(chatId),
+      });
+      console.log("fetched chat", chat);
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        chat,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

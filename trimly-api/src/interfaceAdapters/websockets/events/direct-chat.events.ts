@@ -5,17 +5,17 @@ import { directChatSocketHandler } from "../../../frameworks/di/resolver.js";
 import { IDirectChatSocketHandler } from "../../../entities/socketHandlerInterfaces/direct-chat-handler.interface.js";
 
 export class DirectChatEvents {
-  private handler: IDirectChatSocketHandler;
+  private _handler: IDirectChatSocketHandler;
 
   constructor(private socket: Socket, private io: Server) {
-    this.handler = directChatSocketHandler;
-    this.handler.setSocket(this.socket, this.io);
+    this._handler = directChatSocketHandler;
+    this._handler.setSocket(this.socket, this.io);
   }
 
   register() {
     this.socket.on(
       DIRECT_CHAT_EVENTS.SEND_MESSAGE,
-      this.handler.handleSendMessage
+      this._handler.handleSendMessage
     );
   }
 }

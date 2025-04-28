@@ -6,6 +6,7 @@ export interface ICommunityChat {
   description?: string;
   imageUrl?: string;
   members?: IBarber[];
+  activeMembers?: number;
   status: "active" | "blocked";
   membersCount?: number;
   createdBy: {
@@ -22,13 +23,13 @@ export interface ICommunityChat {
 export interface ICommunityMessage {
   messageId: string;
   communityId: string;
-  senderId: string;
   messageType: "text" | "image";
   content: string | null;
   mediaUrl?: string;
   timestamp: Date;
   status: "sent" | "delivered" | "read";
   readBy: string[];
+  senderId: string;
   senderName: string;
   senderAvatar: string;
 }
@@ -85,6 +86,7 @@ export interface IDirectChat {
 export interface ICommunityChatPreview extends ICommunityChat {
   membersCount: number;
   lastMessage: {
+    senderDetails: IUserPreview
     content: string | null;
     mediaUrl?: string;
     messageType: "text" | "image";

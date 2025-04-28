@@ -179,7 +179,7 @@ export const CommunityForm = ({
         <CardFooter className="flex justify-end space-x-4 bg-zinc-50/50 rounded-b-lg">
           <MuiButton
             type="submit"
-            loading={isLoading}
+            loading={isLoading || formik.isSubmitting}
             disabled={!formik.isValid || formik.isSubmitting || isLoading}
           >
             {isEdit ? (

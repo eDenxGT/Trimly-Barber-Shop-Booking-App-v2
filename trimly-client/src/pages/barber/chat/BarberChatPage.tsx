@@ -6,30 +6,44 @@ import {
 } from "@/hooks/chat/useChats";
 import {
   getAllChatsByBarberId,
+  getAllCommunityChatsByBarberId,
   getChatByChatIdForBarber,
   getChatByUserIdForBarber,
+  getCommunityChatByChatIdForBarber,
 } from "@/services/barber/barberService";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
 export const BarberChatPage = () => {
-  const { setAllChats, setCurrentChat } = useChat();
+  const { setAllChats, setCurrentChat, chatType } = useChat();
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const userIdFromUrl = params.get("userId");
-  const chatIdFromUrl = params.get("chatId");
+
+  const { userIdFromUrl, chatIdFromUrl } = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return {
+      userIdFromUrl: params.get("userId"),
+      chatIdFromUrl: params.get("chatId"),
+    };
+  }, [location.search]);
 
   const id = chatIdFromUrl || userIdFromUrl;
   const queryFunc = chatIdFromUrl
-    ? getChatByChatIdForBarber
+    ? chatType === "community"
+      ? getCommunityChatByChatIdForBarber
+      : getChatByChatIdForBarber
     : getChatByUserIdForBarber;
+
+  const allChatsQueryFn =
+    chatType === "community"
+      ? getAllCommunityChatsByBarberId
+      : getAllChatsByBarberId;
 
   const {
     data: allChatsData,
     isLoading: allChatsLoading,
     isError: allChatsError,
-  } = useFetchAllChatByUserId(getAllChatsByBarberId);
+  } = useFetchAllChatByUserId(allChatsQueryFn);
 
   const {
     data: chatRes,
@@ -38,10 +52,15 @@ export const BarberChatPage = () => {
   } = useFetchChatById(queryFunc, id || "");
 
   useEffect(() => {
+    console.log("Page il an", allChatsData);
+  }, [allChatsData]);
+
+  useEffect(() => {
     if (allChatsData?.chats) {
+      console.log("Setting all chats:", allChatsData.chats);
       setAllChats(allChatsData.chats);
     }
-  }, [allChatsData, setAllChats]);
+  }, [allChatsData, setAllChats, chatType]);
 
   useEffect(() => {
     if (chatRes?.chat) {

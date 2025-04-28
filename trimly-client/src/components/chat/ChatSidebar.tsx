@@ -1,10 +1,6 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  ICommunityChat,
-  IDirectChat,
-  IDirectChatPreview,
-} from "@/types/Chat";
+import { ICommunityChat, IDirectChat, IDirectChatPreview } from "@/types/Chat";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import { Badge } from "@/components/ui/badge";
 import { useChat } from "@/contexts/ChatContext";
@@ -15,7 +11,6 @@ interface ChatSidebarProps {
 
 export function ChatSidebar({ onSelectChat }: ChatSidebarProps) {
   const { allChats, currentChat } = useChat();
-;
   return (
     <div className="h-full flex flex-col bg-white shadow-sm">
       <div className="py-4 px-6 border-b border-gray-200">
@@ -60,17 +55,23 @@ export function ChatSidebar({ onSelectChat }: ChatSidebarProps) {
                       {isCommunity ? chat.name : chat.user.name}
                     </h3>
                     <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
-                      {chat.lastMessage.timestamp
-                        ? getSmartDate(chat.lastMessage.timestamp.toString())
+                      {chat.lastMessage?.timestamp
+                        ? getSmartDate(chat.lastMessage?.timestamp.toString())
                         : ""}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 truncate">
-                    {chat.lastMessage.content || ""}
+                    {chat.lastMessage?.content ? (
+                      chat.lastMessage.content
+                    ) : (
+                      <span className="text-gray-400 italic">
+                        No messages yet
+                      </span>
+                    )}
                   </p>
                 </div>
 
-                {(chat as IDirectChatPreview)?.unreadCount == 0 && (
+                {(chat as IDirectChatPreview)?.unreadCount > 0 && (
                   <Badge className="ml-2 bg-yellow-400 text-white rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0">
                     {(chat as IDirectChatPreview)?.unreadCount}
                   </Badge>

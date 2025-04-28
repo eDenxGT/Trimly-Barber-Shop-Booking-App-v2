@@ -18,6 +18,9 @@ export function ChatArea() {
   const { messages, sendMessage, currentChat, chatType } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  console.log("current chat at chat area", currentChat);
+  console.log("current messages at chat area", messages);
+  console.log("current chat type at chat area", chatType);
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -32,13 +35,13 @@ export function ChatArea() {
 
   const chatName =
     chatType === "dm"
-      ? (currentChat as IDirectChat).participant.name
-      : (currentChat as ICommunityChat).name;
+      ? (currentChat as IDirectChat)?.participant?.name
+      : (currentChat as ICommunityChat)?.name;
 
   const chatAvatar =
     chatType === "dm"
-      ? (currentChat as IDirectChat).participant.profileImageUrl
-      : (currentChat as ICommunityChat).imageUrl;
+      ? (currentChat as IDirectChat)?.participant?.profileImageUrl
+      : (currentChat as ICommunityChat)?.imageUrl;
 
   return (
     <div className="flex flex-col h-full">
@@ -56,7 +59,11 @@ export function ChatArea() {
             <p className="text-xs text-muted-foreground">
               {chatType === "dm"
                 ? "Active now"
-                : `${Math.floor(Math.random() * 10) + 2} members active`}
+                : `${
+                    (currentChat as ICommunityChat)?.activeMembers
+                      ? (currentChat as ICommunityChat)?.activeMembers
+                      : 0
+                  } members active`}
             </p>
           </div>
         </div>

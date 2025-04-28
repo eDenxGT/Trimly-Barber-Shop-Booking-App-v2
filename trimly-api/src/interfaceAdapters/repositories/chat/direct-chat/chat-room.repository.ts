@@ -6,6 +6,8 @@ import {
   IChatRoomModel,
 } from "../../../../frameworks/database/mongoDb/models/chat/chat-room.model.js";
 import { IChatRoomEntity } from "../../../../entities/models/chat/chat-room.entity.js";
+import { CommunityModel } from "../../../../frameworks/database/mongoDb/models/chat/community-chat-room.model.js";
+import { ICommunityChatRoomEntity } from "../../../../entities/models/chat/community-chat-room.entity.js";
 
 @injectable()
 export class ChatRoomRepository
@@ -282,4 +284,5 @@ export class ChatRoomRepository
 
     return chats;
   }
+
 }
