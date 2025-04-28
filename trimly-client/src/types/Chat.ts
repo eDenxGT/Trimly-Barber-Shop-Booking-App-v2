@@ -47,7 +47,7 @@ export interface IUserPreview {
   userId: string;
   name: string;
   profileImageUrl?: string;
-  role: "client" | "barber";
+  role?: "client" | "barber";
 }
 
 // * Direct chat preview

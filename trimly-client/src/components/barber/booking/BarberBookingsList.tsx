@@ -118,7 +118,7 @@ export function BarberBookingsList({
   };
 
   const messageClient = (userId: string) => {
-    navigate(`/barber/chat?userId=${userId}`);
+    navigate(`/barber/chat?userId=${userId}&type=dm`);
   };
 
   return (

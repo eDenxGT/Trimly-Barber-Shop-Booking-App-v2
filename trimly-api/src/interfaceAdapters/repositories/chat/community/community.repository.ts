@@ -211,7 +211,6 @@ export class CommunityRepository
       },
     ]);
 
-    console.log(communities);
     return communities.map((community) => ({
       ...community,
       lastMessage: community.lastMessage ?? null,
@@ -225,12 +224,11 @@ export class CommunityRepository
     userId: string;
     chatId: string;
   }): Promise<ICommunityChatRoomEntity | null> {
-    console.log(userId, chatId);
     const communities = await CommunityModel.aggregate([
       {
         $match: {
           communityId: chatId,
-          // members: { $in: [userId] },
+          members: { $in: [userId] },
           status: "active",
         },
       },
@@ -261,8 +259,7 @@ export class CommunityRepository
                 $expr: { $eq: ["$communityId", "$$communityId"] },
               },
             },
-            { $sort: { timestamp: -1 } },
-            { $limit: 20 },
+            { $sort: { timestamp: 1 } },
             {
               $lookup: {
                 from: "barbers",

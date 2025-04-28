@@ -167,6 +167,10 @@ import { IGetAllCommunityChatsByUserUseCase } from "../../entities/useCaseInterf
 import { GetAllCommunityChatsByUserUseCase } from "../../useCases/chat/community/get-all-community-chats-by-user.usecase.js";
 import { IGetCommunityChatUseCase } from "../../entities/useCaseInterfaces/chat/community/get-community-chat-usecase.interface.js";
 import { GetCommunityChatUseCase } from "../../useCases/chat/community/get-community-chat-by-user.usecase.js";
+import { ISendCommunityMessageUseCase } from "../../entities/useCaseInterfaces/chat/community/send-community-message-usecase.interface.js";
+import { SendCommunityMessageUseCase } from "../../useCases/chat/community/send-community-message.usecase.js";
+import { IGetCommunityByCommunityIdUseCase } from "../../entities/useCaseInterfaces/chat/community/get-community-by-communityid-usecase.interface.js";
+import { GetCommunityByCommunityIdUseCase } from "../../useCases/chat/community/get-community-by-communityid.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -539,6 +543,20 @@ export class UseCaseRegistry {
     container.register<IGetCommunityChatUseCase>("IGetCommunityChatUseCase", {
       useClass: GetCommunityChatUseCase,
     });
+
+    container.register<ISendCommunityMessageUseCase>(
+      "ISendCommunityMessageUseCase",
+      {
+        useClass: SendCommunityMessageUseCase,
+      }
+    );
+
+    container.register<IGetCommunityByCommunityIdUseCase>(
+      "IGetCommunityByCommunityIdUseCase",
+      {
+        useClass: GetCommunityByCommunityIdUseCase,
+      }
+    );
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

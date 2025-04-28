@@ -11,13 +11,16 @@ import {
   getChatByUserIdForBarber,
   getCommunityChatByChatIdForBarber,
 } from "@/services/barber/barberService";
+import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const BarberChatPage = () => {
   const { setAllChats, setCurrentChat, chatType } = useChat();
   const location = useLocation();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { userIdFromUrl, chatIdFromUrl } = useMemo(() => {
     const params = new URLSearchParams(location.search);
@@ -51,13 +54,9 @@ export const BarberChatPage = () => {
     isError: chatByIdError,
   } = useFetchChatById(queryFunc, id || "");
 
-  useEffect(() => {
-    console.log("Page il an", allChatsData);
-  }, [allChatsData]);
 
   useEffect(() => {
     if (allChatsData?.chats) {
-      console.log("Setting all chats:", allChatsData.chats);
       setAllChats(allChatsData.chats);
     }
   }, [allChatsData, setAllChats, chatType]);
@@ -67,6 +66,34 @@ export const BarberChatPage = () => {
       setCurrentChat(chatRes.chat);
     }
   }, [chatRes, setCurrentChat]);
+
+  const handleTypeChange = (type: "dm" | "community") => {
+    queryClient.invalidateQueries({ queryKey: ["all-chats"] });
+    queryClient.invalidateQueries({ queryKey: ["chat"] });
+
+    queryClient.removeQueries({
+      queryKey: [
+        "all-chats",
+        type === "community"
+          ? "getAllChatsByBarberId"
+          : "getAllCommunityChatsByBarberId",
+      ],
+    });
+
+    if (id) {
+      queryClient.removeQueries({ queryKey: ["chat", id] });
+    }
+
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.delete("chatId");
+    searchParams.delete("userId");
+    searchParams.set("type", type);
+
+    navigate({
+      pathname: location.pathname,
+      search: searchParams.toString(),
+    });
+  };
 
   const isOverallLoading = allChatsLoading || chatByIdLoading;
   const isOverallError = allChatsError || chatByIdError;
@@ -83,7 +110,10 @@ export const BarberChatPage = () => {
         {isOverallLoading && !isOverallError ? (
           <div className="text-center text-gray-500 py-10">Loading chat...</div>
         ) : (
-          <ChatLayout userRole="barber" />
+          <ChatLayout
+            userRole="barber"
+            handleTypeChangeForPage={handleTypeChange}
+          />
         )}
       </motion.div>
     </AnimatePresence>

@@ -13,22 +13,36 @@ import { IDirectChat, ICommunityChat } from "@/types/Chat";
 import { MessageBubble } from "./MessageBubble";
 import { MessageInput } from "./MessageInput";
 import { useChat } from "@/contexts/ChatContext";
+import { useLocation } from "react-router-dom";
 
 export function ChatArea() {
   const { messages, sendMessage, currentChat, chatType } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  console.log("current chat at chat area", currentChat);
-  console.log("current messages at chat area", messages);
-  console.log("current chat type at chat area", chatType);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+
+  const chatId = params.get("chatId");
+  const userId = params.get("userId");
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  if (!currentChat) {
+  // ✅ Check if chatId or userId exists
+  if (!chatId && !userId) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500">
         Select a chat to start messaging
+      </div>
+    );
+  }
+
+  // ✅ Check if currentChat also exists (your original condition)
+  if (!currentChat) {
+    return (
+      <div className="flex items-center justify-center h-full text-gray-500">
+        Loading chat...
       </div>
     );
   }
@@ -45,6 +59,7 @@ export function ChatArea() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Header */}
       <div className="p-3 border-b flex items-center justify-between bg-white shadow-sm">
         <div className="flex items-center">
           <Avatar className="h-10 w-10 mr-3 border">
@@ -59,24 +74,17 @@ export function ChatArea() {
             <p className="text-xs text-muted-foreground">
               {chatType === "dm"
                 ? "Active now"
-                : `${
-                    (currentChat as ICommunityChat)?.activeMembers
-                      ? (currentChat as ICommunityChat)?.activeMembers
-                      : 0
-                  } members active`}
+                : `${(currentChat as ICommunityChat)?.activeMembers || 0} members active`}
             </p>
           </div>
         </div>
 
+        {/* Icons */}
         <div className="flex items-center gap-1">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-[var(--darkblue)] rounded-full h-9 w-9"
-                >
+                <Button variant="ghost" size="icon" className="text-[var(--darkblue)] rounded-full h-9 w-9">
                   <Phone className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
@@ -89,11 +97,7 @@ export function ChatArea() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-[var(--darkblue)] rounded-full h-9 w-9"
-                >
+                <Button variant="ghost" size="icon" className="text-[var(--darkblue)] rounded-full h-9 w-9">
                   <Video className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
@@ -106,11 +110,7 @@ export function ChatArea() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-[var(--darkblue)] rounded-full h-9 w-9"
-                >
+                <Button variant="ghost" size="icon" className="text-[var(--darkblue)] rounded-full h-9 w-9">
                   <MoreVertical className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
@@ -122,9 +122,10 @@ export function ChatArea() {
         </div>
       </div>
 
+      {/* Messages Area */}
       <div className="flex-1 overflow-hidden bg-gray-50 relative">
         <ScrollArea className="h-full px-4">
-          <div className="space-y-6 ">
+          <div className="space-y-6">
             <span className="text-muted-foreground text-xs text-center m-2 block">
               Beginning of chat
             </span>
@@ -144,6 +145,7 @@ export function ChatArea() {
         </ScrollArea>
       </div>
 
+      {/* Message Input */}
       <MessageInput onSendMessage={sendMessage} />
     </div>
   );

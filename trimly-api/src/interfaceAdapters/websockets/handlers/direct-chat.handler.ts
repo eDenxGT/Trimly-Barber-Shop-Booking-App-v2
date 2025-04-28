@@ -25,8 +25,10 @@ export class DirectChatSocketHandler implements IDirectChatSocketHandler {
   handleSendMessage = async (data: any) => {
     try {
       console.log(data);
-      socketLogger.info("Message sent", { socketId: this._socket.id });
-      console.log(this._socket.data.userId);
+      socketLogger.info("Message sent", {
+        socketId: this._socket.id,
+        userId: this._socket.data.userId,
+      });
 
       const receiverSocketId = this._socketUserStore.getSocketId(
         data.receiverId

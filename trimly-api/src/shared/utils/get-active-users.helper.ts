@@ -10,3 +10,20 @@ export function getActiveUsersCount(members: { userId: string }[]): number {
 
   return activeCount;
 }
+
+export function getOnlineSocketIdsForMembers(
+  memberUserIds: string[]
+): string[] {
+  const socketUserStore = SocketUserStore.getInstance();
+  const allConnectedUsers = socketUserStore.getAllUsers();
+
+  const onlineSocketIds: string[] = [];
+
+  for (const [userId, socketId] of allConnectedUsers) {
+    if (memberUserIds.includes(userId)) {
+      onlineSocketIds.push(socketId);
+    }
+  }
+
+  return onlineSocketIds;
+}

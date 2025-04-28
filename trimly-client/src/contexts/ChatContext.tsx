@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useSocket } from "@/contexts/SocketContext";
 import { useToaster } from "@/hooks/ui/useToaster";
 import {
@@ -29,10 +29,15 @@ type ChatContextType = {
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const typeFromUrl = searchParams.get("type");
   const [currentChat, setCurrentChatData] = useState<
     IDirectChat | ICommunityChat | null
   >(null);
-  const [chatType, setChatType] = useState<"dm" | "community">("dm");
+  const [chatType, setChatType] = useState<"dm" | "community">(
+    (typeFromUrl as "dm" | "community") || "dm"
+  );
+
   const [messages, setMessages] = useState<
     (IDirectMessage | ICommunityMessage)[]
   >([]);
@@ -40,52 +45,60 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     IDirectChatPreview[] | ICommunityChatPreview[]
   >([]);
 
+  // Using refs to prevent infinite update loops
+  const currentChatRef = useRef<IDirectChat | ICommunityChat | null>(null);
+  const messagesRef = useRef<(IDirectMessage | ICommunityMessage)[]>([]);
+
+  // Update refs when states change
+  useEffect(() => {
+    currentChatRef.current = currentChat;
+  }, [currentChat]);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  // Chat ID for tracking changes
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+
   const socket = useSocket();
   const { infoToast } = useToaster();
   const user: IBarber | IClient | null = useSelector(getCurrentUserDetails);
 
   useEffect(() => {
-    console.log("allChats:", allChats);
-  }, [allChats]);
-
-  useEffect(() => {
     if (!socket) return;
 
-    const handleReceiveMessage = (
-      newMessage: IDirectMessage | ICommunityMessage
-    ) => {
-      //   if (!currentChat) return;
-
+    const handleReceiveDirectMessage = (newMessage: IDirectMessage) => {
       if (chatType === "dm") {
+        const currentDirectChat = currentChatRef.current as IDirectChat | null;
+
         if (
-          (newMessage as IDirectMessage)?.chatRoomId ===
-          (currentChat as IDirectChat)?.chatRoomId
+          currentDirectChat &&
+          newMessage.chatRoomId === currentDirectChat.chatRoomId
         ) {
-          setMessages((prevMessages) => {
-            if (
-              !prevMessages.find(
-                (message) => message.messageId === newMessage.messageId
-              )
-            ) {
-              return [...prevMessages, newMessage];
-            }
-            return prevMessages;
-          });
+          // Add message only if it doesn't exist
+          if (
+            !messagesRef.current.find(
+              (msg) => msg.messageId === newMessage.messageId
+            )
+          ) {
+            setMessages((prev) => [...prev, newMessage]);
+          }
         } else {
           infoToast(`You received a DM: ${newMessage.content}`);
         }
+
         if (allChats.length > 0 && chatType === "dm") {
           setAllChatsData((prevChats) => {
             const chatsArray = [...(prevChats as IDirectChatPreview[])];
             const chatIndex = chatsArray.findIndex(
               (chat) =>
                 "chatRoomId" in chat &&
-                chat.chatRoomId === (newMessage as IDirectMessage).chatRoomId
+                chat.chatRoomId === newMessage.chatRoomId
             );
 
             if (chatIndex > -1) {
               const updatedChat = chatsArray.splice(chatIndex, 1)[0];
-
               const chatWithNewMessage = {
                 ...updatedChat,
                 lastMessage: {
@@ -97,82 +110,84 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
                 },
               } as IDirectChatPreview;
 
-              return [
-                chatWithNewMessage,
-                ...chatsArray,
-              ] as IDirectChatPreview[];
+              return [chatWithNewMessage, ...chatsArray];
             }
-            return chatsArray as IDirectChatPreview[];
+            return chatsArray;
           });
         }
-      } else if (
-        (newMessage as ICommunityMessage).communityId ===
-        (currentChat as ICommunityChat).communityId
-      ) {
-        setMessages((prevMessages) => {
+      } else {
+        infoToast(`You received a DM: ${newMessage.content}`);
+      }
+    };
+
+    const handleReceiveCommunityMessage = (newMessage: ICommunityMessage) => {
+      if (chatType === "community") {
+        const currentCommunityChat =
+          currentChatRef.current as ICommunityChat | null;
+
+        if (
+          currentCommunityChat &&
+          newMessage.communityId === currentCommunityChat.communityId
+        ) {
+          // Add message only if it doesn't exist
           if (
-            !prevMessages.find(
-              (message) => message.messageId === newMessage.messageId
+            !messagesRef.current.find(
+              (msg) => msg.messageId === newMessage.messageId
             )
           ) {
-            return [...prevMessages, newMessage];
+            console.log("neewwwwww", newMessage);
+            setMessages((prev) => [...prev, newMessage]);
           }
-          return prevMessages;
-        });
+        } else {
+          infoToast(`New community message received!`);
+        }
       } else {
         infoToast(`New community message received!`);
       }
     };
 
-    socket.on("direct-chat:receive-message", handleReceiveMessage);
+    // Listeners
+    socket.on("direct-chat:receive-message", handleReceiveDirectMessage);
+    socket.on("community-chat:receive-message", handleReceiveCommunityMessage);
 
     return () => {
-      socket.off("direct-chat:receive-message", handleReceiveMessage);
+      socket.off("direct-chat:receive-message", handleReceiveDirectMessage);
+      socket.off(
+        "community-chat:receive-message",
+        handleReceiveCommunityMessage
+      );
     };
-  }, [socket, currentChat, chatType]);
-
-  // const setAllChats = (
-  //   chats: IDirectChatPreview[] | ICommunityChatPreview[]
-  // ) => {
-  //   if (allChats.length === 0 || allChats.length !== chats.length) {
-  //     setAllChatsData(chats);
-  //   }
-  // };
+  }, [socket, chatType, allChats, infoToast]); // Removed currentChat and messages from deps
 
   const setAllChats = (
     chats: IDirectChatPreview[] | ICommunityChatPreview[]
   ) => {
-    console.log("Setting all chats:", chats);
-    // Always update the chats instead of checking lengths
     setAllChatsData(chats);
   };
 
-  // const setCurrentChat = (chat: IDirectChat | ICommunityChat) => {
-  //   setCurrentChatData(chat);
-  //   if (
-  //     messages.length === 0 ||
-  //     (chat.messages && chat.messages.length > messages.length)
-  //   ) {
-  //     setMessages(chat.messages || []);
-  //   }
-  // };
-
   const setCurrentChat = (chat: IDirectChat | ICommunityChat) => {
-    setCurrentChatData(chat);
-    // Always update messages when changing chats
-    setMessages(chat.messages || []);
+    const chatId = "chatRoomId" in chat ? chat.chatRoomId : chat.communityId;
+
+    // Only reset messages if we're changing to a different chat
+    if (currentChatId !== chatId) {
+      setCurrentChatId(chatId);
+      setMessages(chat.messages || []);
+      setCurrentChatData(chat);
+    } else {
+      // Update the chat without affecting messages
+      setCurrentChatData(chat);
+    }
   };
 
   const onTypeChange = (type: "dm" | "community") => {
     setChatType(type);
     setCurrentChatData(null);
-    setAllChatsData([]);
+    setCurrentChatId(null);
     setMessages([]);
   };
 
   const sendMessage = (content: string, imageUrl?: string) => {
     if (!socket || !currentChat || !chatType || !user) return;
-    console.log("Sending message:", content, imageUrl);
 
     const currentUserId = user.userId || "";
     const senderName =
@@ -196,8 +211,11 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       };
 
       socket.emit("direct-chat:send-message", newMessage);
+
+      // Add message to state
       setMessages((prev) => [...prev, newMessage]);
 
+      // Update allChats with the new last message
       setAllChatsData((prevChats) => {
         const chatsArray = [...(prevChats as IDirectChatPreview[])];
         const chatIndex = chatsArray.findIndex(
@@ -236,15 +254,47 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         senderName: senderName || "User",
         senderAvatar,
       };
-      console.log(newMessage);
 
       socket.emit("community-chat:send-message", newMessage);
+
+      // Add message to state
       setMessages((prev) => [...prev, newMessage]);
+
+      setAllChatsData((prevChats) => {
+        if (chatType !== "community") return prevChats;
+
+        const chatsArray = [...(prevChats as ICommunityChatPreview[])];
+        const chatIndex = chatsArray.findIndex(
+          (chat) => chat.communityId === communityChat.communityId
+        );
+
+        if (chatIndex > -1) {
+          const updatedChat = chatsArray.splice(chatIndex, 1)[0];
+          const chatWithNewMessage: ICommunityChatPreview = {
+            ...updatedChat,
+            lastMessage: {
+              senderDetails: {
+                userId: newMessage.senderId,
+                name: newMessage.senderName,
+                profileImageUrl: newMessage.senderAvatar,
+              },
+              content: newMessage.content,
+              messageType: newMessage.messageType,
+              timestamp: newMessage.timestamp,
+              mediaUrl: newMessage.mediaUrl,
+            },
+          };
+
+          return [chatWithNewMessage, ...chatsArray];
+        }
+        return chatsArray;
+      });
     }
   };
 
   const handleChangeChat = () => {
     setCurrentChatData(null);
+    setCurrentChatId(null);
     setMessages([]);
   };
 

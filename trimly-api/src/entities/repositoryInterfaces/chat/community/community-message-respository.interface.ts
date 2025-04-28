@@ -2,4 +2,8 @@ import { ICommunityMessageEntity } from "../../../models/chat/community-message.
 import { IBaseRepository } from "../../base-repository.interface.js";
 
 export interface ICommunityMessageRepository
-  extends IBaseRepository<ICommunityMessageEntity> {}
+  extends IBaseRepository<ICommunityMessageEntity> {
+  saveCommunityMessage(
+    data: Partial<ICommunityMessageEntity>
+  ): Promise<ICommunityMessageEntity>;
+}

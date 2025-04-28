@@ -1,6 +1,7 @@
 export interface ServerToClientEvents {
   "direct-chat:receive-message": (data: any) => void;
   "receive-notification": (notificationData: { message: string }) => void;
+  "community-chat:receive-message": (data: any) => void;
 }
 
 export interface ClientToServerEvents {

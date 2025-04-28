@@ -10,12 +10,16 @@ import { useChat } from "@/contexts/ChatContext";
 
 interface ChatLayoutProps {
   userRole: "barber" | "client";
+  handleTypeChangeForPage?: (type: "dm" | "community") => void;
 }
 
-export function ChatLayout({ userRole }: ChatLayoutProps) {
+export function ChatLayout({
+  userRole,
+  handleTypeChangeForPage,
+}: ChatLayoutProps) {
   const [showChatArea, setShowChatArea] = useState(false);
   const isMobile = useIsMobile();
-  const { currentChat, onTypeChange, handleChangeChat } = useChat();
+  const { currentChat, onTypeChange, handleChangeChat, chatType } = useChat();
 
   const navigate = useNavigate();
 
@@ -26,7 +30,11 @@ export function ChatLayout({ userRole }: ChatLayoutProps) {
   }, [isMobile, currentChat]);
 
   const handleChatSelect = (chatId: string) => {
-    navigate(`${userRole === "barber" ? "/barber" : ""}/chat?chatId=${chatId}`);
+    navigate(
+      `${
+        userRole === "barber" ? "/barber" : ""
+      }/chat?chatId=${chatId}&type=${chatType}`
+    );
     handleChangeChat();
     if (isMobile) {
       setShowChatArea(true);
@@ -35,6 +43,7 @@ export function ChatLayout({ userRole }: ChatLayoutProps) {
 
   const handleChangeType = (value: "dm" | "community") => {
     onTypeChange?.(value);
+    handleTypeChangeForPage?.(value);
   };
 
   const handleBackToList = () => {
@@ -45,7 +54,7 @@ export function ChatLayout({ userRole }: ChatLayoutProps) {
     <div className="flex flex-col h-[calc(100vh-4rem)] mt-16 bg-white">
       {userRole === "barber" && (
         <Tabs
-          defaultValue="dm"
+          defaultValue={chatType}
           className="w-full"
           onValueChange={(value) =>
             handleChangeType(value as "dm" | "community")
