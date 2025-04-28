@@ -5,4 +5,6 @@ export interface IChatController {
   getAllChatsByUserId: (req: Request, res: Response) => Promise<void>;
   createCommunity: (req: Request, res: Response) => Promise<void>;
   getAllCommunitiesForAdmin: (req: Request, res: Response) => Promise<void>;
+  getCommunityForEdit: (req: Request, res: Response) => Promise<void>;
+  editCommunity: (req: Request, res: Response) => Promise<void>;
 }

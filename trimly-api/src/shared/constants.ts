@@ -87,6 +87,7 @@ export const ERROR_MESSAGES = {
   WRONG_ID: "Invalid ID",
   TOKEN_EXPIRED: "Session expired login again",
   TOKEN_BLACKLISTED: "Session is no longer valid",
+  COMMUNITY_NOT_FOUND: "Community not found",
   EMAIL_NOT_FOUND: "Email not found",
   FORBIDDEN: "You don’t have access",
   BLOCKED: "Your account is blocked",

@@ -106,6 +106,20 @@ export class AdminRoutes extends BaseRoute {
     //* ─────────────────────────────────────────────────────────────
     this.router
       .route("/admin/community")
+      .get(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        (req: Request, res: Response) => {
+          chatController.getCommunityForEdit(req, res);
+        }
+      )
+      .put(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        (req: Request, res: Response) => {
+          chatController.editCommunity(req, res);
+        }
+      )
       .post(
         verifyAuth,
         authorizeRole(["admin"]),

@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import { CommunitiesTable } from "@/components/admin/community/CommunitiesTable";
 import { useGetAllCommunities } from "@/hooks/admin/useCommunity";
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
@@ -12,12 +11,11 @@ export const AdminCommunityListPage = () => {
 
   const { data } = useGetAllCommunities({ page, limit: ITEMS_PER_PAGE });
 
-
-  const handleEdit = (groupId: string) => {
-    console.log("Edit community:", groupId);
+  const handleDelete = (groupId: string) => {
+    console.log("Delete community:", groupId);
   };
 
-  const handleDelete = (groupId: string) => {
+  const handleStatusChange = (groupId: string) => {
     console.log("Delete community:", groupId);
   };
 
@@ -39,9 +37,8 @@ export const AdminCommunityListPage = () => {
       >
         <CommunitiesTable
           communities={data?.communities || []}
-          onEdit={handleEdit}
           onDelete={handleDelete}
-          getSmartDate={getSmartDate}
+          onStatusChange={handleStatusChange}
         />
         {/* Pagination component */}
         {totalPages > 1 && (

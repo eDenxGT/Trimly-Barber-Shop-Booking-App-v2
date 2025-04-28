@@ -103,3 +103,7 @@ export interface IAllCommunitiesResponse {
   totalPages: number;
   currentPage: number;
 }
+
+export interface ICommunityChatResponse extends IAxiosResponse {
+  community: ICommunityChat;
+}

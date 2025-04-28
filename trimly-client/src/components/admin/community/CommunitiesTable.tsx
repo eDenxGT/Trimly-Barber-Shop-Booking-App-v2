@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Info, Plus, Edit, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,21 +12,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ICommunityChat } from "@/types/Chat";
-import { Plus, Edit, Trash2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { CommunityDetailsModal } from "@/components/modals/AdminCommunityDetailsModal";
+import { MdBlock } from "react-icons/md";
+import { getSmartDate } from "@/utils/helpers/timeFormatter";
 
 export const CommunitiesTable = ({
   communities,
-  onEdit,
   onDelete,
-  getSmartDate,
+  onStatusChange,
 }: {
   communities: ICommunityChat[];
-  onEdit: (communityId: string) => void;
   onDelete: (communityId: string) => void;
-  getSmartDate: (date: string) => string;
+  onStatusChange: (communityId: string) => void;
 }) => {
   const navigate = useNavigate();
+  const [selectedCommunity, setSelectedCommunity] =
+    useState<ICommunityChat | null>(null);
 
   return (
     <div className="container mx-auto p-6 mt-16 max-w-7xl">
@@ -36,9 +40,7 @@ export const CommunitiesTable = ({
             Manage your barber communities
           </p>
         </div>
-        <MuiButton
-          onClick={() => navigate("/admin/communities/create")}
-        >
+        <MuiButton onClick={() => navigate("/admin/communities/create")}>
           <Plus className="w-4 h-4 mr-2" />
           Create Community
         </MuiButton>
@@ -48,16 +50,19 @@ export const CommunitiesTable = ({
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>No.</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Members</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Created</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {communities.map((community) => (
+            {communities.map((community, index) => (
               <TableRow key={community.communityId}>
+                <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-3">
                     {community.imageUrl && (
@@ -74,6 +79,17 @@ export const CommunitiesTable = ({
                   {community.description || "No description"}
                 </TableCell>
                 <TableCell>{community.membersCount} members</TableCell>
+                <TableCell className="capitalize">
+                  {community.status === "active" ? (
+                    <span className="bg-green-500 text-white font-medium px-2 py-1 rounded">
+                      Active
+                    </span>
+                  ) : (
+                    <span className="bg-red-500 text-white font-medium px-2 py-1 rounded">
+                      Blocked
+                    </span>
+                  )}
+                </TableCell>
                 <TableCell>
                   {getSmartDate(community.createdAt.toString())}
                 </TableCell>
@@ -82,10 +98,30 @@ export const CommunitiesTable = ({
                     <Button
                       variant="outline"
                       size="icon"
-                      onClick={() => onEdit(community.communityId)}
+                      onClick={() => setSelectedCommunity(community)}
+                      className="text-yellow-600 hover:text-yellow-700"
+                    >
+                      <Info className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() =>
+                        navigate(
+                          `/admin/communities/edit/${community.communityId}`
+                        )
+                      }
                       className="text-zinc-600 hover:text-zinc-900"
                     >
                       <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => onStatusChange(community.communityId)}
+                      className="text-zinc-600 hover:text-zinc-900"
+                    >
+                      <MdBlock className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
@@ -102,6 +138,12 @@ export const CommunitiesTable = ({
           </TableBody>
         </Table>
       </div>
+
+      <CommunityDetailsModal
+        community={selectedCommunity}
+        isOpen={!!selectedCommunity}
+        onClose={() => setSelectedCommunity(null)}
+      />
     </div>
   );
 };

@@ -8,7 +8,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { ArrowLeft, Edit, Plus } from "lucide-react";
 import { ICommunityChat } from "@/types/Chat";
 import { generateUniqueId } from "@/utils/helpers/generateUniqueId";
 import { ImageUploadField } from "@/components/common/fields/ImageUploadField";
@@ -17,48 +17,75 @@ import { addCommunitySchema } from "@/utils/validations/community.validator";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { uploadImageToCloudinary } from "@/services/cloudinary/cloudinary";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface CommunityCreationFormProps {
   onSubmit: (values: Partial<ICommunityChat>) => void;
   isLoading: boolean;
+  initialData?: Partial<ICommunityChat>;
+  formType: "create" | "edit";
 }
 
-export const CommunityCreationForm = ({
+export const CommunityForm = ({
   onSubmit,
   isLoading,
+  initialData,
+  formType,
 }: CommunityCreationFormProps) => {
   const imageRef = useRef<Blob | null>(null);
+  const navigate = useNavigate()
 
   const { errorToast } = useToaster();
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      description: "",
-      imageUrl: "",
+      name: formType === "edit" ? initialData?.name || "" : "",
+      description: formType === "edit" ? initialData?.description || "" : "",
+      imageUrl: formType === "edit" ? initialData?.imageUrl || "" : "",
     },
     validationSchema: addCommunitySchema,
     onSubmit: async (values) => {
-      if (!imageRef.current) {
-        errorToast("Image is required");
-        return;
-      }
-      isLoading = true;
-      const uploadedAvatarUrl = await uploadImageToCloudinary(imageRef.current);
-      if (!uploadedAvatarUrl) {
-        errorToast("Image upload failed");
-        return;
-      }
-      isLoading = false;
+      try {
+        if (formType === "create" && !imageRef.current) {
+          errorToast("Image is required");
+          return;
+        }
 
-      const newCommunity: Partial<ICommunityChat> = {
-        communityId: generateUniqueId("community"),
-        name: values.name,
-        description: values.description || undefined,
-        imageUrl: uploadedAvatarUrl || undefined,
-        createdAt: new Date(),
-      };
-      onSubmit(newCommunity);
+        isLoading = true;
+
+        let finalImageUrl = values.imageUrl;
+
+        if (imageRef.current) {
+          const uploadedImageUrl = await uploadImageToCloudinary(
+            imageRef.current
+          );
+          if (!uploadedImageUrl) {
+            errorToast("Image upload failed");
+            return;
+          }
+          finalImageUrl = uploadedImageUrl;
+        }
+
+        const newCommunity: Partial<ICommunityChat> = {
+          ...(formType === "create"
+            ? {
+                communityId: generateUniqueId("community"),
+                createdAt: new Date(),
+              }
+            : { communityId: initialData?.communityId }),
+          name: values.name,
+          description: values.description || undefined,
+          imageUrl: finalImageUrl || undefined,
+        };
+
+        onSubmit(newCommunity);
+      } catch (err) {
+        console.error(err);
+        errorToast("Something went wrong during submission");
+      } finally {
+        isLoading = false;
+      }
     },
   });
 
@@ -66,14 +93,24 @@ export const CommunityCreationForm = ({
     imageRef.current = file;
   }, []);
 
+  const isEdit = formType === "edit";
+
   return (
     <Card className="w-full max-w-lg mx-auto bg-white shadow-lg animate-fade-in">
       <CardHeader className="space-y-1 bg-gradient-to-r from-yellow/10 to-yellow/5 rounded-t-lg">
         <h2 className="text-2xl font-semibold text-zinc-800">
-          Create New Community
+          <Button
+            className="bg-gray-100 hover:bg-gray-200 text-black mr-2 rounded-full"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          {isEdit ? "Edit Community" : "Create New Community"}
         </h2>
         <p className="text-sm text-zinc-600">
-          Connect with other barbers in your community
+          {isEdit
+            ? "Update your community details"
+            : "Connect with other barbers in your community"}
         </p>
       </CardHeader>
       <form onSubmit={formik.handleSubmit}>
@@ -128,8 +165,9 @@ export const CommunityCreationForm = ({
           <div className="mb-6">
             <h3 className="text-sm font-medium mb-3">Community Picture</h3>
             <ImageUploadField
-              handleRemove={() => formik.setFieldValue("avatar", null)}
+              handleRemove={() => formik.setFieldValue("imageUrl", null)}
               onImageChange={handleImageChange}
+              initialImage={formik.values.imageUrl}
               aspectRatio="square"
               label="Upload Community Picture"
               maxSizeMB={5}
@@ -143,8 +181,17 @@ export const CommunityCreationForm = ({
             loading={isLoading}
             disabled={!formik.isValid || formik.isSubmitting || isLoading}
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Create Community
+            {isEdit ? (
+              <>
+                <Edit className="w-4 h-4 mr-2" />
+                Update Community
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4 mr-2" />
+                Create Community
+              </>
+            )}
           </MuiButton>
         </CardFooter>
       </form>

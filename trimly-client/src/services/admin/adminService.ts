@@ -8,6 +8,7 @@ import {
   IAllCommunitiesResponse,
   IAuthResponse,
   IAxiosResponse,
+  ICommunityChatResponse,
   WithdrawalResponse,
 } from "@/types/Response";
 import { IAdmin, IBarber, IClient, UpdatePasswordData } from "@/types/User";
@@ -142,12 +143,27 @@ export const approveWithdrawal = async (withdrawalId: string) => {
   const response = await adminAxiosInstance.patch("/admin/withdrawals", {
     withdrawalId,
   });
+  return response.data;
+};
 
+export const adminGetCommunityById = async (communityId: string) => {
+  const response = await adminAxiosInstance.get<ICommunityChatResponse>(
+    "/admin/community",
+    { params: { communityId } }
+  );
   return response.data;
 };
 
 export const adminCreateCommunity = async (data: Partial<ICommunityChat>) => {
   const response = await adminAxiosInstance.post<IAxiosResponse>(
+    "/admin/community",
+    data
+  );
+  return response.data;
+};
+
+export const adminEditCommunity = async (data: Partial<ICommunityChat>) => {
+  const response = await adminAxiosInstance.put<IAxiosResponse>(
     "/admin/community",
     data
   );

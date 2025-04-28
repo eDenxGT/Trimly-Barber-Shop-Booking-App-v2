@@ -1,21 +1,28 @@
 import { CommunityForm } from "@/components/admin/community/CommunityForm";
 import { ICommunityChat } from "@/types/Chat";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCreateCommunityMutation } from "../../../hooks/admin/useCommunity";
+import {
+  useEditCommunityMutation,
+  useGetCommunityForEdit,
+} from "../../../hooks/admin/useCommunity";
 import { useToaster } from "@/hooks/ui/useToaster";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-export const AdminCreateCommunityPage = () => {
+export const AdminEditCommunityPage = () => {
   const { successToast, errorToast } = useToaster();
+  const { communityId } = useParams();
   const navigate = useNavigate();
 
+  const { data: communityData } = useGetCommunityForEdit(communityId || "");
+
   const {
-    mutate: createCommunity,
+    mutate: editCommunity,
     isPending: isCreating,
     isError: isCreatingError,
-  } = useCreateCommunityMutation();
+  } = useEditCommunityMutation();
+  
   const handleSubmitCreate = (values: Partial<ICommunityChat>) => {
-    createCommunity(values, {
+    editCommunity(values, {
       onSuccess: (data) => {
         successToast(data.message);
         navigate("/admin/communities");
@@ -38,7 +45,8 @@ export const AdminCreateCommunityPage = () => {
         <CommunityForm
           onSubmit={handleSubmitCreate}
           isLoading={isCreating && !isCreatingError}
-          formType="create"
+          formType="edit"
+          initialData={communityData?.community}
         />
       </motion.div>
     </AnimatePresence>

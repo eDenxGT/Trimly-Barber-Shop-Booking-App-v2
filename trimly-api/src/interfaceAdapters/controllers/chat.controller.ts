@@ -13,6 +13,8 @@ import { IGetAllChatsByUserUseCase } from "../../entities/useCaseInterfaces/chat
 import { IGetChatByChatIdUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/get-chat-by-chatid.usecase.js";
 import { ICreateCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/create-community-usecase.interface.js";
 import { IGetAllCommunitiesForAdminUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-communities-for-admin-usecase.interface.js";
+import { IGetCommunityForEditUseCase } from "../../entities/useCaseInterfaces/chat/community/get-community-for-edit-usecase.interface.js";
+import { IEditCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/edit-community-usecase.interface.js";
 
 @injectable()
 export class ChatController implements IChatController {
@@ -25,8 +27,12 @@ export class ChatController implements IChatController {
     private _getChatByChatIdUseCase: IGetChatByChatIdUseCase,
     @inject("ICreateCommunityUseCase")
     private _createCommunityUseCase: ICreateCommunityUseCase,
+    @inject("IEditCommunityUseCase")
+    private _editCommunityUseCase: IEditCommunityUseCase,
     @inject("IGetAllCommunitiesForAdminUseCase")
-    private _getAllCommunitiesForAdminUseCase: IGetAllCommunitiesForAdminUseCase
+    private _getAllCommunitiesForAdminUseCase: IGetAllCommunitiesForAdminUseCase,
+    @inject("IGetCommunityForEditUseCase")
+    private _getCommunityForEditUseCase: IGetCommunityForEditUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -150,7 +156,7 @@ export class ChatController implements IChatController {
       const { userId } = (req as CustomRequest).user;
 
       const { page, limit } = req.query;
-      console.log(req.query)
+      console.log(req.query);
 
       if (!userId) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
@@ -160,16 +166,77 @@ export class ChatController implements IChatController {
         return;
       }
 
-      const communitiesData = await this._getAllCommunitiesForAdminUseCase.execute({
-        page: Number(page),
-        limit: Number(limit),
-      });
+      const communitiesData =
+        await this._getAllCommunitiesForAdminUseCase.execute({
+          page: Number(page),
+          limit: Number(limit),
+        });
 
       res.status(HTTP_STATUS.OK).json({
         success: true,
         communities: communitiesData.communities,
         totalPages: communitiesData.totalPages,
         currentPage: communitiesData.currentPage,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*            🛠️  Get Community For Edit (For ADMIN)
+  //* ─────────────────────────────────────────────────────────────
+  async getCommunityForEdit(req: Request, res: Response) {
+    try {
+      const { communityId } = req.query;
+
+      if (!communityId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      const community = await this._getCommunityForEditUseCase.execute(
+        String(communityId)
+      );
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        community,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*            🛠️  Edit Community (For ADMIN)
+  //* ─────────────────────────────────────────────────────────────
+  async editCommunity(req: Request, res: Response) {
+    try {
+      const { userId } = (req as CustomRequest).user;
+      const { communityId, name, description, imageUrl } = req.body;
+
+      if (!userId || !communityId || !name || !description || !imageUrl) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      await this._editCommunityUseCase.execute({
+        communityId,
+        name,
+        description,
+        imageUrl,
+      });
+
+      res.status(HTTP_STATUS.CREATED).json({
+        success: true,
+        message: SUCCESS_MESSAGES.COMMUNITY_CREATED,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

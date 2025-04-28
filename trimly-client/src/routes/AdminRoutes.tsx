@@ -7,6 +7,7 @@ import { AdminBarberShopApplicationPage } from "@/pages/admin/applications/Admin
 import { AdminUserWithdrawalsPage } from "@/pages/admin/applications/AdminUserWithdrawalsPage";
 import { AdminCommunityListPage } from "@/pages/admin/community/AdminCommunityListPage";
 import { AdminCreateCommunityPage } from "@/pages/admin/community/AdminCreateCommunityPage";
+import { AdminEditCommunityPage } from "@/pages/admin/community/AdminEditCommunityPage";
 import { AdminBarberManagementPage } from "@/pages/admin/managementPages/AdminBarberShopManagementPage";
 import { AdminClientManagementPage } from "@/pages/admin/managementPages/AdminClientManagementPage";
 import { AdminChangePasswordPage } from "@/pages/admin/settings/AdminChangePasswordPage";
@@ -31,7 +32,14 @@ export const AdminRoutes = () => {
         <Route path="shops" element={<AdminBarberManagementPage />} />
         <Route path="clients" element={<AdminClientManagementPage />} />
         <Route path="communities" element={<AdminCommunityListPage />} />
-        <Route path="communities/create" element={<AdminCreateCommunityPage />} />
+        <Route
+          path="communities/create"
+          element={<AdminCreateCommunityPage />}
+        />
+        <Route
+          path="communities/edit/:communityId"
+          element={<AdminEditCommunityPage />}
+        />
         <Route
           path="shop-applications"
           element={<AdminBarberShopApplicationPage />}

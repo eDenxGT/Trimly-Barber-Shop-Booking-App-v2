@@ -1,9 +1,12 @@
+import { IBarber } from "./User";
+
 export interface ICommunityChat {
   communityId: string;
   name: string;
   description?: string;
   imageUrl?: string;
-  members: string[];
+  members: IBarber[];
+  status: "active" | "blocked";
   membersCount?: number;
   createdBy: {
     userId: string;

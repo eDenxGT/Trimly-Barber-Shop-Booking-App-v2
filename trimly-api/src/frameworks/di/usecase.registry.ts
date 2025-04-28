@@ -151,6 +151,10 @@ import { ICreateCommunityUseCase } from "../../entities/useCaseInterfaces/chat/c
 import { CreateCommunityUseCase } from "../../useCases/chat/community/create-community.usecase.js";
 import { IGetAllCommunitiesForAdminUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-communities-for-admin-usecase.interface.js";
 import { GetAllCommunitiesForAdminUseCase } from "../../useCases/chat/community/get-all-communities-for-admin.usecase.js";
+import { GetCommunityForEditUseCase } from "../../useCases/chat/community/get-community-for-edit.usecase.js";
+import { IGetCommunityForEditUseCase } from "../../entities/useCaseInterfaces/chat/community/get-community-for-edit-usecase.interface.js";
+import { IEditCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/edit-community-usecase.interface.js";
+import { EditCommunityUseCase } from "../../useCases/chat/community/edit-community.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -476,6 +480,17 @@ export class UseCaseRegistry {
         useClass: GetAllCommunitiesForAdminUseCase,
       }
     );
+
+    container.register<IGetCommunityForEditUseCase>(
+      "IGetCommunityForEditUseCase",
+      {
+        useClass: GetCommunityForEditUseCase,
+      }
+    );
+
+    container.register<IEditCommunityUseCase>("IEditCommunityUseCase", {
+      useClass: EditCommunityUseCase,
+    });
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {
