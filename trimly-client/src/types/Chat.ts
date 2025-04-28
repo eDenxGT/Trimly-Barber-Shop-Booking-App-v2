@@ -5,7 +5,7 @@ export interface ICommunityChat {
   name: string;
   description?: string;
   imageUrl?: string;
-  members: IBarber[];
+  members?: IBarber[];
   status: "active" | "blocked";
   membersCount?: number;
   createdBy: {
@@ -13,8 +13,9 @@ export interface ICommunityChat {
     name: string;
     avatar?: string;
   };
+  isJoined?: boolean;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
   messages?: ICommunityMessage[];
 }
 

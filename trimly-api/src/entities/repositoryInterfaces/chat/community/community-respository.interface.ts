@@ -3,10 +3,19 @@ import { ICommunityChatRoomEntity } from "../../../models/chat/community-chat-ro
 
 export interface ICommunityRepository
   extends IBaseRepository<ICommunityChatRoomEntity> {
-  findAllCommunitiesForAdminSide(
-    page: number,
-    limit: number
-  ): Promise<{
+  findAllCommunitiesForListing({
+    filter,
+    search,
+    userId,
+    page,
+    limit,
+  }: {
+    filter: Partial<ICommunityChatRoomEntity>;
+    search: string;
+    userId: string;
+    page: number;
+    limit: number;
+  }): Promise<{
     communities: ICommunityChatRoomEntity[];
     totalPages: number;
     currentPage: number;

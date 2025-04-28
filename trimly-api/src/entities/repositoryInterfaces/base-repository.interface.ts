@@ -7,7 +7,7 @@ export interface IBaseRepository<T> {
   ): Promise<{ items: T[]; total: number }>;
   findOne(filter: any): Promise<T | null>;
   save(data: Partial<T>): Promise<T>;
-  update(filter: any, updateData: Partial<T>): Promise<T | null>;
+  update(filter: any, updateData: Partial<T> | any): Promise<T | null>;
   delete(filter: any): Promise<T | null>;
   deleteAll(filter: any): Promise<void>;
 }

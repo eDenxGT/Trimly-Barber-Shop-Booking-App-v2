@@ -1,21 +1,23 @@
 import { inject, injectable } from "tsyringe";
 import { ICommunityChatRoomEntity } from "../../../entities/models/chat/community-chat-room.entity.js";
-import { IGetAllCommunitiesForAdminUseCase } from "../../../entities/useCaseInterfaces/chat/community/get-all-communities-for-admin-usecase.interface.js";
 import { ICommunityRepository } from "../../../entities/repositoryInterfaces/chat/community/community-respository.interface.js";
+import { IGetAllCommunitiesForBarberUseCase } from "../../../entities/useCaseInterfaces/chat/community/get-all-communities-for-barber-usecase.interface.js";
 
 @injectable()
-export class GetAllCommunitiesForAdminUseCase
-  implements IGetAllCommunitiesForAdminUseCase
+export class GetAllCommunitiesForBarberUseCase
+  implements IGetAllCommunitiesForBarberUseCase
 {
   constructor(
     @inject("ICommunityRepository")
     private _communityRepository: ICommunityRepository
   ) {}
   async execute({
+    userId,
     search,
     page,
     limit,
   }: {
+    userId: string;
     search: string;
     page: number;
     limit: number;
@@ -26,7 +28,8 @@ export class GetAllCommunitiesForAdminUseCase
   }> {
     const communityData =
       await this._communityRepository.findAllCommunitiesForListing({
-        filter: {},
+        filter: { status: "active" },
+        userId,
         search,
         page,
         limit,

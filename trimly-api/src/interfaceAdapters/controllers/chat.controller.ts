@@ -17,6 +17,8 @@ import { IGetCommunityForEditUseCase } from "../../entities/useCaseInterfaces/ch
 import { IEditCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/edit-community-usecase.interface.js";
 import { IUpdateCommunityStatusUseCase } from "../../entities/useCaseInterfaces/chat/community/update-community-status-usecase.interface.js";
 import { IDeleteCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/delete-community-usecase.interface.js";
+import { IGetAllCommunitiesForBarberUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-communities-for-barber-usecase.interface.js";
+import { IBarberJoinCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/barber-join-community-usecase.interface.js";
 
 @injectable()
 export class ChatController implements IChatController {
@@ -37,8 +39,12 @@ export class ChatController implements IChatController {
     private _editCommunityUseCase: IEditCommunityUseCase,
     @inject("IGetAllCommunitiesForAdminUseCase")
     private _getAllCommunitiesForAdminUseCase: IGetAllCommunitiesForAdminUseCase,
+    @inject("IBarberJoinCommunityUseCase")
+    private _barberJoinCommunityUseCase: IBarberJoinCommunityUseCase,
     @inject("IGetCommunityForEditUseCase")
-    private _getCommunityForEditUseCase: IGetCommunityForEditUseCase
+    private _getCommunityForEditUseCase: IGetCommunityForEditUseCase,
+    @inject("IGetAllCommunitiesForBarberUseCase")
+    private _getAllCommunitiesForBarberUseCase: IGetAllCommunitiesForBarberUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -161,7 +167,7 @@ export class ChatController implements IChatController {
     try {
       const { userId } = (req as CustomRequest).user;
 
-      const { page, limit } = req.query;
+      const { search, page, limit } = req.query;
       console.log(req.query);
 
       if (!userId) {
@@ -174,6 +180,43 @@ export class ChatController implements IChatController {
 
       const communitiesData =
         await this._getAllCommunitiesForAdminUseCase.execute({
+          search: String(search),
+          page: Number(page),
+          limit: Number(limit),
+        });
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        communities: communitiesData.communities,
+        totalPages: communitiesData.totalPages,
+        currentPage: communitiesData.currentPage,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*       🛠️  Get All Communities (For Barber ( LISTING ))
+  //* ─────────────────────────────────────────────────────────────
+  async getAllCommunitiesForBarberListing(req: Request, res: Response) {
+    try {
+      const { userId } = (req as CustomRequest).user;
+
+      const { search, page, limit } = req.query;
+
+      if (!userId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      const communitiesData =
+        await this._getAllCommunitiesForBarberUseCase.execute({
+          userId,
+          search: String(search),
           page: Number(page),
           limit: Number(limit),
         });
@@ -281,7 +324,7 @@ export class ChatController implements IChatController {
   async deleteCommunity(req: Request, res: Response) {
     try {
       const { communityId } = req.query;
-      console.log(req.query)
+      console.log(req.query);
 
       if (!communityId) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
@@ -296,6 +339,36 @@ export class ChatController implements IChatController {
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.DELETE_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*            🛠️  Join Community (For Barber)
+  //* ─────────────────────────────────────────────────────────────
+  async barberJoinCommunity(req: Request, res: Response) {
+    try {
+      const { userId } = (req as CustomRequest).user;
+      const { communityId } = req.body;
+
+      if (!communityId || !userId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS,
+        });
+        return;
+      }
+
+      await this._barberJoinCommunityUseCase.execute({
+        communityId,
+        userId,
+      });
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.JOIN_SUCCESS,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

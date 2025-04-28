@@ -196,15 +196,17 @@ export const adminToggleCommunityStatus = async ({
 };
 
 export const adminGetAllCommunities = async ({
+  search,
   page,
   limit,
 }: {
+  search: string;
   page: number;
   limit: number;
 }) => {
   const response = await adminAxiosInstance.get<IAllCommunitiesResponse>(
     "/admin/communities",
-    { params: { page, limit } }
+    { params: { search, page, limit } }
   );
   return response.data;
 };

@@ -184,6 +184,24 @@ export class BarberRoutes extends BaseRoute {
       }
     );
 
+    this.router.get(
+      "/barber/communities",
+      verifyAuth,
+      authorizeRole(["barber"]),
+      (req: Request, res: Response) => {
+        chatController.getAllCommunitiesForBarberListing(req, res);
+      }
+    );
+
+    this.router.put(
+      "/barber/community/join",
+      verifyAuth,
+      authorizeRole(["barber"]),
+      (req: Request, res: Response) => {
+        chatController.barberJoinCommunity(req, res);
+      }
+    );
+
     //* ─────────────────────────────────────────────────────────────
     //*                   🛠️ Service Endpoints
     //* ─────────────────────────────────────────────────────────────

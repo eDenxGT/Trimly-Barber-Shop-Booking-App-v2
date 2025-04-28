@@ -159,6 +159,10 @@ import { IUpdateCommunityStatusUseCase } from "../../entities/useCaseInterfaces/
 import { UpdateCommunityStatusUseCase } from "../../useCases/chat/community/update-community-status.usecase.js";
 import { IDeleteCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/delete-community-usecase.interface.js";
 import { DeleteCommunityUseCase } from "../../useCases/chat/community/delete-community.usecase.js";
+import { GetAllCommunitiesForBarberUseCase } from "../../useCases/chat/community/get-all-communities-for-barber.usecase.js";
+import { IGetAllCommunitiesForBarberUseCase } from "../../entities/useCaseInterfaces/chat/community/get-all-communities-for-barber-usecase.interface.js";
+import { IBarberJoinCommunityUseCase } from "../../entities/useCaseInterfaces/chat/community/barber-join-community-usecase.interface.js";
+import { BarberJoinCommunityUseCase } from "../../useCases/chat/community/barber-join-community.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -506,6 +510,20 @@ export class UseCaseRegistry {
     container.register<IDeleteCommunityUseCase>("IDeleteCommunityUseCase", {
       useClass: DeleteCommunityUseCase,
     });
+
+    container.register<IGetAllCommunitiesForBarberUseCase>(
+      "IGetAllCommunitiesForBarberUseCase",
+      {
+        useClass: GetAllCommunitiesForBarberUseCase,
+      }
+    );
+
+    container.register<IBarberJoinCommunityUseCase>(
+      "IBarberJoinCommunityUseCase",
+      {
+        useClass: BarberJoinCommunityUseCase,
+      }
+    );
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

@@ -9,7 +9,6 @@ import {
   adminCreateCommunity,
   adminDeleteCommunity,
   adminEditCommunity,
-  adminGetAllCommunities,
   adminGetCommunityById,
   adminToggleCommunityStatus,
 } from "@/services/admin/adminService";
@@ -46,18 +45,22 @@ export const useDeleteCommunity = () => {
 };
 
 export const useGetAllCommunities = ({
+  queryFn,
+  search,
   page,
   limit,
 }: {
+  queryFn: (params: {
+    search: string;
+    page: number;
+    limit: number;
+  }) => Promise<IAllCommunitiesResponse>;
+  search: string;
   page: number;
   limit: number;
 }) => {
   return useQuery<IAllCommunitiesResponse, Error>({
-    queryKey: ["communities", page, limit],
-    queryFn: () =>
-      adminGetAllCommunities({
-        page,
-        limit,
-      }),
+    queryKey: ["communities", search, page, limit],
+    queryFn: () => queryFn({ search, page, limit }),
   });
 };

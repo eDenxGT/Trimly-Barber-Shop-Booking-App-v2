@@ -1,23 +1,21 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { CommunitiesTable } from "@/components/admin/community/CommunitiesTable";
-import {
-  useCommunityStatusToggle,
-  useDeleteCommunity,
-  useGetAllCommunities,
-} from "@/hooks/admin/useCommunity";
+import { useGetAllCommunities } from "@/hooks/admin/useCommunity";
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
 import { useEffect, useState } from "react";
 import { useToaster } from "@/hooks/ui/useToaster";
-import { adminGetAllCommunities } from "@/services/admin/adminService";
+import { CommunitiesList } from "@/components/barber/community/CommunityList";
 import { debounce } from "lodash";
+import { barberGetAllCommunitiesForListing } from "@/services/barber/barberService";
+import { useJoinCommunityMutation } from "@/hooks/barber/useBarberCommunity";
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 10;
 
-export const AdminCommunityListPage = () => {
+export const BarberCommunityListPage = () => {
   const [page, setPage] = useState(1);
-  const { successToast, errorToast } = useToaster();
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
+
+  const { successToast, errorToast } = useToaster();
 
   useEffect(() => {
     const handler = debounce(() => {
@@ -31,39 +29,22 @@ export const AdminCommunityListPage = () => {
     };
   }, [searchTerm]);
 
-  const { data, refetch: refetchAllCommunities } = useGetAllCommunities({
-    queryFn: adminGetAllCommunities,
+  const { data, refetch } = useGetAllCommunities({
+    queryFn: barberGetAllCommunitiesForListing,
     search: debouncedSearch,
     page,
     limit: ITEMS_PER_PAGE,
   });
 
-  const { mutate: toggleStatus } = useCommunityStatusToggle();
+  const { mutate: barberJoinCommunity } = useJoinCommunityMutation();
 
-  const { mutate: deleteCommunity } = useDeleteCommunity();
-
-  const handleDelete = (communityId: string) => {
-    deleteCommunity(
+  const handleJoin = (communityId: string) => {
+    barberJoinCommunity(
       { communityId },
       {
         onSuccess: (data) => {
           successToast(data.message);
-          refetchAllCommunities();
-        },
-        onError: (error: any) => {
-          errorToast(error.response.data.message);
-        },
-      }
-    );
-  };
-
-  const handleStatusChange = (communityId: string) => {
-    toggleStatus(
-      { communityId },
-      {
-        onSuccess: (data) => {
-          successToast(data.message);
-          refetchAllCommunities();
+          refetch();
         },
         onError: (error: any) => {
           errorToast(error.response.data.message);
@@ -82,16 +63,16 @@ export const AdminCommunityListPage = () => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key={"admin-community-list"}
+        key={"barber-community-list"}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
+        className="mt-16"
       >
-        <CommunitiesTable
+        <CommunitiesList
           communities={data?.communities || []}
-          onDelete={handleDelete}
-          onStatusChange={handleStatusChange}
+          onJoin={handleJoin}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
         />

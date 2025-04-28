@@ -2,6 +2,7 @@ import { barberAxiosInstance } from "@/api/barber.axios";
 import { IPostFormData } from "@/types/Feed";
 import {
   IAllChatResponse,
+  IAllCommunitiesResponse,
   IAuthResponse,
   IAxiosResponse,
   IBarberHoursResponse,
@@ -279,5 +280,40 @@ export const getAllChatsByBarberId = async (): Promise<IAllChatResponse> => {
   const response = await barberAxiosInstance.get<IAllChatResponse>(
     "/barber/chats"
   );
+  return response.data;
+};
+
+export const barberGetAllCommunitiesForListing = async ({
+  search,
+  page,
+  limit,
+}: {
+  search: string;
+  page: number;
+  limit: number;
+}) => {
+  const response = await barberAxiosInstance.get<IAllCommunitiesResponse>(
+    "/barber/communities",
+    {
+      params: {
+        search,
+        page,
+        limit,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const joinCommunity = async ({
+  communityId,
+}: {
+  communityId: string;
+}) => {
+  const response = await barberAxiosInstance.put<IAxiosResponse>(
+    "/barber/community/join",
+    { communityId }
+  );
+
   return response.data;
 };

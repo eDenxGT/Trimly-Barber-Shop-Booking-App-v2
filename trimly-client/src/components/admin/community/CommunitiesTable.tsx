@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Info, Plus, Edit, Trash2 } from "lucide-react";
+import { useCallback, useState } from "react";
+import { Info, Plus, Edit, Trash2, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { Button } from "@/components/ui/button";
@@ -16,15 +16,21 @@ import { CommunityDetailsModal } from "@/components/modals/AdminCommunityDetails
 import { MdBlock } from "react-icons/md";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
+import { Input } from "@/components/ui/input";
+import { debounce } from "lodash";
 
 export const CommunitiesTable = ({
   communities,
   onDelete,
   onStatusChange,
+  searchTerm,
+  setSearchTerm,
 }: {
   communities: ICommunityChat[];
   onDelete: (communityId: string) => void;
   onStatusChange: (communityId: string) => void;
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
 }) => {
   const navigate = useNavigate();
   const [selectedCommunity, setSelectedCommunity] =
@@ -33,6 +39,10 @@ export const CommunitiesTable = ({
     null
   );
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
 
   return (
     <div className="container mx-auto p-6 mt-16 max-w-7xl">
@@ -49,6 +59,19 @@ export const CommunitiesTable = ({
           <Plus className="w-4 h-4 mr-2" />
           Create Community
         </MuiButton>
+      </div>
+
+      <div className="relative mb-8">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" />
+        <Input
+          type="text"
+          placeholder="Search communities..."
+          className="pl-10 bg-white"
+          value={searchTerm}
+          onChange={(e) => {
+            handleSearch(e.target.value);
+          }}
+        />
       </div>
 
       <div className="bg-white rounded-lg border border-zinc-200 shadow-sm">

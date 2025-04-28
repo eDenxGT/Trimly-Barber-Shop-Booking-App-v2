@@ -49,16 +49,6 @@ const navItems = {
       icon: MessageCircleMore,
       path: "/chat",
     },
-    // {
-    // 	title: "Wishlist",
-    // 	icon: <Heart className="h-5 w-5" />,
-    // 	href: "/student/wishlist",
-    // },
-    // {
-    // 	title: "Purchases",
-    // 	icon: <ShoppingBag className="h-5 w-5" />,
-    // 	href: "/student/purchases",
-    // },
     {
       title: "Settings",
       icon: Settings,
@@ -90,6 +80,11 @@ const navItems = {
       title: "Chat",
       icon: MessageCircleMore,
       path: "/barber/chat",
+    },
+    {
+      title: "Communities",
+      icon: MdGroups,
+      path: "/barber/communities",
     },
     {
       title: "Settings",
