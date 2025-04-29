@@ -14,4 +14,23 @@ export class DirectMessageRepository
   constructor() {
     super(DirectMessageModel);
   }
+
+  async markMessagesAsRead({
+    chatRoomId,
+    userId,
+  }: {
+    chatRoomId: string;
+    userId: string;
+  }): Promise<void> {
+    await this.model.updateMany(
+      {
+        chatRoomId,
+        receiverId: userId,
+        status: "sent",
+      },
+      {
+        $set: { status: "read" },
+      }
+    );
+  }
 }

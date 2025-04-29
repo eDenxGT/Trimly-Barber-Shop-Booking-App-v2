@@ -17,5 +17,9 @@ export class DirectChatEvents {
       DIRECT_CHAT_EVENTS.SEND_MESSAGE,
       this._handler.handleSendMessage
     );
+    this.socket.on(
+      DIRECT_CHAT_EVENTS.READ_MESSAGE,
+      this._handler.handleReadMessage
+    );
   }
 }

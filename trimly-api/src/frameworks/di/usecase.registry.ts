@@ -171,6 +171,8 @@ import { ISendCommunityMessageUseCase } from "../../entities/useCaseInterfaces/c
 import { SendCommunityMessageUseCase } from "../../useCases/chat/community/send-community-message.usecase.js";
 import { IGetCommunityByCommunityIdUseCase } from "../../entities/useCaseInterfaces/chat/community/get-community-by-communityid-usecase.interface.js";
 import { GetCommunityByCommunityIdUseCase } from "../../useCases/chat/community/get-community-by-communityid.usecase.js";
+import { IReadDirectMessageUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/read-direct-message-usecase.interface.js";
+import { ReadDirectMessageUseCase } from "../../useCases/chat/direct-chat/read-direct-message.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -557,6 +559,10 @@ export class UseCaseRegistry {
         useClass: GetCommunityByCommunityIdUseCase,
       }
     );
+
+    container.register<IReadDirectMessageUseCase>("IReadDirectMessageUseCase", {
+      useClass: ReadDirectMessageUseCase,
+    });
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

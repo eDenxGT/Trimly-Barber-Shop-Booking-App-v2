@@ -7,6 +7,7 @@ import { ChatSidebar } from "./ChatSidebar";
 import { ChatArea } from "./ChatArea";
 import { useNavigate } from "react-router-dom";
 import { useChat } from "@/contexts/ChatContext";
+import { useSocket } from "@/contexts/SocketContext";
 
 interface ChatLayoutProps {
   userRole: "barber" | "client";
@@ -20,6 +21,7 @@ export function ChatLayout({
   const [showChatArea, setShowChatArea] = useState(false);
   const isMobile = useIsMobile();
   const { currentChat, onTypeChange, handleChangeChat, chatType } = useChat();
+  const socket = useSocket();
 
   const navigate = useNavigate();
 
@@ -35,7 +37,12 @@ export function ChatLayout({
         userRole === "barber" ? "/barber" : ""
       }/chat?chatId=${chatId}&type=${chatType}`
     );
+
     handleChangeChat();
+    if (chatType === "dm") {
+      socket.emit("direct-chat:read-message", { chatRoomId: chatId });
+    }
+
     if (isMobile) {
       setShowChatArea(true);
     }

@@ -151,6 +151,7 @@ export const ERROR_MESSAGES = {
 export const DIRECT_CHAT_EVENTS = {
   SEND_MESSAGE: "direct-chat:send-message",
   RECEIVE_MESSAGE: "direct-chat:receive-message",
+  READ_MESSAGE: "direct-chat:read-message",
 } as const;
 
 export const COMMUNITY_CHAT_EVENTS = {

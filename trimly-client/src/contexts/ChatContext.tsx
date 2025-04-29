@@ -45,11 +45,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     IDirectChatPreview[] | ICommunityChatPreview[]
   >([]);
 
-  // Using refs to prevent infinite update loops
   const currentChatRef = useRef<IDirectChat | ICommunityChat | null>(null);
   const messagesRef = useRef<(IDirectMessage | ICommunityMessage)[]>([]);
 
-  // Update refs when states change
   useEffect(() => {
     currentChatRef.current = currentChat;
   }, [currentChat]);
@@ -58,11 +56,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     messagesRef.current = messages;
   }, [messages]);
 
-  // Chat ID for tracking changes
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
 
   const socket = useSocket();
-  const { infoToast } = useToaster();
+  const { notifyToast } = useToaster();
   const user: IBarber | IClient | null = useSelector(getCurrentUserDetails);
 
   useEffect(() => {
@@ -76,7 +73,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           currentDirectChat &&
           newMessage.chatRoomId === currentDirectChat.chatRoomId
         ) {
-          // Add message only if it doesn't exist
           if (
             !messagesRef.current.find(
               (msg) => msg.messageId === newMessage.messageId
@@ -85,7 +81,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
             setMessages((prev) => [...prev, newMessage]);
           }
         } else {
-          infoToast(`You received a DM: ${newMessage.content}`);
+          notifyToast({
+            title: `You received a DM:`,
+            content: `${newMessage.content}`,
+          });
         }
 
         if (allChats.length > 0 && chatType === "dm") {
@@ -116,7 +115,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           });
         }
       } else {
-        infoToast(`You received a DM: ${newMessage.content}`);
+        notifyToast({
+          title: `You received a DM:`,
+          content: `${newMessage.content}`,
+        });
       }
     };
 
@@ -129,7 +131,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           currentCommunityChat &&
           newMessage.communityId === currentCommunityChat.communityId
         ) {
-          // Add message only if it doesn't exist
           if (
             !messagesRef.current.find(
               (msg) => msg.messageId === newMessage.messageId
@@ -139,14 +140,19 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
             setMessages((prev) => [...prev, newMessage]);
           }
         } else {
-          infoToast(`New community message received!`);
+          notifyToast({
+            title: `New community message received!`,
+            content: `${newMessage.senderName}: ${newMessage.content}`,
+          });
         }
       } else {
-        infoToast(`New community message received!`);
+        notifyToast({
+          title: `New community message received!`,
+          content: `${newMessage.senderName}: ${newMessage.content}`,
+        });
       }
     };
 
-    // Listeners
     socket.on("direct-chat:receive-message", handleReceiveDirectMessage);
     socket.on("community-chat:receive-message", handleReceiveCommunityMessage);
 
@@ -157,7 +163,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         handleReceiveCommunityMessage
       );
     };
-  }, [socket, chatType, allChats, infoToast]); // Removed currentChat and messages from deps
+  }, [socket, chatType, allChats, notifyToast]);
 
   const setAllChats = (
     chats: IDirectChatPreview[] | ICommunityChatPreview[]
@@ -168,13 +174,11 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const setCurrentChat = (chat: IDirectChat | ICommunityChat) => {
     const chatId = "chatRoomId" in chat ? chat.chatRoomId : chat.communityId;
 
-    // Only reset messages if we're changing to a different chat
     if (currentChatId !== chatId) {
       setCurrentChatId(chatId);
       setMessages(chat.messages || []);
       setCurrentChatData(chat);
     } else {
-      // Update the chat without affecting messages
       setCurrentChatData(chat);
     }
   };
@@ -212,10 +216,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
       socket.emit("direct-chat:send-message", newMessage);
 
-      // Add message to state
       setMessages((prev) => [...prev, newMessage]);
 
-      // Update allChats with the new last message
       setAllChatsData((prevChats) => {
         const chatsArray = [...(prevChats as IDirectChatPreview[])];
         const chatIndex = chatsArray.findIndex(
@@ -257,7 +259,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
       socket.emit("community-chat:send-message", newMessage);
 
-      // Add message to state
       setMessages((prev) => [...prev, newMessage]);
 
       setAllChatsData((prevChats) => {
