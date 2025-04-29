@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { injectable } from "tsyringe";
 import nodemailer from "nodemailer";
 import { config } from "../../shared/config.js";
-import { IEmailService } from "../../entities/servicesInterfaces/email-service.interface.js";
+import { IEmailService } from "../../entities/serviceInterfaces/email-service.interface.js";
 import {
 	PASSWORD_RESET_MAIL_CONTENT,
 	VERIFICATION_MAIL_CONTENT,

@@ -31,6 +31,8 @@ import { CommunityChatSocketHandler } from "../../interfaceAdapters/websockets/h
 import { ICommunityChatSocketHandler } from "../../entities/socketHandlerInterfaces/community-chat-handler.interface.js";
 import { S3Controller } from "../../interfaceAdapters/controllers/s3.controller.js";
 import { IS3Controller } from "../../entities/controllerInterfaces/s3/s3-controller.interface.js";
+import { MeetingController } from "../../interfaceAdapters/controllers/meeting.controller.js";
+import { IMeetingController } from "../../entities/controllerInterfaces/meeting/meeting-controller.interface.js";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -65,6 +67,9 @@ export const feedController =
 
 export const chatController =
   container.resolve<IChatController>(ChatController);
+
+export const meetingController =
+  container.resolve<IMeetingController>(MeetingController);
 
 export const s3Controller = container.resolve<IS3Controller>(S3Controller);
 

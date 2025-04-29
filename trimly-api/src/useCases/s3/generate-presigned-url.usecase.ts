@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IGeneratePresignedUrlUseCase } from "../../entities/useCaseInterfaces/s3/generate-presigned-url-usecase.interface.js";
-import { IS3Service } from "./../../entities/servicesInterfaces/s3-service.interface.js";
+import { IS3Service } from "../../entities/serviceInterfaces/s3-service.interface.js";
 
 @injectable()
 export class GeneratePresignedUrlUseCase

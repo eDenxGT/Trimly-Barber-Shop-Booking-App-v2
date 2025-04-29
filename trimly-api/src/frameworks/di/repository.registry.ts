@@ -38,6 +38,8 @@ import { ICommunityRepository } from "../../entities/repositoryInterfaces/chat/c
 import { CommunityRepository } from "../../interfaceAdapters/repositories/chat/community/community.repository.js";
 import { ICommunityMessageRepository } from "../../entities/repositoryInterfaces/chat/community/community-message-respository.interface.js";
 import { CommunityMessageRepository } from "../../interfaceAdapters/repositories/chat/community/community-message.repository.js";
+import { IMeetingRoomRepository } from "../../entities/repositoryInterfaces/chat/meeting-room-repository.interface.js";
+import { MeetingRoomRepository } from "../../interfaceAdapters/repositories/chat/meeting-room.repository.js";
 
 export class RepositoryRegistry {
   static registerRepositories(): void {
@@ -116,5 +118,9 @@ export class RepositoryRegistry {
         useClass: CommunityMessageRepository,
       }
     );
+
+    container.register<IMeetingRoomRepository>("IMeetingRoomRepository", {
+      useClass: MeetingRoomRepository,
+    });
   }
 }

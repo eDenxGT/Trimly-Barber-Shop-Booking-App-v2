@@ -1,7 +1,7 @@
 import { adminAxiosInstance } from "@/api/admin.axios";
 import { FetchUsersParams, UsersResponse } from "@/hooks/admin/useAllUsers";
 import { FetchShopsParams } from "@/hooks/barber/useAllBarberShops";
-import { ICommunityChat } from "@/types/Chat";
+import { ICommunityChat, IMeetingRoom } from "@/types/Chat";
 import {
   IAdminResponse,
   IAllBarberShopsResponse,
@@ -207,6 +207,14 @@ export const adminGetAllCommunities = async ({
   const response = await adminAxiosInstance.get<IAllCommunitiesResponse>(
     "/admin/communities",
     { params: { search, page, limit } }
+  );
+  return response.data;
+};
+
+export const adminScheduleMeeting = async (data: Partial<IMeetingRoom>) => {
+  const response = await adminAxiosInstance.post<IAxiosResponse>(
+    "/admin/meeting",
+    data
   );
   return response.data;
 };

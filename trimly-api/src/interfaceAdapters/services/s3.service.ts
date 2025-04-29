@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { IS3Service } from "../../entities/servicesInterfaces/s3-service.interface.js";
+import { IS3Service } from "../../entities/serviceInterfaces/s3-service.interface.js";
 import { config } from "../../shared/config.js";
 import AWS from "aws-sdk";
 

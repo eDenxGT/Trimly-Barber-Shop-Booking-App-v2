@@ -10,6 +10,8 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { UserX } from "lucide-react";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
+import MuiButton from "../common/buttons/MuiButton";
+import { useNavigate } from "react-router-dom";
 
 interface CommunityDetailsModalProps {
   community: ICommunityChat | null;
@@ -23,6 +25,8 @@ export const CommunityDetailsModal = ({
   onClose,
 }: CommunityDetailsModalProps) => {
   //   const { toast } = useToast();
+
+  const navigate = useNavigate();
 
   if (!community) return null;
 
@@ -70,7 +74,15 @@ export const CommunityDetailsModal = ({
                   Status
                 </h3>
                 <p className="text-sm text-zinc-900 capitalize">
-                  {community.status}
+                  {community.status === "active" ? (
+                    <span className="bg-green-500 text-white font-medium px-2 py-1 rounded">
+                      Active
+                    </span>
+                  ) : (
+                    <span className="bg-red-500 text-white font-medium px-2 py-1 rounded">
+                      Blocked
+                    </span>
+                  )}
                 </p>
               </div>
             )}
@@ -109,9 +121,23 @@ export const CommunityDetailsModal = ({
 
           {/* Members List */}
           <div>
-            <h3 className="text-sm font-medium text-zinc-500 mb-2">
-              Members ({community.membersCount})
-            </h3>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium text-zinc-500">
+                Members ({community.membersCount})
+              </h3>
+              <MuiButton
+                variant="darkblue"
+                className="text-sm font-medium text-zinc-500 mb-2"
+                onClick={() =>
+                  navigate(
+                    `/admin/communities/${community.communityId}/schedule-meeting`
+                  )
+                }
+              >
+                Schedule Meeting
+              </MuiButton>
+            </div>
+
             <ScrollArea className="h-[240px] rounded-md border border-zinc-200">
               {!community.members?.length ? (
                 <div className="flex items-center justify-center h-full text-sm text-zinc-500">

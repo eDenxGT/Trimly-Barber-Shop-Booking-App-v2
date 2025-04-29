@@ -43,6 +43,11 @@ export const config = {
     AWS_REGION: process.env.AWS_REGION!,
   },
 
+  google: {
+    GOOGLE_SERVICE_CLIENT_EMAIL: process.env.GOOGLE_SERVICE_CLIENT_EMAIL,
+    GOOGLE_SERVICE_PRIVATE_KEY: process.env.GOOGLE_SERVICE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
+  },
+
   payment: {
     RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
     RAZORPAY_SECRET: process.env.RAZORPAY_SECRET,

@@ -15,6 +15,7 @@ import {
   blockStatusMiddleware,
   chatController,
   financeController,
+  meetingController,
   shopController,
   userController,
 } from "../di/resolver.js";
@@ -148,6 +149,18 @@ export class AdminRoutes extends BaseRoute {
       authorizeRole(["admin"]),
       (req: Request, res: Response) => {
         chatController.getAllCommunitiesForAdmin(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                     🛠️ Meeting Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router.post(
+      "/admin/meeting",
+      verifyAuth,
+      authorizeRole(["admin"]),
+      (req: Request, res: Response) => {
+        meetingController.scheduleMeet(req, res);
       }
     );
 

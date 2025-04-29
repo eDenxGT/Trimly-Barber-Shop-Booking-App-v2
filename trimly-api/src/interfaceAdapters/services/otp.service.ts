@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IBcrypt } from "../../frameworks/security/bcrypt.interface.js";
 import { IOtpRepository } from "../../entities/repositoryInterfaces/auth/otp-repository.interface.js";
-import { IOtpService } from "../../entities/servicesInterfaces/otp-service.interface.js";
+import { IOtpService } from "../../entities/serviceInterfaces/otp-service.interface.js";
 import { config } from "../../shared/config.js";
 
 @injectable()

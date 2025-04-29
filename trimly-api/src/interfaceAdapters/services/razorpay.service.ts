@@ -2,7 +2,7 @@ import Razorpay from "razorpay";
 import { injectable } from "tsyringe";
 import { config } from "../../shared/config.js";
 import crypto from "crypto";
-import { IRazorpayService } from "../../entities/servicesInterfaces/razorpay-service.interface.js";
+import { IRazorpayService } from "../../entities/serviceInterfaces/razorpay-service.interface.js";
 
 @injectable()
 export class RazorpayService implements IRazorpayService {

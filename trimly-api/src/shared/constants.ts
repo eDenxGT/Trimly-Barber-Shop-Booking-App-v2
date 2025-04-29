@@ -50,6 +50,7 @@ export const SUCCESS_MESSAGES = {
   REVIEW_ADDED: "Review added successfully",
   JOIN_SUCCESS: "Joined Successfully",
   COMMENT_ADDED: "Comment added successfully",
+  MEETING_CREATED: "Meeting created successfully",
   UPDATE_SUCCESS: "Updated Successfully",
   DELETE_SUCCESS: "Deleted Successfully",
   OPERATION_SUCCESS: "Action completed",
@@ -146,6 +147,7 @@ export const ERROR_MESSAGES = {
   UNSUPPORTED_FILE_TYPE: "Unsupported file type",
   FILE_SIZE_EXCEEDED: "File size is too large",
   RATE_LIMIT_EXCEEDED: "Too many requests try again later",
+  MEETING_ALREADY_EXISTS: "A meeting is already scheduled for this community",
 } as const;
 
 export const DIRECT_CHAT_EVENTS = {
