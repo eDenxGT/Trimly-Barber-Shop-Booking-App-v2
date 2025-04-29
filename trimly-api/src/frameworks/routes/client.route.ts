@@ -18,6 +18,7 @@ import {
   feedController,
   financeController,
   reviewController,
+  s3Controller,
   shopController,
   userController,
 } from "../di/resolver.js";
@@ -161,6 +162,19 @@ export class ClientRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         financeController.withdrawFromWallet(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                   🛠️ S3 Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router.get(
+      "/client/s3/generate-presigned-url",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        s3Controller.generatePresignedUrl(req, res);
       }
     );
 

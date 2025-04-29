@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, ImageIcon, Smile, Mic, X } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
 import {
   Tooltip,
   TooltipContent,
@@ -10,6 +11,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import { useOutletContext } from "react-router-dom";
+import { uploadToS3 } from "@/services/s3/uploadToS3";
+import { getPresignedUrl } from "@/services/s3/getPresignedUrl";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 interface MessageInputProps {
   onSendMessage: (content: string, imageUrl?: string) => void;
@@ -19,10 +24,14 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
   const [message, setMessage] = useState("");
   const [imageUrl, setImageUrl] = useState<string | undefined>();
   const [imagePreview, setImagePreview] = useState<string | undefined>();
+  const [fileToUpload, setFileToUpload] = useState<File | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const emojiButtonRef = useRef<HTMLButtonElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const role = useOutletContext<{ role: "barber" | "client" }>().role;
+
+  const { errorToast } = useToaster();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,14 +52,14 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
     };
   }, [isEmojiPickerOpen]);
 
-  const handleSend = () => {
-    if (message.trim() || imageUrl) {
-      onSendMessage(message.trim(), imageUrl);
-      setMessage("");
-      setImageUrl(undefined);
-      setImagePreview(undefined);
-    }
-  };
+  // const handleSend = () => {
+  //   if (message.trim() || imageUrl) {
+  //     onSendMessage(message.trim(), imageUrl);
+  //     setMessage("");
+  //     setImageUrl(undefined);
+  //     setImagePreview(undefined);
+  //   }
+  // };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -63,13 +72,40 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
     fileInputRef.current?.click();
   };
 
+  const handleSend = async () => {
+    let finalImageUrl: string | undefined = undefined;
+
+    if (fileToUpload) {
+      try {
+        const path = `chat-images/${uuidv4()}-${fileToUpload.name}`;
+
+        const presignedUrl = await getPresignedUrl(path, role, "putObject");
+        await uploadToS3(presignedUrl, fileToUpload);
+        // finalImageUrl = presignedUrl.split("?")[0];
+        finalImageUrl = path;
+
+        setImagePreview(undefined);
+        setFileToUpload(null);
+      } catch (err) {
+        console.error("Image upload failed:", err);
+        errorToast("Failed to upload image");
+        return;
+      }
+    }
+
+    if (message.trim() || finalImageUrl) {
+      onSendMessage(message.trim(), finalImageUrl);
+      setMessage("");
+      setImageUrl(undefined);
+    }
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const objectUrl = URL.createObjectURL(file);
-      setImageUrl(objectUrl);
       setImagePreview(objectUrl);
-
+      setFileToUpload(file);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -84,6 +120,7 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
     if (imageUrl) {
       URL.revokeObjectURL(imageUrl);
     }
+    setFileToUpload(null);
     setImageUrl(undefined);
     setImagePreview(undefined);
   };

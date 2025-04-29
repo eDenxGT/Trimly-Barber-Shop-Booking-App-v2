@@ -1,7 +1,7 @@
 import { JwtPayload } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 import { IBlackListTokenUseCase } from "../../entities/useCaseInterfaces/auth/blacklist-token-usecase.interface.js";
-import { ITokenService } from "../../entities/useCaseInterfaces/services/token-service.interface.js";
+import { ITokenService } from "../../entities/servicesInterfaces/token-service.interface.js";
 import { IRedisTokenRepository } from "../../entities/repositoryInterfaces/redis/redis-token-repository.interface.js";
 
 @injectable()

@@ -3,10 +3,10 @@ import { IResetPasswordUseCase } from "../../entities/useCaseInterfaces/auth/res
 import { IClientRepository } from "../../entities/repositoryInterfaces/users/client-repository.interface.js";
 import { IBarberRepository } from "../../entities/repositoryInterfaces/users/barber-repository.interface.js";
 import { IAdminRepository } from "../../entities/repositoryInterfaces/users/admin-repository.interface.js";
-import { ITokenService } from "../../entities/useCaseInterfaces/services/token-service.interface.js";
+import { ITokenService } from "../../entities/servicesInterfaces/token-service.interface.js";
 import { IRedisTokenRepository } from "../../entities/repositoryInterfaces/redis/redis-token-repository.interface.js";
 import { IBcrypt } from "../../frameworks/security/bcrypt.interface.js";
-import { ResetTokenPayload } from "../services/jwt.service.js";
+import { ResetTokenPayload } from "../../interfaceAdapters/services/jwt.service.js";
 import { CustomError } from "../../entities/utils/custom.error.js";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
 

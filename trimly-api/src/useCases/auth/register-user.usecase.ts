@@ -10,7 +10,7 @@ import { IClientRepository } from "../../entities/repositoryInterfaces/users/cli
 import { IAdminRepository } from "../../entities/repositoryInterfaces/users/admin-repository.interface.js";
 import { IClientEntity } from "../../entities/models/client.entity.js";
 import { IBarberEntity } from "../../entities/models/barber.entity.js";
-import { IUserExistenceService } from "../../entities/useCaseInterfaces/services/user-existence-service.interface.js";
+import { IUserExistenceService } from "../../entities/servicesInterfaces/user-existence-service.interface.js";
 import { generateUniqueId } from "../../shared/utils/unique-uuid.helper.js";
 import { ICreateWalletUseCase } from "../../entities/useCaseInterfaces/finance/wallet/create-wallet-usecase.interface.js";
 

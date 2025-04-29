@@ -3,6 +3,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IDirectMessage, ICommunityMessage } from "@/types/Chat";
 import { useOutletContext } from "react-router-dom";
 import { IBarber, IClient } from "@/types/User";
+import { getPresignedUrl } from "@/services/s3/getPresignedUrl";
+import { useState, useEffect } from "react";
+import { getSmartDate } from "@/utils/helpers/timeFormatter";
 
 interface MessageBubbleProps {
   message: IDirectMessage | ICommunityMessage;
@@ -17,20 +20,18 @@ export function MessageBubble({
 }: MessageBubbleProps) {
   const user = useOutletContext<IBarber | IClient>();
   const isSent = message.senderId === user?.userId;
+  const [mediaUrl, setMediaUrl] = useState<string | null>(null);
 
-  const formatTime = (date: Date) => {
-    const messageDate = new Date(date);
-    const now = new Date();
-    const diffMinutes = Math.floor(
-      (now.getTime() - messageDate.getTime()) / (1000 * 60)
-    );
+  useEffect(() => {
+    const fetchMediaUrl = async () => {
+      if (message?.mediaUrl) {
+        const url = await getMediaUrl(message.mediaUrl);
+        setMediaUrl(url);
+      }
+    };
 
-    if (diffMinutes < 15) {
-      return formatDistanceToNow(messageDate, { addSuffix: true });
-    } else {
-      return format(messageDate, "h:mm a");
-    }
-  };
+    fetchMediaUrl();
+  }, [message?.mediaUrl]);
 
   const senderName =
     chatType === "community"
@@ -46,6 +47,17 @@ export function MessageBubble({
   const avatarFallback = isSent
     ? "U"
     : senderName?.substring(0, 2).toUpperCase();
+
+  const getMediaUrl = async (mediaKey: string) => {
+    if (!mediaKey) return null;
+
+    const presignedUrl = await getPresignedUrl(
+      mediaKey,
+      user?.role as "barber" | "client",
+      "getObject"
+    );
+    return presignedUrl;
+  };
 
   return (
     <div
@@ -75,7 +87,7 @@ export function MessageBubble({
           {message.messageType === "image" ? (
             <div className="space-y-2">
               <img
-                src={message.mediaUrl || "/placeholder.svg"}
+                src={mediaUrl || "/placeholder.svg"}
                 alt="Message attachment"
                 className="rounded-md max-h-60 w-full object-contain"
               />
@@ -86,7 +98,7 @@ export function MessageBubble({
           )}
         </div>
         <span className="text-[10px] text-muted-foreground mt-1">
-          {formatTime(message.timestamp)}
+          {getSmartDate(message.timestamp?.toString())}
         </span>
       </div>
     </div>

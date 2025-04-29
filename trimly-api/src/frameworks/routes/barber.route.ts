@@ -19,6 +19,7 @@ import {
   chatController,
   feedController,
   financeController,
+  s3Controller,
   serviceController,
   userController,
 } from "../di/resolver.js";
@@ -157,6 +158,19 @@ export class BarberRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         feedController.toggleCommentLike(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                   🛠️ S3 Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router.get(
+      "/barber/s3/generate-presigned-url",
+      verifyAuth,
+      authorizeRole(["barber"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        s3Controller.generatePresignedUrl(req, res);
       }
     );
 

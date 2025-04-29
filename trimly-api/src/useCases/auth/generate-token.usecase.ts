@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IGenerateTokenUseCase } from "../../entities/useCaseInterfaces/auth/generate-token-usecase.interface.js";
-import { ITokenService } from "../../entities/useCaseInterfaces/services/token-service.interface.js";
+import { ITokenService } from "../../entities/servicesInterfaces/token-service.interface.js";
 import { IRefreshTokenRepository } from "../../entities/repositoryInterfaces/auth/refresh-token-repository.interface.js";
 import { TRole } from "../../shared/constants.js";
 

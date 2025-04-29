@@ -6,15 +6,15 @@ import { IBcrypt } from "../security/bcrypt.interface.js";
 import { PasswordBcrypt } from "../security/password.bcrypt.js";
 
 //* ====== Service Imports ====== *//
-import { IUserExistenceService } from "../../entities/useCaseInterfaces/services/user-existence-service.interface.js";
-import { UserExistenceService } from "../../useCases/services/user-existence.service.js";
-import { IOtpService } from "../../entities/useCaseInterfaces/services/otp-service.interface.js";
-import { OtpService } from "../../useCases/services/otp.service.js";
+import { IUserExistenceService } from "../../entities/servicesInterfaces/user-existence-service.interface.js";
+import { UserExistenceService } from "../../interfaceAdapters/services/user-existence.service.js";
+import { IOtpService } from "../../entities/servicesInterfaces/otp-service.interface.js";
+import { OtpService } from "../../interfaceAdapters/services/otp.service.js";
 import { OtpBcrypt } from "../security/otp.bcrypt.js";
-import { IEmailService } from "../../entities/useCaseInterfaces/services/email-service.interface.js";
-import { EmailService } from "../../useCases/services/email.service.js";
-import { ITokenService } from "../../entities/useCaseInterfaces/services/token-service.interface.js";
-import { JWTService } from "../../useCases/services/jwt.service.js";
+import { IEmailService } from "../../entities/servicesInterfaces/email-service.interface.js";
+import { EmailService } from "../../interfaceAdapters/services/email.service.js";
+import { ITokenService } from "../../entities/servicesInterfaces/token-service.interface.js";
+import { JWTService } from "../../interfaceAdapters/services/jwt.service.js";
 
 //* ====== UseCase Imports ====== *//
 import { IRegisterUserUseCase } from "../../entities/useCaseInterfaces/auth/register-usecase.interface.js";
@@ -89,8 +89,8 @@ import { IGetWithdrawalByUserUseCase } from "../../entities/useCaseInterfaces/fi
 import { GetWithdrawalByUserUseCase } from "../../useCases/finance/withdrawal/get-withdrawal-by-user-usecase.js";
 import { TopUpWalletUseCase } from "../../useCases/finance/wallet/topup-wallet.usecase.js";
 import { ITopUpWalletUseCase } from "../../entities/useCaseInterfaces/finance/wallet/topup-wallet-usecase.interface.js";
-import { IRazorpayService } from "../../entities/useCaseInterfaces/services/razorpay-service.interface.js";
-import { RazorpayService } from "../../useCases/services/razorpay.service.js";
+import { IRazorpayService } from "../../entities/servicesInterfaces/razorpay-service.interface.js";
+import { RazorpayService } from "../../interfaceAdapters/services/razorpay.service.js";
 import { IVerifyTopUpPaymentUseCase } from "../../entities/useCaseInterfaces/finance/wallet/verify-topup-payment-usecase.interface.js";
 import { VerifyTopUpPaymentUseCase } from "../../useCases/finance/wallet/verify-topup-payment.usecase.js";
 import { IUpdateWalletBalanceUseCase } from "../../entities/useCaseInterfaces/finance/wallet/update-wallet-balance-usecase.interface.js";
@@ -173,6 +173,10 @@ import { IGetCommunityByCommunityIdUseCase } from "../../entities/useCaseInterfa
 import { GetCommunityByCommunityIdUseCase } from "../../useCases/chat/community/get-community-by-communityid.usecase.js";
 import { IReadDirectMessageUseCase } from "../../entities/useCaseInterfaces/chat/direct-chat/read-direct-message-usecase.interface.js";
 import { ReadDirectMessageUseCase } from "../../useCases/chat/direct-chat/read-direct-message.usecase.js";
+import { IGeneratePresignedUrlUseCase } from "../../entities/useCaseInterfaces/s3/generate-presigned-url-usecase.interface.js";
+import { GeneratePresignedUrlUseCase } from "../../useCases/s3/generate-presigned-url.usecase.js";
+import { S3Service } from "../../interfaceAdapters/services/s3.service.js";
+import { IS3Service } from "../../entities/servicesInterfaces/s3-service.interface.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -564,6 +568,13 @@ export class UseCaseRegistry {
       useClass: ReadDirectMessageUseCase,
     });
 
+    container.register<IGeneratePresignedUrlUseCase>(
+      "IGeneratePresignedUrlUseCase",
+      {
+        useClass: GeneratePresignedUrlUseCase,
+      }
+    );
+
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {
       useClass: PasswordBcrypt,
@@ -592,6 +603,10 @@ export class UseCaseRegistry {
 
     container.register<IRazorpayService>("IRazorpayService", {
       useClass: RazorpayService,
+    });
+
+    container.register<IS3Service>("IS3Service", {
+      useClass: S3Service,
     });
   }
 }

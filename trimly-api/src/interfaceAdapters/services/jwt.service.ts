@@ -1,7 +1,7 @@
 import { injectable } from "tsyringe";
 import ms from "ms";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
-import { ITokenService } from "../../entities/useCaseInterfaces/services/token-service.interface.js";
+import { ITokenService } from "../../entities/servicesInterfaces/token-service.interface.js";
 import { config } from "../../shared/config.js";
 
 interface JWTPayloadData {

@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
 import { ISendOtpEmailUseCase } from "../../entities/useCaseInterfaces/auth/sent-otp-usecase.interface.js";
-import { IEmailService } from "../../entities/useCaseInterfaces/services/email-service.interface.js";
-import { IOtpService } from "../../entities/useCaseInterfaces/services/otp-service.interface.js";
-import { IUserExistenceService } from "../../entities/useCaseInterfaces/services/user-existence-service.interface.js";
+import { IEmailService } from "../../entities/servicesInterfaces/email-service.interface.js";
+import { IOtpService } from "../../entities/servicesInterfaces/otp-service.interface.js";
+import { IUserExistenceService } from "../../entities/servicesInterfaces/user-existence-service.interface.js";
 import { IBcrypt } from "../../frameworks/security/bcrypt.interface.js";
 import { CustomError } from "../../entities/utils/custom.error.js";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
