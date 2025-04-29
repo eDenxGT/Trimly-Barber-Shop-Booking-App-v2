@@ -97,6 +97,7 @@ export const ERROR_MESSAGES = {
   EMAIL_EXISTS: "Email already registered",
   USERNAME_EXISTS: "Username already taken",
   WALLET_NOT_FOUND: "Wallet not found",
+  MEETING_NOT_FOUND: "Meeting not found",
   WALLET_UPDATE_FAILED: "Failed to update wallet.",
   REQUEST_NOT_FOUND: "Request not found",
   SERVICE_EXISTS: "Service already exists",

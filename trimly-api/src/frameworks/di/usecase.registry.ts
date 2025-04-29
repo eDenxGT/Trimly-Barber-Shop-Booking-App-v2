@@ -181,444 +181,489 @@ import { IGeneratePresignedUrlUseCase } from "../../entities/useCaseInterfaces/s
 import { GeneratePresignedUrlUseCase } from "../../useCases/s3/generate-presigned-url.usecase.js";
 import { IScheduleMeetingUseCase } from "../../entities/useCaseInterfaces/chat/meeting/schedule-meeting-usecase.interface.js";
 import { ScheduleMeetingUseCase } from "../../useCases/chat/meeting/schedule-meeting.usecase.js";
+import { IGetMeetingByCommunityIdUseCase } from "../../entities/useCaseInterfaces/chat/meeting/get-meeting-by-communityid-usecase.interface.js";
+import { GetMeetingByCommunityIdUseCase } from "../../useCases/chat/meeting/get-meeting-by-communityid.usecase.js";
 
 export class UseCaseRegistry {
-  static registerUseCases(): void {
-    //* ====== Register UseCases ====== *//
-    container.register<IRegisterUserUseCase>("IRegisterUserUseCase", {
-      useClass: RegisterUserUseCase,
-    });
-
-    container.register<ISendOtpEmailUseCase>("ISendOtpEmailUseCase", {
-      useClass: SendOtpEmailUseCase,
-    });
-
-    container.register<IVerifyOtpUseCase>("IVerifyOtpUseCase", {
-      useClass: VerifyOtpUseCase,
-    });
-
-    container.register<ILoginUserUseCase>("ILoginUserUseCase", {
-      useClass: LoginUserUseCase,
-    });
-
-    container.register<IRefreshTokenUseCase>("IRefreshTokenUseCase", {
-      useClass: RefreshTokenUseCase,
-    });
-
-    container.register<IGenerateTokenUseCase>("IGenerateTokenUseCase", {
-      useClass: GenerateTokenUseCase,
-    });
-
-    container.register<IRevokeRefreshTokenUseCase>(
-      "IRevokeRefreshTokenUseCase",
-      {
-        useClass: RevokeRefreshTokenUseCase,
-      }
-    );
-
-    container.register<IBlackListTokenUseCase>("IBlackListTokenUseCase", {
-      useClass: BlackListTokenUseCase,
-    });
-
-    container.register<IForgotPasswordUseCase>("IForgotPasswordUseCase", {
-      useClass: ForgotPasswordUseCase,
-    });
-
-    container.register<IResetPasswordUseCase>("IResetPasswordUseCase", {
-      useClass: ResetPasswordUseCase,
-    });
-
-    container.register<IGoogleUseCase>("IGoogleUseCase", {
-      useClass: GoogleUseCase,
-    });
-
-    container.register<ISendEmailUseCase>("ISendEmailUseCase", {
-      useClass: SendEmailUseCase,
-    });
-
-    container.register<IUpdateUserDetailsUseCase>("IUpdateUserDetailsUseCase", {
-      useClass: UpdateUserDetailsUseCase,
-    });
-
-    container.register<IChangeUserPasswordUseCase>(
-      "IChangeUserPasswordUseCase",
-      {
-        useClass: ChangeUserPasswordUseCase,
-      }
-    );
-
-    container.register<IAddServiceUseCase>("IAddServiceUseCase", {
-      useClass: AddServiceUseCase,
-    });
-
-    container.register<IGetAllServicesUseCase>("IGetAllServicesUseCase", {
-      useClass: GetAllServicesUseCase,
-    });
-
-    container.register<IUpdateServiceUseCase>("IUpdateServiceUseCase", {
-      useClass: UpdateServiceUseCase,
-    });
-
-    container.register<IDeleteServiceUseCase>("IDeleteServiceUseCase", {
-      useClass: DeleteServiceUseCase,
-    });
-
-    container.register<IGetAllShopsUseCase>("IGetAllShopsUseCase", {
-      useClass: GetAllShopsUseCase,
-    });
-
-    container.register<IUpdateShopStatusUseCase>("IUpdateShopStatusUseCase", {
-      useClass: UpdateShopStatusUseCase,
-    });
-
-    container.register<IGetAllUsersUseCase>("IGetAllUsersUseCase", {
-      useClass: GetAllUsersUseCase,
-    });
-
-    container.register<IUpdateUserStatusUseCase>("IUpdateUserStatusUseCase", {
-      useClass: UpdateUserStatusUseCase,
-    });
-
-    container.register<IGetUserDetailsUseCase>("IGetUserDetailsUseCase", {
-      useClass: GetUserDetailsUseCase,
-    });
-
-    container.register<IGetAllNearestShopsUseCase>(
-      "IGetAllNearestShopsUseCase",
-      {
-        useClass: GetAllNearestShopsUseCase,
-      }
-    );
-
-    container.register<IGetShopDetailsByShopIdUseCase>(
-      "IGetShopDetailsByShopIdUseCase",
-      {
-        useClass: GetShopDetailsByShopIdUseCase,
-      }
-    );
-
-    container.register<IGetAllBookingsByShopIdUseCase>(
-      "IGetAllBookingsByShopIdUseCase",
-      {
-        useClass: GetAllBookingsByShopIdUseCase,
-      }
-    );
-
-    container.register<ICreateBookingUseCase>("ICreateBookingUseCase", {
-      useClass: CreateBookingUseCase,
-    });
-
-    container.register<IVerifyPaymentUseCase>("IVerifyPaymentUseCase", {
-      useClass: VerifyPaymentUseCase,
-    });
-
-    container.register<IHandleFailurePaymentUseCase>(
-      "IHandleFailurePaymentUseCase",
-      {
-        useClass: HandleFailurePaymentUseCase,
-      }
-    );
-
-    container.register<IGetAllBookingsByUserUseCase>(
-      "IGetAllBookingsByUserUseCase",
-      { useClass: GetAllBookingsByUserUseCase }
-    );
-
-    container.register<ICancelBookingUseCase>("ICancelBookingUseCase", {
-      useClass: CancelBookingUseCase,
-    });
-
-    container.register<ICompleteBookingUseCase>("ICompleteBookingUseCase", {
-      useClass: CompleteBookingUseCase,
-    });
-
-    container.register<IGetWalletOverviewUseCase>("IGetWalletOverviewUseCase", {
-      useClass: GetWalletOverviewUseCase,
-    });
-
-    container.register<IGetWalletByUserUseCase>("IGetWalletByUserUseCase", {
-      useClass: GetWalletByUserUseCase,
-    });
-
-    container.register<IGetTransactionByUserUseCase>(
-      "IGetTransactionByUserUseCase",
-      {
-        useClass: GetTransactionByUserUseCase,
-      }
-    );
-
-    container.register<IGetWithdrawalByUserUseCase>(
-      "IGetWithdrawalByUserUseCase",
-      {
-        useClass: GetWithdrawalByUserUseCase,
-      }
-    );
-
-    container.register<ITopUpWalletUseCase>("ITopUpWalletUseCase", {
-      useClass: TopUpWalletUseCase,
-    });
-
-    container.register<IVerifyTopUpPaymentUseCase>(
-      "IVerifyTopUpPaymentUseCase",
-      {
-        useClass: VerifyTopUpPaymentUseCase,
-      }
-    );
-
-    container.register<IUpdateWalletBalanceUseCase>(
-      "IUpdateWalletBalanceUseCase",
-      {
-        useClass: UpdateWalletBalanceUseCase,
-      }
-    );
-
-    container.register<IWithdrawFromWalletUseCase>(
-      "IWithdrawFromWalletUseCase",
-      {
-        useClass: WithdrawFromWalletUseCase,
-      }
-    );
-
-    container.register<IHandleTopUpPaymentFailureUseCase>(
-      "IHandleTopUpPaymentFailureUseCase",
-      {
-        useClass: HandleTopUpPaymentFailureUseCase,
-      }
-    );
-
-    container.register<IAddShopReviewUseCase>("IAddShopReviewUseCase", {
-      useClass: AddShopReviewUseCase,
-    });
-
-    container.register<IAddPostUseCase>("IAddPostUseCase", {
-      useClass: AddPostUseCase,
-    });
-
-    container.register<IGetAllPostsByBarberUseCase>(
-      "IGetAllPostsByBarberUseCase",
-      {
-        useClass: GetAllPostsByBarberUseCase,
-      }
-    );
-
-    container.register<IGetSinglePostByPostIdUseCase>(
-      "IGetSinglePostByPostIdUseCase",
-      {
-        useClass: GetSinglePostByPostIdUseCase,
-      }
-    );
-
-    container.register<IUpdatePostUseCase>("IUpdatePostUseCase", {
-      useClass: UpdatePostUseCase,
-    });
-
-    container.register<IDeletePostUseCase>("IDeletePostUseCase", {
-      useClass: DeletePostUseCase,
-    });
-
-    container.register<IUpdatePostStatusUseCase>("IUpdatePostStatusUseCase", {
-      useClass: UpdatePostStatusUseCase,
-    });
-
-    container.register<IToggleLikePostUseCase>("IToggleLikePostUseCase", {
-      useClass: ToggleLikePostUseCase,
-    });
-
-    container.register<IAddCommentUseCase>("IAddCommentUseCase", {
-      useClass: AddCommentUseCase,
-    });
-
-    container.register<IToggleCommentLikeUseCase>("IToggleCommentLikeUseCase", {
-      useClass: ToggleCommentLikeUseCase,
-    });
-
-    container.register<IGetAllPostsForClientUseCase>(
-      "IGetAllPostsForClientUseCase",
-      {
-        useClass: GetAllPostsForClientUseCase,
-      }
-    );
-
-    container.register<ICreateWalletUseCase>("ICreateWalletUseCase", {
-      useClass: CreateWalletUseCase,
-    });
-
-    container.register<IIncrementWalletBalanceUseCase>(
-      "IIncrementWalletBalanceUseCase",
-      {
-        useClass: IncrementWalletBalanceUseCase,
-      }
-    );
-
-    container.register<IDecrementWalletBalanceUseCase>(
-      "IDecrementWalletBalanceUseCase",
-      {
-        useClass: DecrementWalletBalanceUseCase,
-      }
-    );
-
-    container.register<IGetAllUserWithdrawalsUseCase>(
-      "IGetAllUserWithdrawalsUseCase",
-      {
-        useClass: GetAllUserWithdrawalsUseCase,
-      }
-    );
-
-    container.register<IApproveWithdrawalUseCase>("IApproveWithdrawalUseCase", {
-      useClass: ApproveWithdrawalUseCase,
-    });
-
-    container.register<IRejectWithdrawalUseCase>("IRejectWithdrawalUseCase", {
-      useClass: RejectWithdrawalUseCase,
-    });
-
-    container.register<IBookWithWalletUseCase>("IBookWithWalletUseCase", {
-      useClass: BookWithWalletUseCase,
-    });
-
-    container.register<IGetChatByUserUseCase>("IGetChatByUserUseCase", {
-      useClass: GetChatByUserUseCase,
-    });
-
-    container.register<ICreateChatRoomUseCase>("ICreateChatRoomUseCase", {
-      useClass: CreateChatRoomUseCase,
-    });
-
-    container.register<IGetAllChatsByUserUseCase>("IGetAllChatsByUserUseCase", {
-      useClass: GetAllChatsByUserUseCase,
-    });
-
-    container.register<IGetChatByChatIdUseCase>("IGetChatByChatIdUseCase", {
-      useClass: GetChatByChatIdUseCase,
-    });
-
-    container.register<ISendDirectMessageUseCase>("ISendDirectMessageUseCase", {
-      useClass: SendDirectMessageUseCase,
-    });
-
-    container.register<ICreateCommunityUseCase>("ICreateCommunityUseCase", {
-      useClass: CreateCommunityUseCase,
-    });
-
-    container.register<IGetAllCommunitiesForAdminUseCase>(
-      "IGetAllCommunitiesForAdminUseCase",
-      {
-        useClass: GetAllCommunitiesForAdminUseCase,
-      }
-    );
-
-    container.register<IGetCommunityForEditUseCase>(
-      "IGetCommunityForEditUseCase",
-      {
-        useClass: GetCommunityForEditUseCase,
-      }
-    );
-
-    container.register<IEditCommunityUseCase>("IEditCommunityUseCase", {
-      useClass: EditCommunityUseCase,
-    });
-
-    container.register<IUpdateCommunityStatusUseCase>(
-      "IUpdateCommunityStatusUseCase",
-      {
-        useClass: UpdateCommunityStatusUseCase,
-      }
-    );
-
-    container.register<IDeleteCommunityUseCase>("IDeleteCommunityUseCase", {
-      useClass: DeleteCommunityUseCase,
-    });
-
-    container.register<IGetAllCommunitiesForBarberUseCase>(
-      "IGetAllCommunitiesForBarberUseCase",
-      {
-        useClass: GetAllCommunitiesForBarberUseCase,
-      }
-    );
-
-    container.register<IBarberJoinCommunityUseCase>(
-      "IBarberJoinCommunityUseCase",
-      {
-        useClass: BarberJoinCommunityUseCase,
-      }
-    );
-
-    container.register<IGetAllCommunityChatsByUserUseCase>(
-      "IGetAllCommunityChatsByUserUseCase",
-      {
-        useClass: GetAllCommunityChatsByUserUseCase,
-      }
-    );
-
-    container.register<IGetCommunityChatUseCase>("IGetCommunityChatUseCase", {
-      useClass: GetCommunityChatUseCase,
-    });
-
-    container.register<ISendCommunityMessageUseCase>(
-      "ISendCommunityMessageUseCase",
-      {
-        useClass: SendCommunityMessageUseCase,
-      }
-    );
-
-    container.register<IGetCommunityByCommunityIdUseCase>(
-      "IGetCommunityByCommunityIdUseCase",
-      {
-        useClass: GetCommunityByCommunityIdUseCase,
-      }
-    );
-
-    container.register<IReadDirectMessageUseCase>("IReadDirectMessageUseCase", {
-      useClass: ReadDirectMessageUseCase,
-    });
-
-    container.register<IGeneratePresignedUrlUseCase>(
-      "IGeneratePresignedUrlUseCase",
-      {
-        useClass: GeneratePresignedUrlUseCase,
-      }
-    );
-
-    container.register<IScheduleMeetingUseCase>("IScheduleMeetingUseCase", {
-      useClass: ScheduleMeetingUseCase,
-    });
-
-    //* ====== Register Bcrypts ====== *//
-    container.register<IBcrypt>("IPasswordBcrypt", {
-      useClass: PasswordBcrypt,
-    });
-
-    container.register<IBcrypt>("IOtpBcrypt", {
-      useClass: OtpBcrypt,
-    });
-
-    //* ====== Register Services ====== *//
-    container.register<IUserExistenceService>("IUserExistenceService", {
-      useClass: UserExistenceService,
-    });
-
-    container.register<IOtpService>("IOtpService", {
-      useClass: OtpService,
-    });
-
-    container.register<IEmailService>("IEmailService", {
-      useClass: EmailService,
-    });
-
-    container.register<ITokenService>("ITokenService", {
-      useClass: JWTService,
-    });
-
-    container.register<IRazorpayService>("IRazorpayService", {
-      useClass: RazorpayService,
-    });
-
-    container.register<IS3Service>("IS3Service", {
-      useClass: S3Service,
-    });
-
-    container.register<IGoogleCalendarService>("IGoogleCalendarService", {
-      useClass: GoogleCalendarService,
-    });
-  }
+	static registerUseCases(): void {
+		//* ====== Register UseCases ====== *//
+		container.register<IRegisterUserUseCase>("IRegisterUserUseCase", {
+			useClass: RegisterUserUseCase,
+		});
+
+		container.register<ISendOtpEmailUseCase>("ISendOtpEmailUseCase", {
+			useClass: SendOtpEmailUseCase,
+		});
+
+		container.register<IVerifyOtpUseCase>("IVerifyOtpUseCase", {
+			useClass: VerifyOtpUseCase,
+		});
+
+		container.register<ILoginUserUseCase>("ILoginUserUseCase", {
+			useClass: LoginUserUseCase,
+		});
+
+		container.register<IRefreshTokenUseCase>("IRefreshTokenUseCase", {
+			useClass: RefreshTokenUseCase,
+		});
+
+		container.register<IGenerateTokenUseCase>("IGenerateTokenUseCase", {
+			useClass: GenerateTokenUseCase,
+		});
+
+		container.register<IRevokeRefreshTokenUseCase>(
+			"IRevokeRefreshTokenUseCase",
+			{
+				useClass: RevokeRefreshTokenUseCase,
+			}
+		);
+
+		container.register<IBlackListTokenUseCase>("IBlackListTokenUseCase", {
+			useClass: BlackListTokenUseCase,
+		});
+
+		container.register<IForgotPasswordUseCase>("IForgotPasswordUseCase", {
+			useClass: ForgotPasswordUseCase,
+		});
+
+		container.register<IResetPasswordUseCase>("IResetPasswordUseCase", {
+			useClass: ResetPasswordUseCase,
+		});
+
+		container.register<IGoogleUseCase>("IGoogleUseCase", {
+			useClass: GoogleUseCase,
+		});
+
+		container.register<ISendEmailUseCase>("ISendEmailUseCase", {
+			useClass: SendEmailUseCase,
+		});
+
+		container.register<IUpdateUserDetailsUseCase>(
+			"IUpdateUserDetailsUseCase",
+			{
+				useClass: UpdateUserDetailsUseCase,
+			}
+		);
+
+		container.register<IChangeUserPasswordUseCase>(
+			"IChangeUserPasswordUseCase",
+			{
+				useClass: ChangeUserPasswordUseCase,
+			}
+		);
+
+		container.register<IAddServiceUseCase>("IAddServiceUseCase", {
+			useClass: AddServiceUseCase,
+		});
+
+		container.register<IGetAllServicesUseCase>("IGetAllServicesUseCase", {
+			useClass: GetAllServicesUseCase,
+		});
+
+		container.register<IUpdateServiceUseCase>("IUpdateServiceUseCase", {
+			useClass: UpdateServiceUseCase,
+		});
+
+		container.register<IDeleteServiceUseCase>("IDeleteServiceUseCase", {
+			useClass: DeleteServiceUseCase,
+		});
+
+		container.register<IGetAllShopsUseCase>("IGetAllShopsUseCase", {
+			useClass: GetAllShopsUseCase,
+		});
+
+		container.register<IUpdateShopStatusUseCase>(
+			"IUpdateShopStatusUseCase",
+			{
+				useClass: UpdateShopStatusUseCase,
+			}
+		);
+
+		container.register<IGetAllUsersUseCase>("IGetAllUsersUseCase", {
+			useClass: GetAllUsersUseCase,
+		});
+
+		container.register<IUpdateUserStatusUseCase>(
+			"IUpdateUserStatusUseCase",
+			{
+				useClass: UpdateUserStatusUseCase,
+			}
+		);
+
+		container.register<IGetUserDetailsUseCase>("IGetUserDetailsUseCase", {
+			useClass: GetUserDetailsUseCase,
+		});
+
+		container.register<IGetAllNearestShopsUseCase>(
+			"IGetAllNearestShopsUseCase",
+			{
+				useClass: GetAllNearestShopsUseCase,
+			}
+		);
+
+		container.register<IGetShopDetailsByShopIdUseCase>(
+			"IGetShopDetailsByShopIdUseCase",
+			{
+				useClass: GetShopDetailsByShopIdUseCase,
+			}
+		);
+
+		container.register<IGetAllBookingsByShopIdUseCase>(
+			"IGetAllBookingsByShopIdUseCase",
+			{
+				useClass: GetAllBookingsByShopIdUseCase,
+			}
+		);
+
+		container.register<ICreateBookingUseCase>("ICreateBookingUseCase", {
+			useClass: CreateBookingUseCase,
+		});
+
+		container.register<IVerifyPaymentUseCase>("IVerifyPaymentUseCase", {
+			useClass: VerifyPaymentUseCase,
+		});
+
+		container.register<IHandleFailurePaymentUseCase>(
+			"IHandleFailurePaymentUseCase",
+			{
+				useClass: HandleFailurePaymentUseCase,
+			}
+		);
+
+		container.register<IGetAllBookingsByUserUseCase>(
+			"IGetAllBookingsByUserUseCase",
+			{ useClass: GetAllBookingsByUserUseCase }
+		);
+
+		container.register<ICancelBookingUseCase>("ICancelBookingUseCase", {
+			useClass: CancelBookingUseCase,
+		});
+
+		container.register<ICompleteBookingUseCase>("ICompleteBookingUseCase", {
+			useClass: CompleteBookingUseCase,
+		});
+
+		container.register<IGetWalletOverviewUseCase>(
+			"IGetWalletOverviewUseCase",
+			{
+				useClass: GetWalletOverviewUseCase,
+			}
+		);
+
+		container.register<IGetWalletByUserUseCase>("IGetWalletByUserUseCase", {
+			useClass: GetWalletByUserUseCase,
+		});
+
+		container.register<IGetTransactionByUserUseCase>(
+			"IGetTransactionByUserUseCase",
+			{
+				useClass: GetTransactionByUserUseCase,
+			}
+		);
+
+		container.register<IGetWithdrawalByUserUseCase>(
+			"IGetWithdrawalByUserUseCase",
+			{
+				useClass: GetWithdrawalByUserUseCase,
+			}
+		);
+
+		container.register<ITopUpWalletUseCase>("ITopUpWalletUseCase", {
+			useClass: TopUpWalletUseCase,
+		});
+
+		container.register<IVerifyTopUpPaymentUseCase>(
+			"IVerifyTopUpPaymentUseCase",
+			{
+				useClass: VerifyTopUpPaymentUseCase,
+			}
+		);
+
+		container.register<IUpdateWalletBalanceUseCase>(
+			"IUpdateWalletBalanceUseCase",
+			{
+				useClass: UpdateWalletBalanceUseCase,
+			}
+		);
+
+		container.register<IWithdrawFromWalletUseCase>(
+			"IWithdrawFromWalletUseCase",
+			{
+				useClass: WithdrawFromWalletUseCase,
+			}
+		);
+
+		container.register<IHandleTopUpPaymentFailureUseCase>(
+			"IHandleTopUpPaymentFailureUseCase",
+			{
+				useClass: HandleTopUpPaymentFailureUseCase,
+			}
+		);
+
+		container.register<IAddShopReviewUseCase>("IAddShopReviewUseCase", {
+			useClass: AddShopReviewUseCase,
+		});
+
+		container.register<IAddPostUseCase>("IAddPostUseCase", {
+			useClass: AddPostUseCase,
+		});
+
+		container.register<IGetAllPostsByBarberUseCase>(
+			"IGetAllPostsByBarberUseCase",
+			{
+				useClass: GetAllPostsByBarberUseCase,
+			}
+		);
+
+		container.register<IGetSinglePostByPostIdUseCase>(
+			"IGetSinglePostByPostIdUseCase",
+			{
+				useClass: GetSinglePostByPostIdUseCase,
+			}
+		);
+
+		container.register<IUpdatePostUseCase>("IUpdatePostUseCase", {
+			useClass: UpdatePostUseCase,
+		});
+
+		container.register<IDeletePostUseCase>("IDeletePostUseCase", {
+			useClass: DeletePostUseCase,
+		});
+
+		container.register<IUpdatePostStatusUseCase>(
+			"IUpdatePostStatusUseCase",
+			{
+				useClass: UpdatePostStatusUseCase,
+			}
+		);
+
+		container.register<IToggleLikePostUseCase>("IToggleLikePostUseCase", {
+			useClass: ToggleLikePostUseCase,
+		});
+
+		container.register<IAddCommentUseCase>("IAddCommentUseCase", {
+			useClass: AddCommentUseCase,
+		});
+
+		container.register<IToggleCommentLikeUseCase>(
+			"IToggleCommentLikeUseCase",
+			{
+				useClass: ToggleCommentLikeUseCase,
+			}
+		);
+
+		container.register<IGetAllPostsForClientUseCase>(
+			"IGetAllPostsForClientUseCase",
+			{
+				useClass: GetAllPostsForClientUseCase,
+			}
+		);
+
+		container.register<ICreateWalletUseCase>("ICreateWalletUseCase", {
+			useClass: CreateWalletUseCase,
+		});
+
+		container.register<IIncrementWalletBalanceUseCase>(
+			"IIncrementWalletBalanceUseCase",
+			{
+				useClass: IncrementWalletBalanceUseCase,
+			}
+		);
+
+		container.register<IDecrementWalletBalanceUseCase>(
+			"IDecrementWalletBalanceUseCase",
+			{
+				useClass: DecrementWalletBalanceUseCase,
+			}
+		);
+
+		container.register<IGetAllUserWithdrawalsUseCase>(
+			"IGetAllUserWithdrawalsUseCase",
+			{
+				useClass: GetAllUserWithdrawalsUseCase,
+			}
+		);
+
+		container.register<IApproveWithdrawalUseCase>(
+			"IApproveWithdrawalUseCase",
+			{
+				useClass: ApproveWithdrawalUseCase,
+			}
+		);
+
+		container.register<IRejectWithdrawalUseCase>(
+			"IRejectWithdrawalUseCase",
+			{
+				useClass: RejectWithdrawalUseCase,
+			}
+		);
+
+		container.register<IBookWithWalletUseCase>("IBookWithWalletUseCase", {
+			useClass: BookWithWalletUseCase,
+		});
+
+		container.register<IGetChatByUserUseCase>("IGetChatByUserUseCase", {
+			useClass: GetChatByUserUseCase,
+		});
+
+		container.register<ICreateChatRoomUseCase>("ICreateChatRoomUseCase", {
+			useClass: CreateChatRoomUseCase,
+		});
+
+		container.register<IGetAllChatsByUserUseCase>(
+			"IGetAllChatsByUserUseCase",
+			{
+				useClass: GetAllChatsByUserUseCase,
+			}
+		);
+
+		container.register<IGetChatByChatIdUseCase>("IGetChatByChatIdUseCase", {
+			useClass: GetChatByChatIdUseCase,
+		});
+
+		container.register<ISendDirectMessageUseCase>(
+			"ISendDirectMessageUseCase",
+			{
+				useClass: SendDirectMessageUseCase,
+			}
+		);
+
+		container.register<ICreateCommunityUseCase>("ICreateCommunityUseCase", {
+			useClass: CreateCommunityUseCase,
+		});
+
+		container.register<IGetAllCommunitiesForAdminUseCase>(
+			"IGetAllCommunitiesForAdminUseCase",
+			{
+				useClass: GetAllCommunitiesForAdminUseCase,
+			}
+		);
+
+		container.register<IGetCommunityForEditUseCase>(
+			"IGetCommunityForEditUseCase",
+			{
+				useClass: GetCommunityForEditUseCase,
+			}
+		);
+
+		container.register<IEditCommunityUseCase>("IEditCommunityUseCase", {
+			useClass: EditCommunityUseCase,
+		});
+
+		container.register<IUpdateCommunityStatusUseCase>(
+			"IUpdateCommunityStatusUseCase",
+			{
+				useClass: UpdateCommunityStatusUseCase,
+			}
+		);
+
+		container.register<IDeleteCommunityUseCase>("IDeleteCommunityUseCase", {
+			useClass: DeleteCommunityUseCase,
+		});
+
+		container.register<IGetAllCommunitiesForBarberUseCase>(
+			"IGetAllCommunitiesForBarberUseCase",
+			{
+				useClass: GetAllCommunitiesForBarberUseCase,
+			}
+		);
+
+		container.register<IBarberJoinCommunityUseCase>(
+			"IBarberJoinCommunityUseCase",
+			{
+				useClass: BarberJoinCommunityUseCase,
+			}
+		);
+
+		container.register<IGetAllCommunityChatsByUserUseCase>(
+			"IGetAllCommunityChatsByUserUseCase",
+			{
+				useClass: GetAllCommunityChatsByUserUseCase,
+			}
+		);
+
+		container.register<IGetCommunityChatUseCase>(
+			"IGetCommunityChatUseCase",
+			{
+				useClass: GetCommunityChatUseCase,
+			}
+		);
+
+		container.register<ISendCommunityMessageUseCase>(
+			"ISendCommunityMessageUseCase",
+			{
+				useClass: SendCommunityMessageUseCase,
+			}
+		);
+
+		container.register<IGetCommunityByCommunityIdUseCase>(
+			"IGetCommunityByCommunityIdUseCase",
+			{
+				useClass: GetCommunityByCommunityIdUseCase,
+			}
+		);
+
+		container.register<IReadDirectMessageUseCase>(
+			"IReadDirectMessageUseCase",
+			{
+				useClass: ReadDirectMessageUseCase,
+			}
+		);
+
+		container.register<IGeneratePresignedUrlUseCase>(
+			"IGeneratePresignedUrlUseCase",
+			{
+				useClass: GeneratePresignedUrlUseCase,
+			}
+		);
+
+		container.register<IScheduleMeetingUseCase>("IScheduleMeetingUseCase", {
+			useClass: ScheduleMeetingUseCase,
+		});
+
+		container.register<IGetMeetingByCommunityIdUseCase>(
+			"IGetMeetingByCommunityIdUseCase",
+			{
+				useClass: GetMeetingByCommunityIdUseCase,
+			}
+		);
+
+		//* ====== Register Bcrypts ====== *//
+		container.register<IBcrypt>("IPasswordBcrypt", {
+			useClass: PasswordBcrypt,
+		});
+
+		container.register<IBcrypt>("IOtpBcrypt", {
+			useClass: OtpBcrypt,
+		});
+
+		//* ====== Register Services ====== *//
+		container.register<IUserExistenceService>("IUserExistenceService", {
+			useClass: UserExistenceService,
+		});
+
+		container.register<IOtpService>("IOtpService", {
+			useClass: OtpService,
+		});
+
+		container.register<IEmailService>("IEmailService", {
+			useClass: EmailService,
+		});
+
+		container.register<ITokenService>("ITokenService", {
+			useClass: JWTService,
+		});
+
+		container.register<IRazorpayService>("IRazorpayService", {
+			useClass: RazorpayService,
+		});
+
+		container.register<IS3Service>("IS3Service", {
+			useClass: S3Service,
+		});
+
+		container.register<IGoogleCalendarService>("IGoogleCalendarService", {
+			useClass: GoogleCalendarService,
+		});
+	}
 }

@@ -4,6 +4,7 @@ import {
   ICommunityChatPreview,
   IDirectChat,
   IDirectChatPreview,
+  IMeetingRoom,
 } from "./Chat";
 import { IPost } from "./Feed";
 import { IService } from "./Service";
@@ -106,4 +107,8 @@ export interface IAllCommunitiesResponse {
 
 export interface ICommunityChatResponse extends IAxiosResponse {
   community: ICommunityChat;
+}
+
+export interface IMeetingRoomResponse extends IAxiosResponse {
+  meeting: IMeetingRoom;
 }
