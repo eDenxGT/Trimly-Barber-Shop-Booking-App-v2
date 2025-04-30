@@ -1,4 +1,3 @@
-import { formatDistanceToNow, format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IDirectMessage, ICommunityMessage } from "@/types/Chat";
 import { useOutletContext } from "react-router-dom";

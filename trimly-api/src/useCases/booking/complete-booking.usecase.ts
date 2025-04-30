@@ -10,79 +10,80 @@ import { IIncrementWalletBalanceUseCase } from "../../entities/useCaseInterfaces
 
 @injectable()
 export class CompleteBookingUseCase implements ICompleteBookingUseCase {
-	constructor(
-		@inject("IBookingRepository")
-		private _bookingRepository: IBookingRepository,
-		@inject("IWalletRepository")
-		private _transactionRepository: ITransactionRepository,
-		@inject("IIncrementWalletBalanceUseCase")
-		private _incrementWalletBalanceUseCase: IIncrementWalletBalanceUseCase
-	) {}
+  constructor(
+    @inject("IBookingRepository")
+    private _bookingRepository: IBookingRepository,
+    @inject("ITransactionRepository")
+    private _transactionRepository: ITransactionRepository,
+    @inject("IIncrementWalletBalanceUseCase")
+    private _incrementWalletBalanceUseCase: IIncrementWalletBalanceUseCase
+  ) {}
 
-	async execute(bookingId: string, role: string): Promise<void> {
-		const booking = await this._bookingRepository.findOne({ bookingId });
-		if (!booking) {
-			throw new CustomError(
-				ERROR_MESSAGES.BOOKING_NOT_FOUND,
-				HTTP_STATUS.NOT_FOUND
-			);
-		}
+  async execute(bookingId: string, role: string): Promise<void> {
+    const booking = await this._bookingRepository.findOne({ bookingId });
+    if (!booking) {
+      throw new CustomError(
+        ERROR_MESSAGES.BOOKING_NOT_FOUND,
+        HTTP_STATUS.NOT_FOUND
+      );
+    }
 
-		const bookingDate = new Date(booking.date);
-		const startTimeStr = booking.startTime;
+    const bookingDate = new Date(booking.date);
+    const startTimeStr = booking.startTime;
 
-		const fullDateTimeStr = `${format(
-			bookingDate,
-			"yyyy-MM-dd"
-		)} ${startTimeStr}`;
-		const bookingStartTime = parse(
-			fullDateTimeStr,
-			"yyyy-MM-dd h:mm a",
-			new Date()
-		);
+    const fullDateTimeStr = `${format(
+      bookingDate,
+      "yyyy-MM-dd"
+    )} ${startTimeStr}`;
+    const bookingStartTime = parse(
+      fullDateTimeStr,
+      "yyyy-MM-dd h:mm a",
+      new Date()
+    );
 
-		const bookingEndTime = addMinutes(bookingStartTime, booking.duration);
+    const bookingEndTime = addMinutes(bookingStartTime, booking.duration);
 
-		const now = new Date();
-		if (now < bookingEndTime) {
-			throw new CustomError(
-				ERROR_MESSAGES.BOOKING_CANNOT_COMPLETE_BEFORE_TIME_ENDS,
-				HTTP_STATUS.BAD_REQUEST
-			);
-		}
+    const now = new Date();
 
-		const transaction = await this._transactionRepository.findOne({
-			referenceId: bookingId,
-			source: "booking",
-			status: "success",
-		});
+    if (now < bookingEndTime) {
+      throw new CustomError(
+        ERROR_MESSAGES.BOOKING_CANNOT_COMPLETE_BEFORE_TIME_ENDS,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
 
-		if (!transaction) {
-			throw new CustomError(
-				ERROR_MESSAGES.TRANSACTION_NOT_FOUND,
-				HTTP_STATUS.NOT_FOUND
-			);
-		}
+    const transaction = await this._transactionRepository.findOne({
+      referenceId: bookingId,
+      source: "booking",
+      status: "success",
+    });
 
-		await this._bookingRepository.update(
-			{ bookingId },
-			{ status: "completed" }
-		);
+    if (!transaction) {
+      throw new CustomError(
+        ERROR_MESSAGES.TRANSACTION_NOT_FOUND,
+        HTTP_STATUS.NOT_FOUND
+      );
+    }
 
-		await this._transactionRepository.save({
-			transactionId: generateUniqueId("transaction"),
-			userId: booking.shopId,
-			amount: booking.total,
-			type: "credit",
-			source: "booking",
-			status: "success",
-			referenceId: bookingId,
-		});
+    await this._bookingRepository.update(
+      { bookingId },
+      { status: "completed" }
+    );
 
-		await this._incrementWalletBalanceUseCase.execute({
-			ownerId: booking.shopId,
-			amount: booking.total,
-			role: role as "barber" | "client",
-		});
-	}
+    await this._transactionRepository.save({
+      transactionId: generateUniqueId("transaction"),
+      userId: booking.shopId,
+      amount: booking.total,
+      type: "credit",
+      source: "booking",
+      status: "success",
+      referenceId: bookingId,
+    });
+
+    await this._incrementWalletBalanceUseCase.execute({
+      ownerId: booking.shopId,
+      amount: booking.total,
+      role: role as "barber" | "client",
+    });
+  }
 }
