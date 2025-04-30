@@ -103,7 +103,11 @@ export interface IMeetingRoom {
   startTime: Date;
   endTime: Date;
   meetLink: string;
-  status?: "scheduled" | "cancelled" | "completed";
+  communityDetails?: {
+    name: string;
+    imageUrl: string;
+  };
+  status: "scheduled" | "cancelled" | "completed";
   createdAt?: Date;
   updatedAt?: Date;
 }

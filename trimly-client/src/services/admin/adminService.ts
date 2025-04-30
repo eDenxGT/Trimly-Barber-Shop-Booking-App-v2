@@ -6,6 +6,7 @@ import {
   IAdminResponse,
   IAllBarberShopsResponse,
   IAllCommunitiesResponse,
+  IAllMeetingRoomResponse,
   IAuthResponse,
   IAxiosResponse,
   ICommunityChatResponse,
@@ -215,6 +216,26 @@ export const adminScheduleMeeting = async (data: Partial<IMeetingRoom>) => {
   const response = await adminAxiosInstance.post<IAxiosResponse>(
     "/admin/meeting",
     data
+  );
+  return response.data;
+};
+
+export const adminGetAllMeetings = async ({
+  search,
+  status,
+  date,
+  page,
+  limit
+}: {
+  search: string;
+  status: string;
+  date: string;
+  page: number;
+  limit: number;
+}) => {
+  const response = await adminAxiosInstance.get<IAllMeetingRoomResponse>(
+    "/admin/all-meetings",
+    { params: { search, status, date, page, limit } }
   );
   return response.data;
 };

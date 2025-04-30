@@ -8,6 +8,7 @@ import { AdminUserWithdrawalsPage } from "@/pages/admin/applications/AdminUserWi
 import { AdminCommunityListPage } from "@/pages/admin/community/AdminCommunityListPage";
 import { AdminCreateCommunityPage } from "@/pages/admin/community/AdminCreateCommunityPage";
 import { AdminEditCommunityPage } from "@/pages/admin/community/AdminEditCommunityPage";
+import { AdminMeetingsPage } from "@/pages/admin/community/AdminMeetingsListPage";
 import { AdminScheduleMeetingPage } from "@/pages/admin/community/AdminScheduleMeetingPage";
 import { AdminBarberManagementPage } from "@/pages/admin/managementPages/AdminBarberShopManagementPage";
 import { AdminClientManagementPage } from "@/pages/admin/managementPages/AdminClientManagementPage";
@@ -46,7 +47,7 @@ export const AdminRoutes = () => {
           path="communities/:communityId/schedule-meeting"
           element={<AdminScheduleMeetingPage />}
         />
-
+        <Route path="communities/meetings" element={<AdminMeetingsPage />} />
         <Route
           path="shop-applications"
           element={<AdminBarberShopApplicationPage />}

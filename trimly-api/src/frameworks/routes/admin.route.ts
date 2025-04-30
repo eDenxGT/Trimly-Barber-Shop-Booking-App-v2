@@ -163,6 +163,15 @@ export class AdminRoutes extends BaseRoute {
         meetingController.scheduleMeet(req, res);
       }
     );
+    
+    this.router.get(
+      "/admin/all-meetings",
+      verifyAuth,
+      authorizeRole(["admin"]),
+      (req: Request, res: Response) => {
+        meetingController.getAllMeetingsForListing(req, res);
+      }
+    );
 
     //* ─────────────────────────────────────────────────────────────
     //*                     🛠️ Users Endpoints

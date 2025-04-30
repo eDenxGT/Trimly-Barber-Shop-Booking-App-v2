@@ -1,4 +1,5 @@
 import {
+  CalendarIcon,
   Home,
   LayoutDashboard,
   MessageCircleMore,
@@ -112,6 +113,11 @@ const navItems = {
       title: "Manage Communities",
       icon: MdGroups,
       path: "/admin/communities",
+    },
+    {
+      title: "Manage Meetings",
+      icon: CalendarIcon,
+      path: "/admin/communities/meetings",
     },
     {
       title: "Shop Applications",

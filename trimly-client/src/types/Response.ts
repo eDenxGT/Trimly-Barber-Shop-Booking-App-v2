@@ -109,6 +109,13 @@ export interface ICommunityChatResponse extends IAxiosResponse {
   community: ICommunityChat;
 }
 
+// * Meetings
 export interface IMeetingRoomResponse extends IAxiosResponse {
   meeting: IMeetingRoom;
+}
+
+export interface IAllMeetingRoomResponse extends IAxiosResponse {
+  meetings: IMeetingRoom[];
+  totalPages: number;
+  currentPage: number;
 }

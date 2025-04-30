@@ -7,26 +7,24 @@ import { IGetMeetingByCommunityIdUseCase } from "../../../entities/useCaseInterf
 
 @injectable()
 export class GetMeetingByCommunityIdUseCase
-	implements IGetMeetingByCommunityIdUseCase
+  implements IGetMeetingByCommunityIdUseCase
 {
-	constructor(
-		@inject("IMeetingRoomRepository")
-		private _meetingRoomRepository: IMeetingRoomRepository
-	) {}
+  constructor(
+    @inject("IMeetingRoomRepository")
+    private _meetingRoomRepository: IMeetingRoomRepository
+  ) {}
 
-	async execute(communityId: string): Promise<IMeetingRoomEntity> {
-		const meetingRoom = await this._meetingRoomRepository.findOne({
-			communityId,
-		});
-      console.log(meetingRoom)
+  async execute(communityId: string): Promise<IMeetingRoomEntity> {
+    const meetingRoom =
+      await this._meetingRoomRepository.findLastPlannedMeeting(communityId);
 
-		if (!meetingRoom) {
-			throw new CustomError(
-				ERROR_MESSAGES.MEETING_NOT_FOUND,
-				HTTP_STATUS.NOT_FOUND
-			);
-		}
+    if (!meetingRoom) {
+      throw new CustomError(
+        ERROR_MESSAGES.MEETING_NOT_FOUND,
+        HTTP_STATUS.NOT_FOUND
+      );
+    }
 
-		return meetingRoom;
-	}
+    return meetingRoom;
+  }
 }
