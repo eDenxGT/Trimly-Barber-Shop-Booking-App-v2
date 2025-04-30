@@ -50,6 +50,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { IMeetingRoom } from "@/types/Chat";
+import { SiGooglemeet } from "react-icons/si";
 
 interface MeetingsComponentProps {
   meetings: IMeetingRoom[];
@@ -86,7 +87,6 @@ export const MeetingsComponent = ({
   handleCancelMeeting,
   handleCompleteMeeting,
 }: MeetingsComponentProps) => {
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "scheduled":
@@ -236,7 +236,7 @@ export const MeetingsComponent = ({
                   <TableHead>Date & Time</TableHead>
                   <TableHead>Duration</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Meeting Link</TableHead>
+                  <TableHead>Meet Link</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -301,7 +301,11 @@ export const MeetingsComponent = ({
                               {meeting.title}
                             </div>
                             <div className="text-xs text-gray-500 truncate">
-                              {meeting.description}
+                              {meeting.description
+                                ? meeting.description.length > 50
+                                  ? meeting.description.slice(0, 50) + "..."
+                                  : meeting.description
+                                : "N/A"}
                             </div>
                           </div>
                         </TableCell>
@@ -321,16 +325,21 @@ export const MeetingsComponent = ({
                           {minutes > 0 ? `${minutes}m` : ""}
                         </TableCell>
                         <TableCell>{getStatusBadge(meeting.status)}</TableCell>
+
                         <TableCell>
                           <a
                             href={meeting.meetLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-blue-600 hover:underline truncate block max-w-[150px]"
+                            className="flex items-center justify-center gap-2 text-sm text-blue-600 hover:underline max-w-[150px] truncate"
+                            title={meeting.meetLink} // shows tooltip on hover
                           >
-                            {meeting.meetLink}
+                            <SiGooglemeet className="text-xl shrink-0" />
+                            {/* Google Meet icon */}
+                            {/* <span className="truncate">{meeting.meetLink}</span> */}
                           </a>
                         </TableCell>
+
                         <TableCell className="text-right">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -349,9 +358,13 @@ export const MeetingsComponent = ({
                             >
                               <DropdownMenuItem
                                 onClick={() => handleEditMeeting(meeting)}
-                                disabled={meeting.status === "cancelled"}
+                                disabled={
+                                  meeting.status === "cancelled" ||
+                                  meeting.status === "completed"
+                                }
                                 className={
-                                  meeting.status === "cancelled"
+                                  meeting.status === "cancelled" ||
+                                  meeting.status === "completed"
                                     ? "opacity-50 cursor-not-allowed"
                                     : ""
                                 }

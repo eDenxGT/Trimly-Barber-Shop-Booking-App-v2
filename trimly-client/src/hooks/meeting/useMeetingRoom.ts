@@ -1,6 +1,9 @@
 import {
+  adminCompleteMeeting,
+  adminDeleteMeeting,
   adminGetAllMeetings,
   adminScheduleMeeting,
+  adminUpdateMeeting,
 } from "@/services/admin/adminService";
 import { fetchMeetingRoomById } from "@/services/barber/barberService";
 import { IMeetingRoom } from "@/types/Chat";
@@ -9,7 +12,7 @@ import {
   IAxiosResponse,
   IMeetingRoomResponse,
 } from "@/types/Response";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useScheduleMeeting = () => {
   return useMutation<IAxiosResponse, Error, Partial<IMeetingRoom>>({
@@ -31,7 +34,7 @@ export const useGetAllMeetings = ({
   status,
   date,
   page,
-  limit
+  limit,
 }: {
   search: string;
   status: string;
@@ -41,12 +44,52 @@ export const useGetAllMeetings = ({
 }) => {
   return useQuery<IAllMeetingRoomResponse>({
     queryKey: ["admin-meetings", search, status, date, page, limit],
-    queryFn: () => adminGetAllMeetings({
-      search,
-      status,
-      date,
-      page,
-      limit,
-    }),
+    queryFn: () =>
+      adminGetAllMeetings({
+        search,
+        status,
+        date,
+        page,
+        limit,
+      }),
+  });
+};
+
+export const useUpdateMeeting = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IAxiosResponse, Error, Partial<IMeetingRoom>>({
+    mutationFn: adminUpdateMeeting,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["admin-meetings"],
+        exact: false,
+      });
+    },
+  });
+};
+
+export const useCancelMeeting = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IAxiosResponse, Error, { meetingId: string }>({
+    mutationFn: adminDeleteMeeting,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["admin-meetings"],
+        exact: false,
+      });
+    },
+  });
+};
+
+export const useCompleteMeeting = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IAxiosResponse, Error, { meetingId: string }>({
+    mutationFn: adminCompleteMeeting,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["admin-meetings"],
+        exact: false,
+      });
+    },
   });
 };

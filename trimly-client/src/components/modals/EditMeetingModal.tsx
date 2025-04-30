@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react"
-import { format, parseISO } from "date-fns"
-import { CalendarIcon, Clock, Info } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+import { useEffect, useState } from "react";
+import { format, parseISO, isAfter, isBefore } from "date-fns";
+import { CalendarIcon, Clock, Info } from "lucide-react";
+import { useFormik } from "formik";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -12,139 +13,236 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { cn } from "@/lib/utils"
-import { IMeetingRoom } from "@/types/Chat"
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
+import { IMeetingRoom } from "@/types/Chat";
+import { meetingSchema } from "@/utils/validations/meeting.validator";
+import {
+  convertTo24Hour,
+} from "@/utils/helpers/timeFormatter";
 
 interface EditMeetingModalProps {
-  meeting: IMeetingRoom
-  isOpen: boolean
-  onClose: () => void
-  onSave: (meeting: IMeetingRoom) => void
+  meeting: IMeetingRoom;
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (meeting: IMeetingRoom) => void;
 }
 
-export function EditMeetingModal({ meeting, isOpen, onClose, onSave }: EditMeetingModalProps) {
-  const [editedMeeting, setEditedMeeting] = useState<IMeetingRoom>({ ...meeting })
-  const [meetingDate, setMeetingDate] = useState<Date | undefined>(parseISO(meeting.startTime.toString()))
-  const [startHour, setStartHour] = useState("")
-  const [startMinute, setStartMinute] = useState("")
-  const [startPeriod, setStartPeriod] = useState<"AM" | "PM">("AM")
-  const [endHour, setEndHour] = useState("")
-  const [endMinute, setEndMinute] = useState("")
-  const [endPeriod, setEndPeriod] = useState<"AM" | "PM">("AM")
-  const [timeError, setTimeError] = useState("")
+export function EditMeetingModal({
+  meeting,
+  isOpen,
+  onClose,
+  onSave,
+}: EditMeetingModalProps) {
+  const [timeError, setTimeError] = useState<string>("");
+
+  const hourOptions = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
+  const minuteOptions = Array.from({ length: 12 }, (_, i) =>
+    (i * 5).toString().padStart(2, "0")
+  );
+
+  const getTimeComponents = (isoString: string) => {
+    const date = parseISO(isoString);
+    let hours = date.getHours();
+    const period = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return {
+      hour: hours.toString(),
+      minute: minutes,
+      period,
+    };
+  };
+
+  const startTimeComponents = getTimeComponents(meeting.startTime.toString());
+  const endTimeComponents = getTimeComponents(meeting.endTime.toString());
+  const validateTimes = (values: any) => {
+    if (!values.meetingDate) return true;
+
+    const { hour: startHour24, minute: startMinute } = convertTo24Hour(
+      values.startHour,
+      values.startMinute,
+      values.startPeriod
+    );
+
+    const { hour: endHour24, minute: endMinute } = convertTo24Hour(
+      values.endHour,
+      values.endMinute,
+      values.endPeriod
+    );
+
+    const startTime = new Date(values.meetingDate);
+    startTime.setHours(
+      Number.parseInt(startHour24),
+      Number.parseInt(startMinute),
+      0
+    );
+
+    const endTime = new Date(values.meetingDate);
+    endTime.setHours(Number.parseInt(endHour24), Number.parseInt(endMinute), 0);
+    console.log(startTime, endTime, values);
+
+    if (!isAfter(endTime, startTime)) {
+      setTimeError("End time must be after start time");
+      return false;
+    }
+
+    const now = new Date();
+    if (isBefore(startTime, now)) {
+      setTimeError("Start time must be after current time");
+      return false;
+    }
+
+    setTimeError("");
+    return true;
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      title: meeting.title,
+      description: meeting.description || "",
+      meetLink: meeting.meetLink || "",
+      meetingDate: parseISO(meeting.startTime.toString()),
+      startHour: startTimeComponents.hour,
+      startMinute: startTimeComponents.minute,
+      startPeriod: startTimeComponents.period as "AM" | "PM",
+      endHour: endTimeComponents.hour,
+      endMinute: endTimeComponents.minute,
+      endPeriod: endTimeComponents.period as "AM" | "PM",
+    },
+    validationSchema: meetingSchema,
+    onSubmit: (values) => {
+      if (!validateTimes(values)) return;
+
+      const { hour: startHour24, minute: startMinute } = convertTo24Hour(
+        values.startHour,
+        values.startMinute,
+        values.startPeriod
+      );
+
+      const { hour: endHour24, minute: endMinute } = convertTo24Hour(
+        values.endHour,
+        values.endMinute,
+        values.endPeriod
+      );
+
+      const startTime = new Date(values.meetingDate);
+      startTime.setHours(
+        Number.parseInt(startHour24),
+        Number.parseInt(startMinute),
+        0
+      );
+
+      const endTime = new Date(values.meetingDate);
+      endTime.setHours(
+        Number.parseInt(endHour24),
+        Number.parseInt(endMinute),
+        0
+      );
+
+      const updatedMeeting = {
+        ...meeting,
+        title: values.title,
+        description: values.description,
+        meetLink: values.meetLink,
+        startTime: new Date(startTime),
+        endTime: new Date(endTime),
+      };
+
+      onSave(updatedMeeting);
+    },
+  });
 
   useEffect(() => {
-    if (meeting) {
-      const startDate = parseISO(meeting.startTime.toString())
-      const endDate = parseISO(meeting.endTime.toString())
-
-      let startHourValue = startDate.getHours()
-      const startPeriodValue = startHourValue >= 12 ? "PM" : "AM"
-      startHourValue = startHourValue % 12 || 12 
-
-      let endHourValue = endDate.getHours()
-      const endPeriodValue = endHourValue >= 12 ? "PM" : "AM"
-      endHourValue = endHourValue % 12 || 12 
-
-      setStartHour(startHourValue.toString())
-      setStartMinute(startDate.getMinutes().toString().padStart(2, "0"))
-      setStartPeriod(startPeriodValue)
-
-      setEndHour(endHourValue.toString())
-      setEndMinute(endDate.getMinutes().toString().padStart(2, "0"))
-      setEndPeriod(endPeriodValue)
-
-      setMeetingDate(startDate)
+    if (formik.values.meetingDate) {
+      validateTimes(formik.values);
     }
-  }, [meeting])
+  }, [
+    formik.values.startHour,
+    formik.values.startMinute,
+    formik.values.startPeriod,
+    formik.values.endHour,
+    formik.values.endMinute,
+    formik.values.endPeriod,
+    formik.values.meetingDate,
+  ]);
 
-  const hourOptions = Array.from({ length: 12 }, (_, i) => (i + 1).toString())
-  const minuteOptions = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, "0"))
+  useEffect(() => {
+    if (meeting && isOpen) {
+      const startComponents = getTimeComponents(meeting.startTime.toString());
+      const endComponents = getTimeComponents(meeting.endTime.toString());
 
-  const validateTimes = () => {
-    if (!meetingDate) return false
+      formik.resetForm({
+        values: {
+          title: meeting.title,
+          description: meeting.description || "",
+          meetLink: meeting.meetLink || "",
+          meetingDate: parseISO(meeting.startTime.toString()),
+          startHour: startComponents.hour,
+          startMinute: startComponents.minute,
+          startPeriod: startComponents.period as "AM" | "PM",
+          endHour: endComponents.hour,
+          endMinute: endComponents.minute,
+          endPeriod: endComponents.period as "AM" | "PM",
+        },
+      });
 
-    let startHourValue = Number.parseInt(startHour)
-    if (startPeriod === "PM" && startHourValue !== 12) startHourValue += 12
-    if (startPeriod === "AM" && startHourValue === 12) startHourValue = 0
-
-    let endHourValue = Number.parseInt(endHour)
-    if (endPeriod === "PM" && endHourValue !== 12) endHourValue += 12
-    if (endPeriod === "AM" && endHourValue === 12) endHourValue = 0
-
-    const startTime = new Date(meetingDate)
-    startTime.setHours(startHourValue, Number.parseInt(startMinute), 0)
-
-    const endTime = new Date(meetingDate)
-    endTime.setHours(endHourValue, Number.parseInt(endMinute), 0)
-
-    if (endTime <= startTime) {
-      setTimeError("End time must be after start time")
-      return false
+      setTimeError("");
     }
-
-    setTimeError("")
-    return true
-  }
-
-  // Handle save
-  const handleSave = () => {
-    if (!validateTimes()) return
-
-    // Convert to 24-hour format
-    let startHourValue = Number.parseInt(startHour)
-    if (startPeriod === "PM" && startHourValue !== 12) startHourValue += 12
-    if (startPeriod === "AM" && startHourValue === 12) startHourValue = 0
-
-    let endHourValue = Number.parseInt(endHour)
-    if (endPeriod === "PM" && endHourValue !== 12) endHourValue += 12
-    if (endPeriod === "AM" && endHourValue === 12) endHourValue = 0
-
-    const startTime = new Date(meetingDate!)
-    startTime.setHours(startHourValue, Number.parseInt(startMinute), 0)
-
-    const endTime = new Date(meetingDate!)
-    endTime.setHours(endHourValue, Number.parseInt(endMinute), 0)
-
-    const updatedMeeting = {
-      ...editedMeeting,
-      startTime: startTime.toISOString(),
-      endTime: endTime.toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-
-    onSave(updatedMeeting as unknown as IMeetingRoom)
-  }
+  }, [meeting, isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Edit Meeting</DialogTitle>
-          <DialogDescription>Update the meeting details. Click save when you're done.</DialogDescription>
+          <DialogDescription>
+            Update the meeting details. Click save when you're done.
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
+        <form onSubmit={formik.handleSubmit} className="grid gap-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="title">Meeting Title</Label>
             <Input
               id="title"
-              value={editedMeeting.title}
-              onChange={(e) => setEditedMeeting({ ...editedMeeting, title: e.target.value })}
+              name="title"
+              value={formik.values.title}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className={
+                formik.touched.title && formik.errors.title
+                  ? "border-red-500"
+                  : ""
+              }
             />
+            {formik.touched.title && formik.errors.title && (
+              <p className="text-red-500 text-sm">{formik.errors.title}</p>
+            )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              value={editedMeeting.description}
-              onChange={(e) => setEditedMeeting({ ...editedMeeting, description: e.target.value })}
+              name="description"
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               className="min-h-[80px]"
             />
           </div>
@@ -153,9 +251,19 @@ export function EditMeetingModal({ meeting, isOpen, onClose, onSave }: EditMeeti
             <Label htmlFor="meetLink">Meeting Link</Label>
             <Input
               id="meetLink"
-              value={editedMeeting.meetLink}
-              onChange={(e) => setEditedMeeting({ ...editedMeeting, meetLink: e.target.value })}
+              name="meetLink"
+              value={formik.values.meetLink}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className={
+                formik.touched.meetLink && formik.errors.meetLink
+                  ? "border-red-500"
+                  : ""
+              }
             />
+            {formik.touched.meetLink && formik.errors.meetLink && (
+              <p className="text-red-500 text-sm">{formik.errors.meetLink}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -163,24 +271,48 @@ export function EditMeetingModal({ meeting, isOpen, onClose, onSave }: EditMeeti
             <Popover>
               <PopoverTrigger asChild>
                 <Button
+                  type="button"
                   variant="outline"
-                  className={cn("w-full justify-start text-left", !meetingDate && "text-muted-foreground")}
+                  className={cn(
+                    "w-full justify-start text-left",
+                    !formik.values.meetingDate && "text-muted-foreground"
+                  )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {meetingDate ? format(meetingDate, "PPP") : <span>Pick a date</span>}
+                  {formik.values.meetingDate ? (
+                    format(formik.values.meetingDate, "PPP")
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <Calendar mode="single" selected={meetingDate} onSelect={setMeetingDate} initialFocus />
+                <Calendar
+                  mode="single"
+                  selected={formik.values.meetingDate}
+                  onSelect={(date) => formik.setFieldValue("meetingDate", date)}
+                  initialFocus
+                />
               </PopoverContent>
             </Popover>
+            {formik.touched.meetingDate && formik.errors.meetingDate && (
+              <p className="text-red-500 text-sm">
+                {formik.errors.meetingDate as string}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Start Time</Label>
               <div className="flex space-x-2">
-                <Select value={startHour} onValueChange={setStartHour}>
+                <Select
+                  name="startHour"
+                  value={formik.values.startHour}
+                  onValueChange={(value) =>
+                    formik.setFieldValue("startHour", value)
+                  }
+                >
                   <SelectTrigger className="w-[70px]">
                     <SelectValue placeholder="Hour" />
                   </SelectTrigger>
@@ -192,8 +324,16 @@ export function EditMeetingModal({ meeting, isOpen, onClose, onSave }: EditMeeti
                     ))}
                   </SelectContent>
                 </Select>
+
                 <span className="flex items-center">:</span>
-                <Select value={startMinute} onValueChange={setStartMinute}>
+
+                <Select
+                  name="startMinute"
+                  value={formik.values.startMinute}
+                  onValueChange={(value) =>
+                    formik.setFieldValue("startMinute", value)
+                  }
+                >
                   <SelectTrigger className="w-[70px]">
                     <SelectValue placeholder="Min" />
                   </SelectTrigger>
@@ -205,7 +345,14 @@ export function EditMeetingModal({ meeting, isOpen, onClose, onSave }: EditMeeti
                     ))}
                   </SelectContent>
                 </Select>
-                <Select value={startPeriod} onValueChange={(value: "AM" | "PM") => setStartPeriod(value)}>
+
+                <Select
+                  name="startPeriod"
+                  value={formik.values.startPeriod}
+                  onValueChange={(value: "AM" | "PM") =>
+                    formik.setFieldValue("startPeriod", value)
+                  }
+                >
                   <SelectTrigger className="w-[70px]">
                     <SelectValue placeholder="AM/PM" />
                   </SelectTrigger>
@@ -220,7 +367,14 @@ export function EditMeetingModal({ meeting, isOpen, onClose, onSave }: EditMeeti
             <div className="space-y-2">
               <Label>End Time</Label>
               <div className="flex space-x-2">
-                <Select value={endHour} onValueChange={setEndHour}>
+                <Select
+                  name="endHour"
+                  value={formik.values.endHour}
+                  onValueChange={(value) => {
+                    formik.setFieldValue("endHour", value);
+                    formik.setFieldTouched("endHour", true);
+                  }}
+                >
                   <SelectTrigger className="w-[70px]">
                     <SelectValue placeholder="Hour" />
                   </SelectTrigger>
@@ -232,8 +386,17 @@ export function EditMeetingModal({ meeting, isOpen, onClose, onSave }: EditMeeti
                     ))}
                   </SelectContent>
                 </Select>
+
                 <span className="flex items-center">:</span>
-                <Select value={endMinute} onValueChange={setEndMinute}>
+
+                <Select
+                  name="endMinute"
+                  value={formik.values.endMinute}
+                  onValueChange={(value) => {
+                    formik.setFieldValue("endMinute", value);
+                    formik.setFieldTouched("endMinute", true);
+                  }}
+                >
                   <SelectTrigger className="w-[70px]">
                     <SelectValue placeholder="Min" />
                   </SelectTrigger>
@@ -245,7 +408,15 @@ export function EditMeetingModal({ meeting, isOpen, onClose, onSave }: EditMeeti
                     ))}
                   </SelectContent>
                 </Select>
-                <Select value={endPeriod} onValueChange={(value: "AM" | "PM") => setEndPeriod(value)}>
+
+                <Select
+                  name="endPeriod"
+                  value={formik.values.endPeriod}
+                  onValueChange={(value: "AM" | "PM") => {
+                    formik.setFieldValue("endPeriod", value);
+                    formik.setFieldTouched("endPeriod", true);
+                  }}
+                >
                   <SelectTrigger className="w-[70px]">
                     <SelectValue placeholder="AM/PM" />
                   </SelectTrigger>
@@ -259,25 +430,38 @@ export function EditMeetingModal({ meeting, isOpen, onClose, onSave }: EditMeeti
           </div>
 
           {timeError && (
-            <Alert variant="destructive" className="bg-red-50 text-red-800 border-red-200">
+            <Alert
+              variant="destructive"
+              className="bg-red-50 text-red-800 border-red-200"
+            >
               <AlertDescription className="flex items-center">
                 <Info className="h-4 w-4 mr-2" />
                 {timeError}
               </AlertDescription>
             </Alert>
           )}
-        </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} className="bg-yellow-500 hover:bg-yellow-600">
-            <Clock className="h-4 w-4 mr-2" />
-            Save Changes
-          </Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="bg-yellow-500 hover:bg-yellow-600"
+              disabled={
+                !formik.isValid ||
+                formik.isSubmitting ||
+                !formik.values.title ||
+                !formik.values.meetingDate ||
+                Boolean(timeError)
+              }
+            >
+              <Clock className="h-4 w-4 mr-2" />
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

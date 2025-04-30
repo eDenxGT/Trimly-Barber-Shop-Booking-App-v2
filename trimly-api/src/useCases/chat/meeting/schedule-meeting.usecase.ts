@@ -21,7 +21,6 @@ export class ScheduleMeetingUseCase {
     userId: string;
     meetLink: string;
   }): Promise<void> {
-
     // ? Previous implementation
     // const meetLink = await this._calendarService.createMeeting({
     //   summary: input.title,
@@ -29,7 +28,33 @@ export class ScheduleMeetingUseCase {
     //   start: input.startTime,
     //   end: input.endTime,
     // });
-    
+
+    const startTime = new Date(input.startTime);
+    const endTime = new Date(input.endTime);
+
+    if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+      throw new CustomError(
+        ERROR_MESSAGES.INVALID_DATES_FOR_MEETING,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
+    const now = new Date();
+
+    if (startTime <= now) {
+      throw new CustomError(
+        ERROR_MESSAGES.MEETING_CANNOT_SCHEDULE_IN_PAST,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
+    if (startTime >= endTime) {
+      throw new CustomError(
+        ERROR_MESSAGES.START_TIME_MUST_BE_BEFORE_END_TIME,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
     const isMeetingExistsForThisCommunity =
       await this._meetingRoomRepository.findOne({
         communityId: input.communityId,

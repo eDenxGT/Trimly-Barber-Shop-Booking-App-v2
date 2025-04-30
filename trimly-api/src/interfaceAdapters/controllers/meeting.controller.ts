@@ -12,6 +12,9 @@ import { CustomRequest } from "../middlewares/auth.middleware.js";
 import { IGetMeetingByCommunityIdUseCase } from "../../entities/useCaseInterfaces/chat/meeting/get-meeting-by-communityid-usecase.interface.js";
 import { CustomError } from "../../entities/utils/custom.error.js";
 import { IGetAllMeetingsForListingUseCase } from "../../entities/useCaseInterfaces/chat/meeting/get-all-meetings-for-listing-usecase.interface.js";
+import { IUpdateMeetingDetailsUseCase } from "../../entities/useCaseInterfaces/chat/meeting/update-meeting-details-usecase.interface.js";
+import { ICancelMeetingUseCase } from "../../entities/useCaseInterfaces/chat/meeting/cancel-meeting-usecase.interface.js";
+import { ICompleteMeetingUseCase } from "../../entities/useCaseInterfaces/chat/meeting/complete-meeting-usecase.interface.js";
 
 @injectable()
 export class MeetingController implements IMeetingController {
@@ -21,7 +24,13 @@ export class MeetingController implements IMeetingController {
     @inject("IGetMeetingByCommunityIdUseCase")
     private _getMeetingByCommunityIdUseCase: IGetMeetingByCommunityIdUseCase,
     @inject("IGetAllMeetingsForListingUseCase")
-    private _getAllMeetingsForListingUseCase: IGetAllMeetingsForListingUseCase
+    private _getAllMeetingsForListingUseCase: IGetAllMeetingsForListingUseCase,
+    @inject("IUpdateMeetingDetailsUseCase")
+    private _updateMeetingDetailsUseCase: IUpdateMeetingDetailsUseCase,
+    @inject("ICancelMeetingUseCase")
+    private _cancelMeetingUseCase: ICancelMeetingUseCase,
+    @inject("ICompleteMeetingUseCase")
+    private _completeMeetingUseCase: ICompleteMeetingUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -32,6 +41,13 @@ export class MeetingController implements IMeetingController {
       const { title, description, startTime, endTime, communityId, meetLink } =
         req.body;
       const { userId } = (req as CustomRequest).user;
+
+      if (!title || !communityId || !meetLink || !startTime || !endTime) {
+        throw new CustomError(
+          ERROR_MESSAGES.MISSING_PARAMETERS,
+          HTTP_STATUS.BAD_REQUEST
+        );
+      }
 
       await this._scheduleMeetingUseCase.execute({
         title,
@@ -85,7 +101,6 @@ export class MeetingController implements IMeetingController {
   async getAllMeetingsForListing(req: Request, res: Response): Promise<void> {
     try {
       const { search, status, date, page, limit } = req.query;
-      console.log(req.query);
       const { meetings, totalPages } =
         await this._getAllMeetingsForListingUseCase.execute({
           search: String(search),
@@ -99,6 +114,94 @@ export class MeetingController implements IMeetingController {
         success: true,
         meetings,
         totalPages,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                🛠️  Update Meeting Details
+  //* ─────────────────────────────────────────────────────────────
+  async updateMeetingDetails(req: Request, res: Response): Promise<void> {
+    try {
+      const {
+        title,
+        description,
+        startTime,
+        endTime,
+        communityId,
+        meetLink,
+        meetingId,
+      } = req.body;
+
+      await this._updateMeetingDetailsUseCase.execute({
+        title,
+        description,
+        startTime,
+        endTime,
+        communityId,
+        meetLink,
+        meetingId,
+      });
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                   🛠️  Complete Meeting
+  //* ─────────────────────────────────────────────────────────────
+  async completeMeeting(req: Request, res: Response): Promise<void> {
+    try {
+      const { meetingId } = req.body;
+      
+      if (!meetingId) {
+        throw new CustomError(
+          ERROR_MESSAGES.MISSING_PARAMETERS,
+          HTTP_STATUS.BAD_REQUEST
+        );
+      }
+
+      await this._completeMeetingUseCase.execute({
+        meetingId: String(meetingId),
+      });
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                   🛠️  Cancel Meeting
+  //* ─────────────────────────────────────────────────────────────
+  async cancelMeeting(req: Request, res: Response): Promise<void> {
+    try {
+      const { meetingId } = req.query;
+
+      if (!meetingId) {
+        throw new CustomError(
+          ERROR_MESSAGES.MISSING_PARAMETERS,
+          HTTP_STATUS.BAD_REQUEST
+        );
+      }
+
+      await this._cancelMeetingUseCase.execute({
+        meetingId: String(meetingId),
+      });
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        message: SUCCESS_MESSAGES.CANCEL_SUCCESS,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

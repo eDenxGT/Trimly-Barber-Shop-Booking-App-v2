@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { useGetMeetingById } from "@/hooks/meeting/useMeetingRoom";
 import { CircularProgress } from "@mui/material";
 
+
 interface MeetingDetailsModalProps {
   communityId: string | null;
   isOpen: boolean;
@@ -23,8 +24,12 @@ export function MeetingDetailsModal({
   isOpen,
   onClose,
 }: MeetingDetailsModalProps) {
+
   const { data, isFetching, isError } = useGetMeetingById(communityId || "");
+  
   const meeting = data?.meeting;
+
+  if (!isOpen) return null;
 
   if (isFetching && !isError) {
     return (
@@ -62,20 +67,22 @@ export function MeetingDetailsModal({
   }
 
   const startTime =
-    typeof meeting.startTime === "string"
-      ? new Date(meeting.startTime)
-      : meeting.startTime;
+    typeof meeting?.startTime === "string"
+      ? new Date(meeting?.startTime)
+      : meeting?.startTime;
 
   const endTime =
-    typeof meeting.endTime === "string"
-      ? new Date(meeting.endTime)
-      : meeting.endTime;
+    typeof meeting?.endTime === "string"
+      ? new Date(meeting?.endTime)
+      : meeting?.endTime;
 
   const formatDate = (date: Date) => {
+    if (!date) return "";
     return format(date, "PPP");
   };
 
   const formatTime = (date: Date) => {
+    if (!date) return "";
     return format(date, "h:mm a");
   };
 
@@ -103,7 +110,7 @@ export function MeetingDetailsModal({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            {meeting.title}
+            {meeting?.title || "Meeting"}
           </DialogTitle>
         </DialogHeader>
 

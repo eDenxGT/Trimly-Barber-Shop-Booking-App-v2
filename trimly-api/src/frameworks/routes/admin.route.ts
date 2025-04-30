@@ -155,15 +155,37 @@ export class AdminRoutes extends BaseRoute {
     //* ─────────────────────────────────────────────────────────────
     //*                     🛠️ Meeting Endpoints
     //* ─────────────────────────────────────────────────────────────
-    this.router.post(
-      "/admin/meeting",
-      verifyAuth,
-      authorizeRole(["admin"]),
-      (req: Request, res: Response) => {
-        meetingController.scheduleMeet(req, res);
-      }
-    );
-    
+    this.router
+      .route("/admin/meeting")
+      .post(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        (req: Request, res: Response) => {
+          meetingController.scheduleMeet(req, res);
+        }
+      )
+      .put(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        (req: Request, res: Response) => {
+          meetingController.updateMeetingDetails(req, res);
+        }
+      )
+      .patch(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        (req: Request, res: Response) => {
+          meetingController.completeMeeting(req, res);
+        }
+      )
+      .delete(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        (req: Request, res: Response) => {
+          meetingController.cancelMeeting(req, res);
+        }
+      );
+
     this.router.get(
       "/admin/all-meetings",
       verifyAuth,

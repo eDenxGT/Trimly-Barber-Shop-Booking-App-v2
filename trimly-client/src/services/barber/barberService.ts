@@ -336,9 +336,11 @@ export const joinCommunity = async ({
 };
 
 export const fetchMeetingRoomById = async (communityId: string) => {
+	console.log(communityId);
 	const response = await barberAxiosInstance.get<IMeetingRoomResponse>(
 		"/barber/meeting",
 		{ params: { communityId } }
 	);
+	console.log(response);
 	return response.data;
 };

@@ -91,3 +91,32 @@ export const getSmartDate = (dateStr: string) => {
 
   return daysDiff < 3 ? date.fromNow() : formatDate(dateStr);
 };
+
+
+export const convertTo24Hour = (hour: string, minute: string, period: string) => {
+  let hourNum = Number.parseInt(hour);
+
+  if (period === "PM" && hourNum < 12) {
+    hourNum += 12;
+  } else if (period === "AM" && hourNum === 12) {
+    hourNum = 0;
+  }
+
+  return {
+    hour: hourNum.toString().padStart(2, "0"),
+    minute,
+  };
+};
+
+export const convertTo12Hour = (hour: string) => {
+  const hourNum = Number.parseInt(hour);
+  if (hourNum === 0) {
+    return { hour: "12", period: "AM" };
+  } else if (hourNum === 12) {
+    return { hour: "12", period: "PM" };
+  } else if (hourNum > 12) {
+    return { hour: (hourNum - 12).toString(), period: "PM" };
+  } else {
+    return { hour: hourNum.toString(), period: "AM" };
+  }
+};

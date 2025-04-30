@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { format, isAfter, addHours } from "date-fns";
 import { CalendarIcon, Clock, Info } from "lucide-react";
@@ -41,6 +41,7 @@ import { meetingSchema } from "@/utils/validations/meeting.validator";
 import { useScheduleMeeting } from "@/hooks/meeting/useMeetingRoom";
 import { IMeetingRoom } from "@/types/Chat";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { convertTo12Hour, convertTo24Hour } from "@/utils/helpers/timeFormatter";
 
 export const AdminScheduleMeetingPage = () => {
   const isLoading = false;
@@ -48,34 +49,6 @@ export const AdminScheduleMeetingPage = () => {
   const { communityId } = useParams();
   const [timeError, setTimeError] = useState("");
   const navigate = useNavigate();
-
-  const convertTo24Hour = (hour: string, minute: string, period: string) => {
-    let hourNum = Number.parseInt(hour);
-
-    if (period === "PM" && hourNum < 12) {
-      hourNum += 12;
-    } else if (period === "AM" && hourNum === 12) {
-      hourNum = 0;
-    }
-
-    return {
-      hour: hourNum.toString().padStart(2, "0"),
-      minute,
-    };
-  };
-
-  const convertTo12Hour = (hour: string) => {
-    const hourNum = Number.parseInt(hour);
-    if (hourNum === 0) {
-      return { hour: "12", period: "AM" };
-    } else if (hourNum === 12) {
-      return { hour: "12", period: "PM" };
-    } else if (hourNum > 12) {
-      return { hour: (hourNum - 12).toString(), period: "PM" };
-    } else {
-      return { hour: hourNum.toString(), period: "AM" };
-    }
-  };
 
   const validateTimes = (values: any) => {
     if (!values.meetingDate) return true;
@@ -102,7 +75,7 @@ export const AdminScheduleMeetingPage = () => {
     const endTime = new Date(values.meetingDate);
     endTime.setHours(Number.parseInt(endHour24), Number.parseInt(endMinute), 0);
 
-    if (isAfter(startTime, endTime)) {
+    if (isAfter(startTime, endTime) || startTime.getTime() === endTime.getTime()) {
       setTimeError("End time must be after start time");
       return false;
     }
@@ -126,6 +99,7 @@ export const AdminScheduleMeetingPage = () => {
       },
     });
   };
+  
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -143,7 +117,6 @@ export const AdminScheduleMeetingPage = () => {
     onSubmit: async (values) => {
       if (!validateTimes(values)) return;
 
-      // Convert to 24-hour format for saving
       const { hour: startHour24, minute: startMinute } = convertTo24Hour(
         values.startHour,
         values.startMinute,
@@ -156,7 +129,6 @@ export const AdminScheduleMeetingPage = () => {
         values.endPeriod
       );
 
-      // Create date objects
       const startDate = new Date(values.meetingDate!);
       startDate.setHours(
         Number.parseInt(startHour24),
@@ -180,22 +152,16 @@ export const AdminScheduleMeetingPage = () => {
         communityId: communityId,
       };
 
-      console.log("Meeting data in 24-hour format:", meetingData);
-      console.log("Start time (24h):", startHour24 + ":" + startMinute);
-      console.log("End time (24h):", endHour24 + ":" + endMinute);
-
       handleScheduleMeeting(meetingData);
     },
   });
 
-  // Generate time options for dropdowns
   const hourOptions = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
 
   const minuteOptions = Array.from({ length: 12 }, (_, i) =>
     (i * 5).toString().padStart(2, "0")
   );
 
-  // Calculate suggested end time (1 hour after start time)
   const suggestEndTime = () => {
     if (!formik.values.meetingDate) return;
 
@@ -222,6 +188,27 @@ export const AdminScheduleMeetingPage = () => {
     formik.setFieldValue("endMinute", endMinute.toString().padStart(2, "0"));
     formik.setFieldValue("endPeriod", period);
   };
+
+  useEffect(() => {
+    if (formik.values.meetingDate) {
+      validateTimes(formik.values);
+    }
+  }, [
+    formik.values.startHour,
+    formik.values.startMinute,
+    formik.values.startPeriod,
+    formik.values.endHour,
+    formik.values.endMinute,
+    formik.values.endPeriod,
+    formik.values.meetingDate,
+  ]);
+
+  
+  useEffect(() => {
+    if (formik.values.meetingDate) {
+      suggestEndTime();
+    }
+  }, [formik.values.meetingDate]);
 
   return (
     <div className="container mx-auto py-8 mt-16 px-4 max-w-2xl">
@@ -279,7 +266,7 @@ export const AdminScheduleMeetingPage = () => {
 
               <div className="space-y-2">
                 <Label
-                  htmlFor="title"
+                  htmlFor="meetLink"
                   className="text-sm font-medium flex items-center gap-1"
                 >
                   Meeting Link <span className="text-red-500">*</span>
@@ -472,7 +459,6 @@ export const AdminScheduleMeetingPage = () => {
                         value={formik.values.endHour}
                         onValueChange={(value) => {
                           formik.setFieldValue("endHour", value);
-                          validateTimes(formik.values);
                         }}
                       >
                         <SelectTrigger className="w-[70px]">
@@ -492,7 +478,6 @@ export const AdminScheduleMeetingPage = () => {
                         value={formik.values.endMinute}
                         onValueChange={(value) => {
                           formik.setFieldValue("endMinute", value);
-                          validateTimes(formik.values);
                         }}
                       >
                         <SelectTrigger className="w-[70px]">
@@ -514,7 +499,6 @@ export const AdminScheduleMeetingPage = () => {
                         value={formik.values.endPeriod}
                         onValueChange={(value) => {
                           formik.setFieldValue("endPeriod", value);
-                          validateTimes(formik.values);
                         }}
                       >
                         <SelectTrigger className="w-[70px]">
@@ -586,7 +570,12 @@ export const AdminScheduleMeetingPage = () => {
                 <Button
                   type="submit"
                   disabled={
-                    !formik.isValid || formik.isSubmitting || !!timeError
+                    !formik.isValid || 
+                    formik.isSubmitting || 
+                    !!timeError ||
+                    !formik.values.title ||
+                    !formik.values.meetLink ||
+                    !formik.values.meetingDate
                   }
                   className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium"
                 >

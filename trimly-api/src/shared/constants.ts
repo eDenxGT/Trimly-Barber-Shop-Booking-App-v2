@@ -59,6 +59,7 @@ export const SUCCESS_MESSAGES = {
   VERIFICATION_SUCCESS: "Verification done",
   DATA_RETRIEVED: "Data loaded",
   ACTION_SUCCESS: "Action successful",
+  CANCEL_SUCCESS: "Cancelled Successfully",
   WITHDRAWAL_SUCCESS:
     "Your withdrawal request has been processed successfully.",
   WITHDRAWAL_APPROVED_SUCCESS: "Withdrawal approved successfully.",
@@ -149,6 +150,14 @@ export const ERROR_MESSAGES = {
   FILE_SIZE_EXCEEDED: "File size is too large",
   RATE_LIMIT_EXCEEDED: "Too many requests try again later",
   MEETING_ALREADY_EXISTS: "A meeting is already scheduled for this community",
+  MEETING_ALREADY_CANCELLED: "Meeting already cancelled",
+  MEETING_ALREADY_COMPLETED: "Meeting already completed",
+  MEETING_CANNOT_COMPLETE_BEFORE_TIME_ENDS:
+    "Meeting cannot be marked as completed before it ends",
+  INVALID_DATES_FOR_MEETING: "Invalid start time or end time for meeting",
+  MEETING_CANNOT_SCHEDULE_IN_PAST:
+    "Meeting must be scheduled for a future time.",
+  START_TIME_MUST_BE_BEFORE_END_TIME: "Start time must be before end time.",
 } as const;
 
 export const DIRECT_CHAT_EVENTS = {

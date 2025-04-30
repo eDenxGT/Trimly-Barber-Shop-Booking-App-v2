@@ -185,6 +185,12 @@ import { IGetMeetingByCommunityIdUseCase } from "../../entities/useCaseInterface
 import { GetMeetingByCommunityIdUseCase } from "../../useCases/chat/meeting/get-meeting-by-communityid.usecase.js";
 import { IGetAllMeetingsForListingUseCase } from "../../entities/useCaseInterfaces/chat/meeting/get-all-meetings-for-listing-usecase.interface.js";
 import { GetAllMeetingsForListingUseCase } from "../../useCases/chat/meeting/get-all-meetings-for-listing.usecase.js";
+import { UpdateMeetingDetailsUseCase } from "../../useCases/chat/meeting/update-meeting-details.usecase.js";
+import { IUpdateMeetingDetailsUseCase } from "../../entities/useCaseInterfaces/chat/meeting/update-meeting-details-usecase.interface.js";
+import { ICancelMeetingUseCase } from "../../entities/useCaseInterfaces/chat/meeting/cancel-meeting-usecase.interface.js";
+import { CancelMeetingUseCase } from "../../useCases/chat/meeting/cancel-meeting.usecase.js";
+import { CompleteMeetingUseCase } from "../../useCases/chat/meeting/complete-meeting.usecase.js";
+import { ICompleteMeetingUseCase } from "../../entities/useCaseInterfaces/chat/meeting/complete-meeting-usecase.interface.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -600,6 +606,21 @@ export class UseCaseRegistry {
         useClass: GetAllMeetingsForListingUseCase,
       }
     );
+
+    container.register<IUpdateMeetingDetailsUseCase>(
+      "IUpdateMeetingDetailsUseCase",
+      {
+        useClass: UpdateMeetingDetailsUseCase,
+      }
+    );
+
+    container.register<ICancelMeetingUseCase>("ICancelMeetingUseCase", {
+      useClass: CancelMeetingUseCase,
+    });
+
+    container.register<ICompleteMeetingUseCase>("ICompleteMeetingUseCase", {
+      useClass: CompleteMeetingUseCase,
+    });
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

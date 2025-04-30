@@ -3,9 +3,15 @@ import { format } from "date-fns";
 import { EditMeetingModal } from "@/components/modals/EditMeetingModal";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
 import { IMeetingRoom } from "@/types/Chat";
-import { useGetAllMeetings } from "@/hooks/meeting/useMeetingRoom";
+import {
+  useCancelMeeting,
+  useCompleteMeeting,
+  useGetAllMeetings,
+  useUpdateMeeting,
+} from "@/hooks/meeting/useMeetingRoom";
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
 import { MeetingsComponent } from "@/components/admin/community/MeetingsList";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 export function AdminMeetingsPage() {
   const [meetings, setMeetings] = useState<IMeetingRoom[]>();
@@ -31,6 +37,12 @@ export function AdminMeetingsPage() {
     limit: 10,
   });
 
+  const { mutate: updateMeeting } = useUpdateMeeting();
+  const { mutate: completeMeeting } = useCompleteMeeting();
+  const { mutate: cancelMeeting } = useCancelMeeting();
+
+  const { successToast, errorToast } = useToaster();
+
   const totalPages = data?.totalPages;
 
   useEffect(() => {
@@ -53,22 +65,48 @@ export function AdminMeetingsPage() {
   };
 
   const saveEditedMeeting = (editedMeeting: IMeetingRoom) => {
-    // In production, this would be an API call
-    console.log(editedMeeting);
-    setIsEditModalOpen(false);
+    updateMeeting(editedMeeting, {
+      onSuccess: (data) => {
+        setIsEditModalOpen(false);
+        successToast(data?.message);
+      },
+      onError: (error: any) => {
+        errorToast(error.response.data.message);
+      },
+    });
   };
 
   const confirmMeetingCompletion = () => {
     if (selectedMeeting) {
-      // In production, this would be an API call
-      setIsCompletedDialogOpen(false);
+      completeMeeting(
+        { meetingId: selectedMeeting.meetingId },
+        {
+          onSuccess: (data) => {
+            setIsCompletedDialogOpen(false);
+            successToast(data?.message);
+          },
+          onError: (error: any) => {
+            errorToast(error.response.data.message);
+          },
+        }
+      );
     }
   };
 
   const confirmCancelMeeting = () => {
     if (selectedMeeting) {
-      // In production, this would be an API call
-      setIsCancelDialogOpen(false);
+      cancelMeeting(
+        { meetingId: selectedMeeting.meetingId },
+        {
+          onSuccess: (data) => {
+            setIsCancelDialogOpen(false);
+            successToast(data?.message);
+          },
+          onError: (error: any) => {
+            errorToast(error.response.data.message);
+          },
+        }
+      );
     }
   };
 

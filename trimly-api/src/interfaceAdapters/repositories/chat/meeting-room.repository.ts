@@ -19,10 +19,9 @@ export class MeetingRoomRepository
   async findLastPlannedMeeting(
     communityId: string
   ): Promise<IMeetingRoomModel | null> {
-    return await MeetingRoomModel.findOne(
-      { communityId },
-      { sort: { createdAt: -1 } }
-    );
+    return await MeetingRoomModel.findOne({ communityId }).sort({
+      createdAt: -1,
+    });
   }
 
   async getAllMeetingsForListing({
@@ -39,7 +38,7 @@ export class MeetingRoomRepository
     limit: number;
   }): Promise<{ meetings: IMeetingRoomEntity[]; totalPages: number }> {
     const matchConditions: any[] = [];
-  
+
     if (search) {
       matchConditions.push({
         $or: [
@@ -48,19 +47,19 @@ export class MeetingRoomRepository
         ],
       });
     }
-  
+
     if (status) {
       matchConditions.push({ status });
     }
-  
+
     if (date) {
       const dateObj = new Date(date);
       const nextDay = new Date(dateObj);
       nextDay.setDate(dateObj.getDate() + 1);
-  
+
       matchConditions.push({ startTime: { $gte: dateObj, $lt: nextDay } });
     }
-  
+
     const basePipeline = [
       {
         $lookup: {
@@ -80,15 +79,15 @@ export class MeetingRoomRepository
         $match: matchConditions.length ? { $and: matchConditions } : {},
       },
     ];
-  
+
     const countResult = await MeetingRoomModel.aggregate([
       ...basePipeline,
       { $count: "total" },
     ]);
-  
+
     const total = countResult[0]?.total || 0;
     const totalPages = Math.ceil(total / limit);
-  
+
     const meetings = await MeetingRoomModel.aggregate([
       ...basePipeline,
       {
@@ -109,9 +108,9 @@ export class MeetingRoomRepository
       },
       { $skip: (page - 1) * limit },
       { $limit: limit },
+      { $sort: { createdAt: -1 } },
     ]);
-  
+
     return { meetings, totalPages };
   }
-  
 }

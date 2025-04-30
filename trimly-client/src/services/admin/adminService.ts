@@ -225,7 +225,7 @@ export const adminGetAllMeetings = async ({
   status,
   date,
   page,
-  limit
+  limit,
 }: {
   search: string;
   status: string;
@@ -236,6 +236,38 @@ export const adminGetAllMeetings = async ({
   const response = await adminAxiosInstance.get<IAllMeetingRoomResponse>(
     "/admin/all-meetings",
     { params: { search, status, date, page, limit } }
+  );
+  return response.data;
+};
+
+export const adminUpdateMeeting = async (data: Partial<IMeetingRoom>) => {
+  const response = await adminAxiosInstance.put<IAxiosResponse>(
+    "/admin/meeting",
+    data
+  );
+  return response.data;
+};
+
+export const adminDeleteMeeting = async ({
+  meetingId,
+}: {
+  meetingId: string;
+}) => {
+  const response = await adminAxiosInstance.delete<IAxiosResponse>(
+    "/admin/meeting",
+    { params: { meetingId } }
+  );
+  return response.data;
+};
+
+export const adminCompleteMeeting = async ({
+  meetingId,
+}: {
+  meetingId: string;
+}) => {
+  const response = await adminAxiosInstance.patch<IAxiosResponse>(
+    "/admin/meeting",
+    { meetingId }
   );
   return response.data;
 };
