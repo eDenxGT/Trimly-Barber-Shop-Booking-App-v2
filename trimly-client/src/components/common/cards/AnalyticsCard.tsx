@@ -12,6 +12,7 @@ export interface AnalyticsCardProps {
   icon: string;
   bgColor?: string;
   iconColor?: string;
+  totalReviews?: number;
 }
 
 export const AnalyticsCardComponent: React.FC<AnalyticsCardProps> = ({
@@ -20,6 +21,7 @@ export const AnalyticsCardComponent: React.FC<AnalyticsCardProps> = ({
   icon,
   bgColor,
   iconColor,
+  totalReviews,
 }) => {
   const IconComponent = () => {
     switch (icon) {
@@ -54,7 +56,7 @@ export const AnalyticsCardComponent: React.FC<AnalyticsCardProps> = ({
             <div className="flex items-baseline space-x-2">
               <h3 className="text-2xl font-bold">{value}</h3>
               {icon === "star" && (
-                <span className="text-xs text-gray-500">(132 reviews)</span>
+                <span className="text-xs text-gray-500">({totalReviews} reviews)</span>
               )}
             </div>
           </div>

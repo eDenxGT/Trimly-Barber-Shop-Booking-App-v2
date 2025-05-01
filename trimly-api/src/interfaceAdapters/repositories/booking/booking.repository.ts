@@ -289,18 +289,13 @@ export class BookingRepository
   }> {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-  
+
     const weekAgo = new Date(today);
     weekAgo.setDate(today.getDate() - 6);
-  
-    const thisMonth = today.getMonth();
-    const thisYear = today.getFullYear();
-    
-    const firstDayOfMonth = new Date(thisYear, thisMonth, 1);
-    const lastDayOfMonth = new Date(thisYear, thisMonth + 1, 0);
 
-    console.log(firstDayOfMonth.getDate(), lastDayOfMonth.getDate())
-  
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(today.getDate() - 29);
+
     const [weeklyBookings, monthlyBookings, weeklyEarnings, monthlyEarnings] =
       await Promise.all([
         BookingModel.aggregate([
@@ -321,12 +316,12 @@ export class BookingRepository
           },
           { $sort: { _id: 1 } },
         ]),
-  
+
         BookingModel.aggregate([
           {
             $match: {
               shopId,
-              date: { $gte: firstDayOfMonth, $lte: today },
+              date: { $gte: thirtyDaysAgo, $lte: today },
               status: { $in: ["confirmed", "completed"] },
             },
           },
@@ -340,7 +335,7 @@ export class BookingRepository
           },
           { $sort: { _id: 1 } },
         ]),
-  
+
         BookingModel.aggregate([
           {
             $match: {
@@ -359,12 +354,12 @@ export class BookingRepository
           },
           { $sort: { _id: 1 } },
         ]),
-  
+
         BookingModel.aggregate([
           {
             $match: {
               shopId,
-              date: { $gte: firstDayOfMonth, $lte: today },
+              date: { $gte: thirtyDaysAgo, $lte: today },
               status: "completed",
             },
           },
@@ -379,40 +374,46 @@ export class BookingRepository
           { $sort: { _id: 1 } },
         ]),
       ]);
-      
+
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const weeklyDays = [];
-    
+
     for (let i = 0; i < 7; i++) {
       const date = new Date(weekAgo);
       date.setDate(weekAgo.getDate() + i);
       weeklyDays.push({
-        fullDate: date.toISOString().split('T')[0], 
-        dayName: dayNames[date.getDay()]
+        fullDate: date.toISOString().split("T")[0],
+        dayName: dayNames[date.getDay()],
       });
     }
-    
-    const transformedWeeklyBookings = weeklyDays.map(day => {
-      const matchingBooking = weeklyBookings.find(b => b._id === day.fullDate);
-      return {
-        date: day.dayName,
-        count: matchingBooking ? matchingBooking.count : 0
-      };
-    });
-    
-    const transformedWeeklyEarnings = weeklyDays.map(day => {
-      const matchingEarning = weeklyEarnings.find(e => e._id === day.fullDate);
-      return {
-        date: day.dayName,
-        total: matchingEarning ? matchingEarning.total : 0
-      };
-    });
-    console.log("Monthly details",monthlyBookings, monthlyEarnings)
-  
-    const transformedMonthlyBookings = generateCompleteWeeklyData(monthlyBookings);
-    const transformedMonthlyEarnings = generateCompleteWeeklyData(monthlyEarnings, true);
 
-  
+    const transformedWeeklyBookings = weeklyDays.map((day) => {
+      const matchingBooking = weeklyBookings.find(
+        (b) => b._id === day.fullDate
+      );
+      return {
+        date: day.dayName,
+        count: matchingBooking ? matchingBooking.count : 0,
+      };
+    });
+
+    const transformedWeeklyEarnings = weeklyDays.map((day) => {
+      const matchingEarning = weeklyEarnings.find(
+        (e) => e._id === day.fullDate
+      );
+      return {
+        date: day.dayName,
+        total: matchingEarning ? matchingEarning.total : 0,
+      };
+    });
+
+    const transformedMonthlyBookings =
+      generateCompleteWeeklyData(monthlyBookings);
+    const transformedMonthlyEarnings = generateCompleteWeeklyData(
+      monthlyEarnings,
+      true
+    );
+
     return {
       weeklyBookings: transformedWeeklyBookings,
       monthlyBookings: transformedMonthlyBookings,
@@ -421,13 +422,15 @@ export class BookingRepository
     };
   }
 
-  async getUpcomingAppointmentsForToday(shopId: string): Promise<IBarberDashboardResponse["upcomingAppointments"]> {
+  async getUpcomingAppointmentsForToday(
+    shopId: string
+  ): Promise<IBarberDashboardResponse["upcomingAppointments"]> {
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
-  
+
     const todayEnd = new Date();
     todayEnd.setHours(23, 59, 59, 999);
-  
+
     return BookingModel.aggregate([
       {
         $match: {
@@ -457,5 +460,4 @@ export class BookingRepository
       },
     ]);
   }
-  
 }

@@ -260,6 +260,7 @@ const BarberDashboard = (
             value={`${analytics.averageRating}`}
             bgColor="bg-yellow-500/10"
             iconColor="text-yellow-500"
+            totalReviews={analytics.totalReviews}
           />
         </div>
 
