@@ -197,6 +197,8 @@ import { IGetLastBookingByUserUseCase } from "../../entities/useCaseInterfaces/b
 import { GetLastBookingByUserUseCase } from "../../useCases/booking/get-last-booking-by-user.usecase.js";
 import { GetBarberDashboardDataUseCase } from "../../useCases/dashboard/get-barber-dashboard-data.usecase.js";
 import { IGetBarberDashboardDataUseCase } from "../../entities/useCaseInterfaces/dashboard/get-barber-dashboard-data-usecase..interface.js";
+import { GetAdminDashboardDataUseCase } from "../../useCases/dashboard/get-admin-dashboard-data.usecase.js";
+import { IGetAdminDashboardDataUseCase } from "../../entities/useCaseInterfaces/dashboard/get-admin-dashboard-data-usecase.interface.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -646,6 +648,13 @@ export class UseCaseRegistry {
       "IGetBarberDashboardDataUseCase",
       {
         useClass: GetBarberDashboardDataUseCase,
+      }
+    );
+
+    container.register<IGetAdminDashboardDataUseCase>(
+      "IGetAdminDashboardDataUseCase",
+      {
+        useClass: GetAdminDashboardDataUseCase,
       }
     );
 

@@ -27,4 +27,13 @@ export interface IBookingRepository extends IBaseRepository<IBookingEntity> {
   getUpcomingAppointmentsForToday(
     shopId: string
   ): Promise<IBarberDashboardResponse["upcomingAppointments"]>;
+
+  getTotalEarnings(): Promise<number>;
+
+  getBookingAndEarningsChartDataForAdmin(): Promise<{
+    weeklyBookings: { date: string; count: number }[];
+    monthlyBookings: { date: string; count: number }[];
+    weeklyEarnings: { date: string; total: number }[];
+    monthlyEarnings: { date: string; total: number }[];
+  }>;
 }

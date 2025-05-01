@@ -33,3 +33,26 @@ export interface IAnalyticsData {
   averageRating: number;
   totalReviews: number;
 }
+
+export interface IAdminAnalyticsData {
+  totalClients: number;
+  totalBarbers: number;
+  totalBookings: number;
+  totalEarnings: number;
+}
+
+export interface ShopDashboardData {
+  id: string;
+  name: string;
+  ownerName: string;
+  status: "active" | "pending" | "suspended";
+  createdAt: string;
+}
+
+export interface ClientDashboardData {
+  id: string;
+  name: string;
+  userId: string;
+  createdAt: string;
+  avatar?: string;
+}

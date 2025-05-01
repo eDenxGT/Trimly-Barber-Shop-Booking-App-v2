@@ -1,4 +1,4 @@
-import { IBarberDashboardResponse } from "../../../shared/dtos/dashboard-data.dto.js";
+import { IAdminDashboardResponse, IBarberDashboardResponse } from "../../../shared/dtos/dashboard-data.dto.js";
 import { IBarberEntity } from "../../models/barber.entity.js";
 import { IBookingEntity } from "../../models/booking.entity.js";
 import { IServiceEntity } from "../../models/service.enity.js";
@@ -35,4 +35,6 @@ export interface IBarberRepository extends IBaseRepository<IBarberEntity> {
     latitude: number;
     longitude: number;
   }): Promise<IBarberEntity[] | null>;
+
+  getRecentShops(): Promise<IAdminDashboardResponse["recentShops"]>;
 }

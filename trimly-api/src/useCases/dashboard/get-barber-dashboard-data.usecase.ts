@@ -32,8 +32,7 @@ export class GetBarberDashboardDataUseCase
       this._reviewRepository.getLatestReviews(userId),
     ]);
 
-    console.log(analytics, reviewStats, bookingAndEarningsChartData);
-
+    
     return {
       analytics: {
         totalEarnings: analytics.totalEarnings || 0,
@@ -54,51 +53,3 @@ export class GetBarberDashboardDataUseCase
     };
   }
 }
-
-// export interface IBarberDashboardResponse {
-//   analytics: {
-//     totalEarnings: number;
-//     totalBookings: number;
-//     totalClientsServed: number;
-//     upcomingAppointmentsToday: number;
-//     averageRating: number;
-//     totalReviews: number;
-//   };
-
-//   charts: {
-//     weeklyBookings: {
-//       date: string;
-//       count: number;
-//     }[];
-//     monthlyBookings: {
-//       date: string;
-//       total: number;
-//     }[];
-//     weeklyEarnings: {
-//       date: string;
-//       total: number;
-//     }[];
-//     monthlyEarnings: {
-//       date: string;
-//       total: number;
-//     }[];
-//   };
-
-//   upcomingAppointments: {
-//     bookingId: string;
-//     clientName: string;
-//     clientAvatar?: string;
-//     timeSlot: string;
-//     services: string[];
-//     status: "confirmed" | "cancelled" ;
-//   }[];
-
-//   latestReviews: {
-//     reviewId: string;
-//     clientName: string;
-//     clientAvatar?: string;
-//     rating: number;
-//     comment?: string;
-//     createdAt: string;
-//   }[];
-// }

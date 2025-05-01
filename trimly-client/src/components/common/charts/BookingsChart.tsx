@@ -23,7 +23,6 @@ const BookingsChart = ({
   weeklyChartData: IBookingsChartData[];
   monthlyChartData: IBookingsChartData[];
 }) => {
-  console.log(weeklyChartData)
   return (
     <Card className="shadow-md">
       <CardHeader className="flex flex-row items-center justify-between pb-2">

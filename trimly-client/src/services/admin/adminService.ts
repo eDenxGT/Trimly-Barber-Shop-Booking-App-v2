@@ -3,6 +3,7 @@ import { FetchUsersParams, UsersResponse } from "@/hooks/admin/useAllUsers";
 import { FetchShopsParams } from "@/hooks/barber/useAllBarberShops";
 import { ICommunityChat, IMeetingRoom } from "@/types/Chat";
 import {
+  IAdminDashboardResponse,
   IAdminResponse,
   IAllBarberShopsResponse,
   IAllCommunitiesResponse,
@@ -271,3 +272,11 @@ export const adminCompleteMeeting = async ({
   );
   return response.data;
 };
+
+export const getAdminDashboardData =
+  async (): Promise<IAdminDashboardResponse> => {
+    const response = await adminAxiosInstance.get<{
+      data: IAdminDashboardResponse;
+    }>("/admin/dashboard");
+    return response.data.data;
+  };

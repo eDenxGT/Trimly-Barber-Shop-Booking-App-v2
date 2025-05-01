@@ -10,4 +10,5 @@ export interface IBaseRepository<T> {
   update(filter: any, updateData: Partial<T> | any): Promise<T | null>;
   delete(filter: any): Promise<T | null>;
   deleteAll(filter: any): Promise<void>;
+  countDocuments(filter: any): Promise<number>;
 }

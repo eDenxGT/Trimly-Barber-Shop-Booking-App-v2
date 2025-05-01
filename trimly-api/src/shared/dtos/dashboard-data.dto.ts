@@ -45,3 +45,40 @@ export interface IBarberDashboardResponse {
     createdAt: string;
   }[];
 }
+
+export interface IAdminDashboardResponse {
+  analytics: {
+    totalClients: number;
+    totalBarbers: number;
+    totalBookings: number;
+    totalEarnings: number;
+  };
+
+  charts: {
+    weeklyBookings: {
+      date: string;
+      count: number;
+    }[];
+    monthlyBookings: {
+      date: string;
+      count: number;
+    }[];
+    weeklyEarnings: {
+      date: string;
+      total: number;
+    }[];
+    monthlyEarnings: {
+      date: string;
+      total: number;
+    }[];
+  };
+
+  recentShops: {
+    userId: string;
+    name: string;
+    ownerName: string;
+    createdAt: Date;
+    status: "pending" | "approved" | "rejected";
+  }[];
+  recentClients: { userId: string; name: string; createdAt: Date }[];
+}

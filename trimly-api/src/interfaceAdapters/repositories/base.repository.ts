@@ -32,8 +32,12 @@ export class BaseRepository<T> implements IBaseRepository<T> {
   async delete(filter: FilterQuery<T>) {
     return this.model.findOneAndDelete(filter).lean() as Promise<T>;
   }
-  
+
   async deleteAll(filter: FilterQuery<T>) {
     await this.model.deleteMany(filter);
+  }
+
+  async countDocuments(filter: FilterQuery<T>) {
+    return this.model.countDocuments(filter);
   }
 }

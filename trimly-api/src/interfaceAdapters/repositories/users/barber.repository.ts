@@ -9,6 +9,7 @@ import { IBarberRepository } from "../../../entities/repositoryInterfaces/users/
 import { IBookingEntity } from "../../../entities/models/booking.entity.js";
 import { IServiceEntity } from "../../../entities/models/service.enity.js";
 import { FilterQuery, PipelineStage } from "mongoose";
+import { IAdminDashboardResponse } from "../../../shared/dtos/dashboard-data.dto.js";
 
 @injectable()
 export class BarberRepository
@@ -335,5 +336,27 @@ export class BarberRepository
 
     const shops = await BarberModel.aggregate(pipeline);
     return shops;
+  }
+
+  async getRecentShops(): Promise<IAdminDashboardResponse["recentShops"]> {
+    const recentShops = await BarberModel.aggregate([
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $project: {
+          userId: 1,
+          name: "$shopName",
+          ownerName: "$ownerName",
+          createdAt: 1,
+          status: 1,
+        },
+      },
+    ]);
+
+    return recentShops;
   }
 }

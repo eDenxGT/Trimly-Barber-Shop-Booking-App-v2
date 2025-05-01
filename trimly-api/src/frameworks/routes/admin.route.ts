@@ -14,6 +14,7 @@ import {
   authController,
   blockStatusMiddleware,
   chatController,
+  dashboardController,
   financeController,
   meetingController,
   shopController,
@@ -48,6 +49,19 @@ export class AdminRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         userController.changeUserPassword(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                🛠️ Dashboard Endpoint
+    //* ─────────────────────────────────────────────────────────────
+    this.router.get(
+      "/admin/dashboard",
+      verifyAuth,
+      authorizeRole(["admin"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        dashboardController.getAdminDashboardData(req, res);
       }
     );
 

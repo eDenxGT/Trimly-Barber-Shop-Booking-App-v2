@@ -8,10 +8,13 @@ import {
 } from "./Chat";
 import {
   AppointmentData,
+  ClientDashboardData,
+  IAdminAnalyticsData,
   IAnalyticsData,
   IBookingsChartData,
   IEarningsChartData,
   ReviewData,
+  ShopDashboardData,
 } from "./DashboardListingTypes";
 import { IPost } from "./Feed";
 import { IService } from "./Service";
@@ -146,4 +149,17 @@ export interface IBarberDashboardResponse {
   upcomingAppointments: AppointmentData[];
 
   latestReviews: ReviewData[];
+}
+
+export interface IAdminDashboardResponse {
+  analytics: IAdminAnalyticsData;
+  charts: {
+    weeklyBookings: IBookingsChartData[];
+    monthlyBookings: IBookingsChartData[];
+    weeklyEarnings: IEarningsChartData[];
+    monthlyEarnings: IEarningsChartData[];
+  };
+
+  recentShops: ShopDashboardData[];
+  recentClients: ClientDashboardData[];
 }
