@@ -22,7 +22,8 @@ export class GetAllPostsForClientUseCase
       },
       skip,
       limit,
-      userId
+      userId,
+      true
     );
   }
 }

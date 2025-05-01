@@ -6,6 +6,7 @@ import {
   PostModel,
 } from "../../../frameworks/database/mongoDb/models/post.model.js";
 import { IPostEntity } from "../../../entities/models/post.entity.js";
+import console from "console";
 
 @injectable()
 export class PostRepository
@@ -15,12 +16,12 @@ export class PostRepository
   constructor() {
     super(PostModel);
   }
-
   async findAllPosts(
     filter: Partial<IPostEntity>,
     skip: number,
     limit: number,
-    userId?: string
+    userId?: string,
+    isForClient?: boolean
   ): Promise<{ items: IPostEntity[]; total: number }> {
     const matchStage = {
       $match: {
@@ -29,12 +30,19 @@ export class PostRepository
       },
     };
 
-    const aggregationPipeline: any[] = [
-      matchStage,
-      { $sort: { createdAt: -1 } },
-      { $skip: skip },
-      { $limit: limit },
+    const aggregationPipeline: any[] = [matchStage];
 
+    if (!isForClient) {
+      aggregationPipeline.push(
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limit }
+      );
+    } else {
+      aggregationPipeline.push({ $sample: { size: limit } });
+    }
+    
+    aggregationPipeline.push(
       {
         $lookup: {
           from: "barbers",
@@ -43,7 +51,6 @@ export class PostRepository
           as: "barberDetails",
         },
       },
-
       {
         $lookup: {
           from: "comments",
@@ -52,7 +59,6 @@ export class PostRepository
           as: "commentsList",
         },
       },
-
       {
         $addFields: {
           userDetails: {
@@ -80,15 +86,14 @@ export class PostRepository
           },
         },
       },
-
       {
         $project: {
           barberDetails: 0,
           commentsList: 0,
           likes: 0,
         },
-      },
-    ];
+      }
+    );
 
     const [items, total] = await Promise.all([
       PostModel.aggregate(aggregationPipeline),

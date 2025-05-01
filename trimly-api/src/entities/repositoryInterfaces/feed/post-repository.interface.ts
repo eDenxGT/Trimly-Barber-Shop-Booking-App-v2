@@ -6,9 +6,10 @@ export interface IPostRepository extends IBaseRepository<IPostEntity> {
     filter: Partial<IPostEntity>,
     skip: number,
     limit: number,
-    userId: string
+    userId: string,
+    isForClient?: boolean
   ): Promise<{ items: IPostEntity[]; total: number }>;
-
+  
   getSinglePostByPostId(
     filter: Partial<IPostEntity>,
     userId: string

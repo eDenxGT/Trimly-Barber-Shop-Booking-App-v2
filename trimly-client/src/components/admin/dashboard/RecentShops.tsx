@@ -19,52 +19,13 @@ import { ShopDashboardData } from "@/types/DashboardListingTypes";
 import { Building } from "lucide-react";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 
-// Sample data for development and testing
-const sampleShops: ShopDashboardData[] = [
-  {
-    id: "shop1",
-    name: "Sharp Cuts Barbershop",
-    ownerName: "Michael Johnson",
-    status: "active",
-    joinedDate: "2025-04-25T14:48:00.000Z"
-  },
-  {
-    id: "shop2",
-    name: "Style Hub",
-    ownerName: "Robert Williams",
-    status: "pending",
-    joinedDate: "2025-04-24T09:30:00.000Z"
-  },
-  {
-    id: "shop3",
-    name: "Classic Barbers",
-    ownerName: "David Brown",
-    status: "active",
-    joinedDate: "2025-04-22T11:15:00.000Z"
-  },
-  {
-    id: "shop4",
-    name: "Modern Cuts",
-    ownerName: "James Davis",
-    status: "active",
-    joinedDate: "2025-04-21T16:20:00.000Z"
-  },
-  {
-    id: "shop5",
-    name: "Elite Grooming",
-    ownerName: "William Taylor",
-    status: "suspended",
-    joinedDate: "2025-04-19T13:45:00.000Z"
-  }
-];
-
 interface RecentShopsProps {
   shops?: ShopDashboardData[];
   isLoading?: boolean;
 }
 
 const RecentShops: React.FC<RecentShopsProps> = ({ 
-  shops = sampleShops, 
+  shops, 
   isLoading = false 
 }) => {
 
@@ -111,7 +72,7 @@ const RecentShops: React.FC<RecentShopsProps> = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {shops.map((shop) => (
+              {shops?.map((shop) => (
                 <TableRow key={shop.id}>
                   <TableCell className="font-medium">{shop.name}</TableCell>
                   <TableCell>
