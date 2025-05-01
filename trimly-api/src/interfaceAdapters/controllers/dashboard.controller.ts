@@ -6,6 +6,7 @@ import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
 import { IGetNearest3ShopsForClientUseCase } from "../../entities/useCaseInterfaces/shop/get-nearest-3-shops-for-client-usecase.interface.js";
 import { IGetLastBookingByUserUseCase } from "../../entities/useCaseInterfaces/booking/get-last-booking-by-user-usecase.interface.js";
+import { IGetBarberDashboardDataUseCase } from "../../entities/useCaseInterfaces/dashboard/get-barber-dashboard-data-usecase..interface.js";
 
 @injectable()
 export class DashboardController implements IDashboardController {
@@ -13,7 +14,9 @@ export class DashboardController implements IDashboardController {
     @inject("IGetNearest3ShopsForClientUseCase")
     private _getNearest3ShopsForClientUseCase: IGetNearest3ShopsForClientUseCase,
     @inject("IGetLastBookingByUserUseCase")
-    private _getLastBookingByUserUseCase: IGetLastBookingByUserUseCase
+    private _getLastBookingByUserUseCase: IGetLastBookingByUserUseCase,
+    @inject("IGetBarberDashboardDataUseCase")
+    private _getBarberDashboardDataUseCase: IGetBarberDashboardDataUseCase
   ) {}
 
   //* ─────────────────────────────────────────────────────────────
@@ -48,6 +51,115 @@ export class DashboardController implements IDashboardController {
         shops,
         lastBooking,
       });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                🛠️ Get Barber Dashboard Data
+  //* ─────────────────────────────────────────────────────────────
+  async getBarberDashboardData(req: Request, res: Response): Promise<void> {
+    try {
+      const { userId } = (req as CustomRequest).user;
+
+      if (!userId) {
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({
+          success: false,
+          message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+        });
+        return;
+      }
+
+      const dashboardData = await this._getBarberDashboardDataUseCase.execute({
+        userId,
+      });
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        data: dashboardData,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  // export interface IBarberDashboardResponse {
+  //   analytics: {
+  //     totalEarnings: number;
+  //     totalBookings: number;
+  //     totalClientsServed: number;
+  //     upcomingAppointmentsToday: number;
+  //     averageRating: number;
+  //     totalReviews: number;
+  //   };
+
+  //   charts: {
+  //     weeklyBookings: {
+  //       date: string;
+  //       count: number;
+  //     }[];
+  //     monthlyBookings: {
+  //       date: string;
+  //       total: number;
+  //     }[];
+  //     weeklyEarnings: {
+  //       date: string;
+  //       total: number;
+  //     }[];
+  //     monthlyEarnings: {
+  //       date: string;
+  //       total: number;
+  //     }[];
+  //   };
+
+  //   upcomingAppointments: {
+  //     bookingId: string;
+  //     clientName: string;
+  //     clientAvatar?: string;
+  //     timeSlot: string;
+  //     services: string[];
+  //     status: "confirmed" | "cancelled" ;
+  //   }[];
+
+  //   latestReviews: {
+  //     reviewId: string;
+  //     clientName: string;
+  //     clientAvatar?: string;
+  //     rating: number;
+  //     comment?: string;
+  //     createdAt: string;
+  //   }[];
+  // }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                🛠️ Get Admin Dashboard Data
+  //* ─────────────────────────────────────────────────────────────
+  async getAdminDashboardData(req: Request, res: Response): Promise<void> {
+    try {
+      // const { userId } = (req as CustomRequest).user;
+      // const { latitude, longitude } = req.query;
+      // if (!userId) {
+      //   res.status(HTTP_STATUS.UNAUTHORIZED).json({
+      //     success: false,
+      //     message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+      //   });
+      //   return;
+      // }
+      // const shops = await this._getNearest3ShopsForClientUseCase.execute({
+      //   userId,
+      //   latitude: Number(latitude),
+      //   longitude: Number(longitude),
+      // });
+      // const lastBooking = await this._getLastBookingByUserUseCase.execute({
+      //   userId,
+      // });
+      // console.log(lastBooking, shops);
+      // res.status(HTTP_STATUS.OK).json({
+      //   success: true,
+      //   shops,
+      //   lastBooking,
+      // });
     } catch (error) {
       handleErrorResponse(req, res, error);
     }

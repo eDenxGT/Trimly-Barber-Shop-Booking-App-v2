@@ -62,7 +62,7 @@
     "react-razorpay": "^3.0.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.4.0",
-    "recharts": "^2.15.1",
+    "recharts": "^2.15.3",
     "redux-persist": "^6.0.0",
     "rrule": "^2.8.1",
     "socket.io-client": "^4.8.1",

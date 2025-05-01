@@ -1,3 +1,4 @@
+import { IBarberDashboardResponse } from "../../../shared/dtos/dashboard-data.dto.js";
 import { IBarberEntity } from "../../models/barber.entity.js";
 import { IBookingEntity } from "../../models/booking.entity.js";
 import { IServiceEntity } from "../../models/service.enity.js";

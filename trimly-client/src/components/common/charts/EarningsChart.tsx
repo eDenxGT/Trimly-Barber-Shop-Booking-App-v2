@@ -1,54 +1,62 @@
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
   ResponsiveContainer,
-  Tooltip
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
+import { CustomTooltip } from "../tooltip/CustomTooltip";
+import { IEarningsChartData } from "@/types/DashboardListingTypes";
 
-const data = [
-  { name: "1", value: 800, light: 1000 },
-  { name: "2", value: 1700, light: 1800 },
-  { name: "3", value: 900, light: 1000 },
-  { name: "4", value: 1500, light: 1600 },
-  { name: "5", value: 1000, light: 1100 },
-  { name: "6", value: 1300, light: 1400 },
-  { name: "7", value: 800, light: 900 },
-  { name: "8", value: 1000, light: 1100 },
-  { name: "9", value: 1200, light: 1300 },
-  { name: "10", value: 900, light: 1000 },
-];
-
-export const EarningsChart = () => {
+const EarningsChart = ({
+  earningsTimeRange,
+  setEarningsTimeRange,
+  weeklyChartData,
+  monthlyChartData,
+}: {
+  earningsTimeRange: "7d" | "30d";
+  setEarningsTimeRange: (value: "7d" | "30d") => void;
+  weeklyChartData: IEarningsChartData[];
+  monthlyChartData: IEarningsChartData[];
+}) => {
   return (
-    <div className="w-full h-60">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={data}
-          margin={{ top: 10, right: 10, left: -25, bottom: 0 }}
-          barSize={10}
+    <Card className="shadow-md">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle>Earnings Over Time</CardTitle>
+        <Tabs
+          defaultValue="7d"
+          value={earningsTimeRange}
+          onValueChange={(value) => setEarningsTimeRange(value as "7d" | "30d")}
+          className="w-[150px]"
         >
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="name" tickLine={false} axisLine={false} />
-          <YAxis hide />
-          <Tooltip 
-            formatter={(value) => [`$${value}`, 'Earnings']}
-            cursor={{ fill: 'transparent' }}
-          />
-          <Bar 
-            dataKey="light" 
-            fill="#E5F7E8" 
-            radius={[5, 5, 0, 0]} 
-          />
-          <Bar 
-            dataKey="value" 
-            fill="#22C55E" 
-            radius={[5, 5, 0, 0]} 
-          />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="7d">7 Days</TabsTrigger>
+            <TabsTrigger value="30d">30 Days</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </CardHeader>
+      <CardContent className="h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={
+              earningsTimeRange === "7d" ? weeklyChartData : monthlyChartData
+            }
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <XAxis dataKey="date" />
+            <YAxis />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip content={<CustomTooltip />} />
+            <Bar dataKey="total" fill="#F9B208" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
   );
 };
+
+export default EarningsChart;

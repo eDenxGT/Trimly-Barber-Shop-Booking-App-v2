@@ -6,6 +6,13 @@ import {
   IDirectChatPreview,
   IMeetingRoom,
 } from "./Chat";
+import {
+  AppointmentData,
+  IAnalyticsData,
+  IBookingsChartData,
+  IEarningsChartData,
+  ReviewData,
+} from "./DashboardListingTypes";
 import { IPost } from "./Feed";
 import { IService } from "./Service";
 import { IAdmin, IBarber, IClient, UserDTO } from "./User";
@@ -124,4 +131,19 @@ export interface IAllMeetingRoomResponse extends IAxiosResponse {
 export interface IClientHomePageResponse extends IAxiosResponse {
   lastBooking: IBooking;
   shops: IBarber[];
+}
+
+export interface IBarberDashboardResponse {
+  analytics: IAnalyticsData;
+
+  charts: {
+    weeklyBookings: IBookingsChartData[];
+    monthlyBookings: IBookingsChartData[];
+    weeklyEarnings: IEarningsChartData[];
+    monthlyEarnings: IEarningsChartData[];
+  };
+
+  upcomingAppointments: AppointmentData[];
+
+  latestReviews: ReviewData[];
 }

@@ -195,6 +195,8 @@ import { IGetNearest3ShopsForClientUseCase } from "../../entities/useCaseInterfa
 import { GetNearest3ShopsForClientUseCase } from "../../useCases/shop/get-nearest-3-shops-for-client.usecase.js";
 import { IGetLastBookingByUserUseCase } from "../../entities/useCaseInterfaces/booking/get-last-booking-by-user-usecase.interface.js";
 import { GetLastBookingByUserUseCase } from "../../useCases/booking/get-last-booking-by-user.usecase.js";
+import { GetBarberDashboardDataUseCase } from "../../useCases/dashboard/get-barber-dashboard-data.usecase.js";
+import { IGetBarberDashboardDataUseCase } from "../../entities/useCaseInterfaces/dashboard/get-barber-dashboard-data-usecase..interface.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -637,6 +639,13 @@ export class UseCaseRegistry {
       "IGetLastBookingByUserUseCase",
       {
         useClass: GetLastBookingByUserUseCase,
+      }
+    );
+
+    container.register<IGetBarberDashboardDataUseCase>(
+      "IGetBarberDashboardDataUseCase",
+      {
+        useClass: GetBarberDashboardDataUseCase,
       }
     );
 
