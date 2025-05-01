@@ -1,6 +1,5 @@
 import { inject, injectable } from "tsyringe";
 import { Request, Response } from "express";
-import { ZodError } from "zod";
 import { IUserController } from "../../entities/controllerInterfaces/users/user-controller.interface.js";
 import { handleErrorResponse } from "../../shared/utils/error.handler.js";
 import {

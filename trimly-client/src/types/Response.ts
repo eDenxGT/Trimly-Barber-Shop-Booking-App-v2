@@ -119,3 +119,9 @@ export interface IAllMeetingRoomResponse extends IAxiosResponse {
   totalPages: number;
   currentPage: number;
 }
+
+// * Home
+export interface IClientHomePageResponse extends IAxiosResponse {
+  lastBooking: IBooking;
+  shops: IBarber[];
+}

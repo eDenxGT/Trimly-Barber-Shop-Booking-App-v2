@@ -15,6 +15,7 @@ import {
   blockStatusMiddleware,
   bookingController,
   chatController,
+  dashboardController,
   feedController,
   financeController,
   reviewController,
@@ -49,6 +50,19 @@ export class ClientRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         userController.changeUserPassword(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                🛠️ Home Page Endpoint
+    //* ─────────────────────────────────────────────────────────────
+    this.router.get(
+      "/client/home-data",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        dashboardController.getClientHomePageData(req, res);
       }
     );
 

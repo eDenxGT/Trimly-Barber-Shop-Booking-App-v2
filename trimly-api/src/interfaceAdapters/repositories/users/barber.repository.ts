@@ -276,4 +276,64 @@ export class BarberRepository
     const data = await BarberModel.aggregate(pipeline).exec();
     return data[0];
   }
+
+  async findNearest3Shops({
+    latitude,
+    longitude,
+  }: {
+    latitude: number;
+    longitude: number;
+  }): Promise<IBarberEntity[]> {
+    const pipeline: any[] = [];
+
+    pipeline.push({
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: [longitude, latitude],
+        },
+        distanceField: "distance",
+        spherical: true,
+        query: { status: "active" },
+      },
+    });
+
+    pipeline.push(
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "userId",
+          foreignField: "shopId",
+          as: "reviews",
+        },
+      },
+      {
+        $addFields: {
+          averageRating: {
+            $cond: {
+              if: { $gt: [{ $size: "$reviews" }, 0] },
+              then: { $avg: "$reviews.rating" },
+              else: null,
+            },
+          },
+        },
+      },
+      {
+        $unset: "reviews",
+      }
+    );
+
+    pipeline.push({
+      $sort: {
+        averageRating: -1,
+      },
+    });
+
+    pipeline.push({
+      $limit: 3,
+    });
+
+    const shops = await BarberModel.aggregate(pipeline);
+    return shops;
+  }
 }

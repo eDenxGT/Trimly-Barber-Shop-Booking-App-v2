@@ -191,6 +191,10 @@ import { ICancelMeetingUseCase } from "../../entities/useCaseInterfaces/chat/mee
 import { CancelMeetingUseCase } from "../../useCases/chat/meeting/cancel-meeting.usecase.js";
 import { CompleteMeetingUseCase } from "../../useCases/chat/meeting/complete-meeting.usecase.js";
 import { ICompleteMeetingUseCase } from "../../entities/useCaseInterfaces/chat/meeting/complete-meeting-usecase.interface.js";
+import { IGetNearest3ShopsForClientUseCase } from "../../entities/useCaseInterfaces/shop/get-nearest-3-shops-for-client-usecase.interface.js";
+import { GetNearest3ShopsForClientUseCase } from "../../useCases/shop/get-nearest-3-shops-for-client.usecase.js";
+import { IGetLastBookingByUserUseCase } from "../../entities/useCaseInterfaces/booking/get-last-booking-by-user-usecase.interface.js";
+import { GetLastBookingByUserUseCase } from "../../useCases/booking/get-last-booking-by-user.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -621,6 +625,20 @@ export class UseCaseRegistry {
     container.register<ICompleteMeetingUseCase>("ICompleteMeetingUseCase", {
       useClass: CompleteMeetingUseCase,
     });
+
+    container.register<IGetNearest3ShopsForClientUseCase>(
+      "IGetNearest3ShopsForClientUseCase",
+      {
+        useClass: GetNearest3ShopsForClientUseCase,
+      }
+    );
+
+    container.register<IGetLastBookingByUserUseCase>(
+      "IGetLastBookingByUserUseCase",
+      {
+        useClass: GetLastBookingByUserUseCase,
+      }
+    );
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

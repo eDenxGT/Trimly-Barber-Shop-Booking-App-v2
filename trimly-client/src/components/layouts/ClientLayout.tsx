@@ -12,6 +12,7 @@ import { Sidebar } from "../mainComponents/SideBar";
 import { useLogout } from "@/hooks/auth/useLogout";
 import { logoutClient } from "@/services/auth/authService";
 import { ConnectSocket } from "@/lib/socket/ConnectSocket";
+import Footer from "../mainComponents/Footer";
 
 export const ClientLayout = () => {
   const [isSideBarVisible, setIsSideBarVisible] = useState(false);
@@ -68,6 +69,7 @@ export const ClientLayout = () => {
       />
       {/* Main content */}
       <Outlet context={user} />
+      <Footer />
     </div>
   );
 };

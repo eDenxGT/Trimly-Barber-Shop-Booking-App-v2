@@ -8,6 +8,7 @@ import {
   IAxiosResponse,
   IBarberResponse,
   IBookingResponse,
+  IClientHomePageResponse,
   IClientResponse,
   ISinglePostResponse,
   IWalletPageResponse,
@@ -304,6 +305,20 @@ export const getChatByChatIdForClient = async (chatId: string) => {
 export const getAllChatsByClientId = async (): Promise<IAllChatResponse> => {
   const response = await clientAxiosInstance.get<IAllChatResponse>(
     "/client/chats"
+  );
+  return response.data;
+};
+
+export const getHomePageData = async ({
+  latitude,
+  longitude,
+}: {
+  latitude: number | null;
+  longitude: number | null;
+}) => {
+  const response = await clientAxiosInstance.get<IClientHomePageResponse>(
+    "/client/home-data",
+    { params: { latitude, longitude } }
   );
   return response.data;
 };

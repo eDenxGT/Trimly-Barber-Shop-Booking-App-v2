@@ -1,21 +1,80 @@
-import ClientHome from "@/components/client/ClientHome";
+import { ClientHome } from "@/components/client/ClientHome";
+import { useGetClientHomeData } from "@/hooks/client/useGetHomeData";
+import { IBooking } from "@/types/Booking";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export const ClientHomePage = () => {
-	
-	return (
-		<>
-			<AnimatePresence mode="wait">
-				<motion.div
-					key={"client-home"}
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					exit={{ opacity: 0, y: -20 }}
-					transition={{ duration: 0.5 }}>
-					<ClientHome />
-				</motion.div>
-			</AnimatePresence>
-		</>
-	);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
+  const [permissionDenied, setPermissionDenied] = useState(false);
+
+  const getLocation = async () => {
+    if (navigator.permissions) {
+      const status = await navigator.permissions.query({
+        name: "geolocation" as PermissionName,
+      });
+
+      if (status.state === "denied") {
+        alert(
+          "You've blocked location access. Please enable it from browser settings."
+        );
+        setPermissionDenied(true);
+        return;
+      }
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setPermissionDenied(false);
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+        if (error.code === error.PERMISSION_DENIED) {
+          alert("Location access is required to show nearby shops.");
+          setPermissionDenied(true);
+        }
+      }
+    );
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  const { data: homeData, isLoading } = useGetClientHomeData({
+    latitude: location?.lat as number | null,
+    longitude: location?.lng as number | null,
+  });
+
+  const shops = homeData?.shops;
+  const booking = homeData?.lastBooking;
+  return (
+    <>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={"client-home"}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.5 }}
+          className="mt-16"
+        >
+          <ClientHome
+            shops={shops || []}
+            booking={booking || ({} as IBooking)}
+            isLoading={isLoading}
+            getLocation={getLocation}
+            permissionDenied={permissionDenied}
+          />
+        </motion.div>
+      </AnimatePresence>
+    </>
+  );
 };

@@ -80,7 +80,7 @@ export function PrivateHeader({
 	return (
 		<header
 			className={cn(
-				"fixed top-0 left-0 right-0 h-16 border-b bg-[#121212] shadow-md",
+				"fixed top-0 left-0 right-0 h-16 border-b border-gray-700 bg-[#121212] shadow-md",
 				className
 			)}>
 			<div className=" mx-auto justify-between flex h-full items-center px-4">

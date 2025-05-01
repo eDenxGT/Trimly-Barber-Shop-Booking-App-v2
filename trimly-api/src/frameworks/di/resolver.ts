@@ -33,6 +33,8 @@ import { S3Controller } from "../../interfaceAdapters/controllers/s3.controller.
 import { IS3Controller } from "../../entities/controllerInterfaces/s3/s3-controller.interface.js";
 import { MeetingController } from "../../interfaceAdapters/controllers/meeting.controller.js";
 import { IMeetingController } from "../../entities/controllerInterfaces/meeting/meeting-controller.interface.js";
+import { DashboardController } from "../../interfaceAdapters/controllers/dashboard.controller.js";
+import { IDashboardController } from "../../entities/controllerInterfaces/dashboard/dashboard-controller.interface.js";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -70,6 +72,9 @@ export const chatController =
 
 export const meetingController =
   container.resolve<IMeetingController>(MeetingController);
+
+export const dashboardController =
+  container.resolve<IDashboardController>(DashboardController);
 
 export const s3Controller = container.resolve<IS3Controller>(S3Controller);
 
