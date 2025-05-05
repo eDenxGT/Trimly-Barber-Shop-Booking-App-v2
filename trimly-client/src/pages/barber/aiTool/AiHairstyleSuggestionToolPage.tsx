@@ -102,6 +102,7 @@ export const AiHairstyleSuggestionToolPage: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
+        className="mt-10"
       >
         <HairStyleDetectionTool
           faceShape={faceShape}
@@ -113,38 +114,6 @@ export const AiHairstyleSuggestionToolPage: React.FC = () => {
           isAnalyzing={isAnalyzing}
           isFetchingStyles={isFetchingStyles}
         />
-
-        {faceShape && !isAnalyzing && (
-          <div className="space-y-8">
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2
-                className="text-2xl font-semibold mb-2"
-                style={{ color: "var(--darkblue)" }}
-              >
-                Your Result
-              </h2>
-              <div className="flex items-center gap-3 mb-6">
-                <div
-                  className="px-4 py-2 rounded-full text-lg font-bold"
-                  style={{ backgroundColor: "var(--yellow)", color: "white" }}
-                >
-                  {faceShape} Face
-                </div>
-              </div>
-
-              <p className="text-gray-600">
-                Based on your face shape, we've selected some{" "}
-                {formik.values.gender} hairstyles that would complement your
-                features perfectly.
-              </p>
-            </div>
-
-            <HairstyleCarousel
-              hairstyles={hairstyles}
-              isLoading={isFetchingStyles}
-            />
-          </div>
-        )}
       </motion.div>
     </AnimatePresence>
   );

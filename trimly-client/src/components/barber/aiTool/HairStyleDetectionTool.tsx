@@ -4,6 +4,8 @@ import Webcam from "react-webcam";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { useRef, useState } from "react";
 import { IHairstyle } from "@/types/Hairstyle";
+import { HairstyleCarousel } from "./HairstyleCarousel";
+import MuiButton from "@/components/common/buttons/MuiButton";
 
 interface HairStyleDetectionToolProps {
   faceShape: string | null;
@@ -22,6 +24,8 @@ export const HairStyleDetectionTool: React.FC<HairStyleDetectionToolProps> = ({
   setHairstyles,
   formik,
   isAnalyzing,
+  hairstyles,
+  faceShape,
   isFetchingStyles,
 }) => {
   const webcamRef = useRef<Webcam | null>(null);
@@ -177,13 +181,15 @@ export const HairStyleDetectionTool: React.FC<HairStyleDetectionToolProps> = ({
                 >
                   Try Another Photo
                 </Button>
-                <Button
+                <MuiButton
                   onClick={() => detectFaceShape(imageFileRef.current!)}
-                  variant="default"
+                  disabled={isAnalyzing || isFetchingStyles}
+                  loading={isAnalyzing || isFetchingStyles}
+                  variant="yellow"
                   className="btn-primary bg-[var(--yellow)] hover:bg-[var(--yellow-hover)]"
                 >
                   Analyze
-                </Button>
+                </MuiButton>
               </div>
             </div>
           )}
@@ -207,7 +213,7 @@ export const HairStyleDetectionTool: React.FC<HairStyleDetectionToolProps> = ({
             </div>
           ))}
 
-        {/* {faceShape && !isAnalyzing && (
+        {faceShape && !isAnalyzing && (
           <div className="space-y-8">
             <div className="bg-white rounded-xl shadow-md p-6">
               <h2
@@ -237,7 +243,7 @@ export const HairStyleDetectionTool: React.FC<HairStyleDetectionToolProps> = ({
               isLoading={isFetchingStyles}
             />
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );

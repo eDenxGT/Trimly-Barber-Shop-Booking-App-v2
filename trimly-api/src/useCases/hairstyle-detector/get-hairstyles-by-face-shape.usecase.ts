@@ -21,8 +21,10 @@ export class GetHairstylesByFaceShapeUseCase
     faceShape: string;
     gender: string;
   }): Promise<IHairstyleEntity[]> {
+    const normalizedFaceShape = faceShape.toLowerCase();
+
     const hairstyles = await this._hairstyleRepository.find({
-      faceShape,
+      faceShapes: { $in: [normalizedFaceShape] },
       gender,
     });
 
