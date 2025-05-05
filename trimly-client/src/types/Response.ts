@@ -17,6 +17,7 @@ import {
   ShopDashboardData,
 } from "./DashboardListingTypes";
 import { IPost } from "./Feed";
+import { IHairstyle } from "./Hairstyle";
 import { IService } from "./Service";
 import { IAdmin, IBarber, IClient, UserDTO } from "./User";
 import { ITransaction, IWithdrawal } from "./Wallet";
@@ -162,4 +163,12 @@ export interface IAdminDashboardResponse {
 
   recentShops: ShopDashboardData[];
   recentClients: ClientDashboardData[];
+}
+
+export interface IFaceShapeDetectionResponse extends IAxiosResponse {
+  faceShape: string;
+}
+
+export interface IHairstyleResponse extends IAxiosResponse {
+  hairstyles: IHairstyle[];
 }

@@ -9,6 +9,8 @@ import {
   IBarberHoursResponse,
   IBarberResponse,
   IBookingResponse,
+  IFaceShapeDetectionResponse,
+  IHairstyleResponse,
   IMeetingRoomResponse,
   IServiceResponse,
   ISinglePostResponse,
@@ -17,6 +19,9 @@ import {
 import { IService } from "@/types/Service";
 import { IBarber, UpdatePasswordData } from "@/types/User";
 import { WithdrawRequestDTO } from "@/types/Wallet";
+import axios from "axios";
+const faceShapeDetectionApiUrl = import.meta.env
+  .VITE_FACE_SHAPE_DETECTION_API_URI;
 
 export type IUpdateBarberData = Partial<
   Pick<
@@ -349,3 +354,40 @@ export const getBarberDashboardData =
     }>("/barber/dashboard");
     return response.data.data;
   };
+
+export const barberDetectFaceShape = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await axios.post<IFaceShapeDetectionResponse>(
+    faceShapeDetectionApiUrl,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer eyJzdWIiOiIxMjM0NTY4ODkwIiwibmFtZSI6IkpqaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const getBarberHairstyles = async ({
+  gender,
+  faceShape,
+}: {
+  gender: string;
+  faceShape: string;
+}) => {
+  const response = await barberAxiosInstance.get<IHairstyleResponse>(
+    "/barber/hairstyles",
+    {
+      params: {
+        gender,
+        faceShape,
+      },
+    }
+  );
+  return response.data;
+};
