@@ -18,6 +18,7 @@ import { BarberMyPostsListPage } from "@/pages/barber/feed/BarberMyPostsListPage
 import { BarberEditPostPage } from "@/pages/barber/feed/BarberEditPostPage";
 import { BarberChatPage } from "@/pages/barber/chat/BarberChatPage";
 import { BarberCommunityListPage } from "@/pages/barber/community/BarberCommunityListPage";
+import { AiHairstyleSuggestionToolPage } from "@/pages/barber/aiTool/AiHairstyleSuggestionToolPage";
 
 export const BarberRoutes = () => {
   return (
@@ -54,6 +55,7 @@ export const BarberRoutes = () => {
         <Route path="settings/profile" element={<BarberProfileEditPage />} />
         <Route path="wallet" element={<BarberWalletPage />} />
         <Route path="communities" element={<BarberCommunityListPage />} />
+        <Route path="ai-hairstyle-tool" element={<AiHairstyleSuggestionToolPage />} />
         <Route path="my-posts" element={<BarberMyPostsListPage />} />
         <Route path="my-posts/create" element={<BarberAddPostPage />} />
         <Route path="my-posts/:postId/edit" element={<BarberEditPostPage />} />

@@ -197,7 +197,7 @@ export function PrivateHeader({
 					 )}
 
 					{/* Notifications */}
-					<Tooltip title="Notifications" arrow placement="bottom">
+					{/* <Tooltip title="Notifications" arrow placement="bottom">
 						<div>
 							<Popover>
 								<PopoverTrigger asChild>
@@ -230,9 +230,9 @@ export function PrivateHeader({
 											You have {notifications} unread
 											notifications.
 										</p>
-										<div className="border-t border-[#2a2a2a] pt-2 mt-2">
+										<div className="border-t border-[#2a2a2a] pt-2 mt-2"> */}
 											{/* Sample notifications */}
-											<div className="flex items-start space-x-2 mb-2">
+											{/* <div className="flex items-start space-x-2 mb-2">
 												<div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
 													<img
 														src="/logo.svg"
@@ -269,7 +269,7 @@ export function PrivateHeader({
 								</PopoverContent>
 							</Popover>
 						</div>
-					</Tooltip>
+					</Tooltip> */}
 
 					{/* Avatar with Dropdown */}
 					<Tooltip title="Account" arrow placement="bottom">

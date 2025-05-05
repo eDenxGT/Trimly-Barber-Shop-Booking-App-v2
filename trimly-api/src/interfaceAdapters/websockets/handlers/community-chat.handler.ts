@@ -39,7 +39,6 @@ export class CommunityChatSocketHandler implements ICommunityChatSocketHandler {
       const community = await this._getCommunityByCommunityIdUseCase.execute(
         data.communityId
       );
-      console.log(result);
 
       const onlineSocketIds = getOnlineSocketIdsForMembers(
         community?.members || []

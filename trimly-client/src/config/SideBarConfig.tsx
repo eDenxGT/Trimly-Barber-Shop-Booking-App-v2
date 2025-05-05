@@ -14,9 +14,9 @@ import {
   Wallet,
 } from "lucide-react";
 import { PiHandWithdrawDuotone } from "react-icons/pi";
-
 import { AiTwotoneShop } from "react-icons/ai";
 import { MdGroups } from "react-icons/md";
+import { FaRobot } from "react-icons/fa";
 
 const navItems = {
   client: [
@@ -86,6 +86,11 @@ const navItems = {
       title: "Communities",
       icon: MdGroups,
       path: "/barber/communities",
+    },
+    {
+      title: "AI Hairstyle Tool",
+      icon: FaRobot,
+      path: "/barber/ai-hairstyle-tool",
     },
     {
       title: "Settings",
