@@ -35,6 +35,8 @@ import { MeetingController } from "../../interfaceAdapters/controllers/meeting.c
 import { IMeetingController } from "../../entities/controllerInterfaces/meeting/meeting-controller.interface.js";
 import { DashboardController } from "../../interfaceAdapters/controllers/dashboard.controller.js";
 import { IDashboardController } from "../../entities/controllerInterfaces/dashboard/dashboard-controller.interface.js";
+import { HairstyleDetectorController } from "../../interfaceAdapters/controllers/hairstyle-detector.controller.js";
+import { IHairstyleDetectorController } from "../../entities/controllerInterfaces/hairstyle-detector/hairstyle-detector-controller.interface.js";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -75,6 +77,9 @@ export const meetingController =
 
 export const dashboardController =
   container.resolve<IDashboardController>(DashboardController);
+
+export const hairstyleDetectorController =
+  container.resolve<IHairstyleDetectorController>(HairstyleDetectorController);
 
 export const s3Controller = container.resolve<IS3Controller>(S3Controller);
 

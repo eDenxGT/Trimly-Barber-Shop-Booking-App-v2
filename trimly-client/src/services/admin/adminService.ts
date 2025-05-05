@@ -2,6 +2,7 @@ import { adminAxiosInstance } from "@/api/admin.axios";
 import { FetchUsersParams, UsersResponse } from "@/hooks/admin/useAllUsers";
 import { FetchShopsParams } from "@/hooks/barber/useAllBarberShops";
 import { ICommunityChat, IMeetingRoom } from "@/types/Chat";
+import { IHairstyle } from "@/types/Hairstyle";
 import {
   IAdminDashboardResponse,
   IAdminResponse,
@@ -11,6 +12,7 @@ import {
   IAuthResponse,
   IAxiosResponse,
   ICommunityChatResponse,
+  IHairstylePaginationResponse,
   WithdrawalResponse,
 } from "@/types/Response";
 import { IAdmin, IBarber, IClient, UpdatePasswordData } from "@/types/User";
@@ -280,3 +282,46 @@ export const getAdminDashboardData =
     }>("/admin/dashboard");
     return response.data.data;
   };
+
+export const addHairstyle = async (data: Partial<IHairstyle>) => {
+  const response = await adminAxiosInstance.post<IAxiosResponse>(
+    "/admin/hairstyle",
+    data
+  );
+  return response.data;
+};
+
+export const updateHairstyle = async (data: Partial<IHairstyle>) => {
+  const response = await adminAxiosInstance.put<IAxiosResponse>(
+    `/admin/hairstyle/${data.hairstyleId}`,
+    data
+  );
+  return response.data;
+};
+
+export const getAllHairstyles = async ({
+  search,
+  page,
+  limit,
+}: {
+  search: string;
+  page: number;
+  limit: number;
+}) => {
+  const response = await adminAxiosInstance.get<IHairstylePaginationResponse>(
+    "/admin/all-hairstyles",
+    { params: { search, page, limit } }
+  );
+  return response.data;
+};
+
+export const deleteHairstyle = async ({
+  hairstyleId,
+}: {
+  hairstyleId: string;
+}) => {
+  const response = await adminAxiosInstance.delete<IAxiosResponse>(
+    `/admin/hairstyle/${hairstyleId}`
+  );
+  return response.data;
+};

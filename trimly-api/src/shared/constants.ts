@@ -40,7 +40,7 @@ export const SUCCESS_MESSAGES = {
   BOOKING_SUCCESS: "Booking completed",
   CANCELLATION_SUCCESS: "Cancellation successful",
   CREATED: "Successfully created",
-  ADDED: "Successfully Added",
+  ADDED: "Added successfully",
   LOGIN_SUCCESS: "Logged in",
   REGISTRATION_SUCCESS: "Registration completed",
   OTP_SEND_SUCCESS: "OTP sent",
@@ -158,6 +158,8 @@ export const ERROR_MESSAGES = {
   MEETING_CANNOT_SCHEDULE_IN_PAST:
     "Meeting must be scheduled for a future time.",
   START_TIME_MUST_BE_BEFORE_END_TIME: "Start time must be before end time.",
+  HAIRSTYLE_ALREADY_EXISTS: "Hairstyle with this name already exists",
+  HAIRSTYLE_NOT_FOUND: "Hairstyle not found",
 } as const;
 
 export const DIRECT_CHAT_EVENTS = {

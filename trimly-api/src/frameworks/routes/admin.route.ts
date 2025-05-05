@@ -16,6 +16,7 @@ import {
   chatController,
   dashboardController,
   financeController,
+  hairstyleDetectorController,
   meetingController,
   shopController,
   userController,
@@ -62,6 +63,49 @@ export class AdminRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         dashboardController.getAdminDashboardData(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                🛠️ Hairstyle Detector Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router
+      .route("/admin/hairstyle")
+      .post(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          hairstyleDetectorController.addHairstyle(req, res);
+        }
+      );
+
+    this.router
+      .route("/admin/hairstyle/:hairstyleId")
+      .put(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          hairstyleDetectorController.updateHairstyle(req, res);
+        }
+      )
+      .delete(
+        verifyAuth,
+        authorizeRole(["admin"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          hairstyleDetectorController.deleteHairstyle(req, res);
+        }
+      );
+
+    this.router.get(
+      "/admin/all-hairstyles",
+      verifyAuth,
+      authorizeRole(["admin"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        hairstyleDetectorController.getAllHairstyles(req, res);
       }
     );
 

@@ -13,6 +13,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
+import { GiHairStrands } from "react-icons/gi";
 import { PiHandWithdrawDuotone } from "react-icons/pi";
 import { AiTwotoneShop } from "react-icons/ai";
 import { MdGroups } from "react-icons/md";
@@ -133,6 +134,11 @@ const navItems = {
       title: "User Withdrawals",
       icon: PiHandWithdrawDuotone,
       path: "/admin/withdrawal-requests",
+    },
+    {
+      title: "Manage Hairstyles",
+      icon: GiHairStrands,
+      path: "/admin/hairstyles",
     },
     {
       title: "Settings",

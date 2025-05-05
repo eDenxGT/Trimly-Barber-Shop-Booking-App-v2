@@ -199,6 +199,16 @@ import { GetBarberDashboardDataUseCase } from "../../useCases/dashboard/get-barb
 import { IGetBarberDashboardDataUseCase } from "../../entities/useCaseInterfaces/dashboard/get-barber-dashboard-data-usecase..interface.js";
 import { GetAdminDashboardDataUseCase } from "../../useCases/dashboard/get-admin-dashboard-data.usecase.js";
 import { IGetAdminDashboardDataUseCase } from "../../entities/useCaseInterfaces/dashboard/get-admin-dashboard-data-usecase.interface.js";
+import { IGetHairstylesByFaceShapeUseCase } from "../../entities/useCaseInterfaces/hairstyle-detector/get-hairstyles-by-face-shape-usecase.interface.js";
+import { GetHairstylesByFaceShapeUseCase } from "../../useCases/hairstyle-detector/get-hairstyles-by-face-shape.usecase.js";
+import { AddHairstyleUseCase } from "../../useCases/hairstyle-detector/add-hairstyle.usecase.js";
+import { IAddHairstyleUseCase } from "../../entities/useCaseInterfaces/hairstyle-detector/add-hairstyle-usecase.interface.js";
+import { IGetAllHairstylesUseCase } from "../../entities/useCaseInterfaces/hairstyle-detector/get-all-hairstyles-usecase.interface.js";
+import { GetAllHairstylesUseCase } from "../../useCases/hairstyle-detector/get-all-hairstyles.usecase.js";
+import { IUpdateHairstyleUseCase } from "../../entities/useCaseInterfaces/hairstyle-detector/update-hairstyle-usecase.interface.js";
+import { UpdateHairstyleUseCase } from "../../useCases/hairstyle-detector/update-hairstyle.usecase.js";
+import { IDeleteHairstyleUseCase } from "../../entities/useCaseInterfaces/hairstyle-detector/delete-hairstyle-usecase.interface.js";
+import { DeleteHairstyleUseCase } from "../../useCases/hairstyle-detector/delete-hairstyle.usecase.js";
 
 export class UseCaseRegistry {
   static registerUseCases(): void {
@@ -657,6 +667,29 @@ export class UseCaseRegistry {
         useClass: GetAdminDashboardDataUseCase,
       }
     );
+
+    container.register<IGetHairstylesByFaceShapeUseCase>(
+      "IGetHairstylesByFaceShapeUseCase",
+      {
+        useClass: GetHairstylesByFaceShapeUseCase,
+      }
+    );
+
+    container.register<IAddHairstyleUseCase>("IAddHairstyleUseCase", {
+      useClass: AddHairstyleUseCase,
+    });
+
+    container.register<IGetAllHairstylesUseCase>("IGetAllHairstylesUseCase", {
+      useClass: GetAllHairstylesUseCase,
+    });
+
+    container.register<IUpdateHairstyleUseCase>("IUpdateHairstyleUseCase", {
+      useClass: UpdateHairstyleUseCase,
+    });
+
+    container.register<IDeleteHairstyleUseCase>("IDeleteHairstyleUseCase", {
+      useClass: DeleteHairstyleUseCase,
+    });
 
     //* ====== Register Bcrypts ====== *//
     container.register<IBcrypt>("IPasswordBcrypt", {

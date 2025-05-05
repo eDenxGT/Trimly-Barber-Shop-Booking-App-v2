@@ -40,6 +40,8 @@ import { ICommunityMessageRepository } from "../../entities/repositoryInterfaces
 import { CommunityMessageRepository } from "../../interfaceAdapters/repositories/chat/community/community-message.repository.js";
 import { IMeetingRoomRepository } from "../../entities/repositoryInterfaces/chat/meeting-room-repository.interface.js";
 import { MeetingRoomRepository } from "../../interfaceAdapters/repositories/chat/meeting-room.repository.js";
+import { IHairstyleRepository } from "../../entities/repositoryInterfaces/hairstyle/hairstyle-repository.interface.js";
+import { HairstyleRepository } from "../../interfaceAdapters/repositories/hairstyle/hairstyle.repository.js";
 
 export class RepositoryRegistry {
   static registerRepositories(): void {
@@ -121,6 +123,10 @@ export class RepositoryRegistry {
 
     container.register<IMeetingRoomRepository>("IMeetingRoomRepository", {
       useClass: MeetingRoomRepository,
+    });
+
+    container.register<IHairstyleRepository>("IHairstyleRepository", {
+      useClass: HairstyleRepository,
     });
   }
 }

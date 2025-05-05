@@ -17,8 +17,6 @@ interface HairStyleDetectionToolProps {
 }
 
 export const HairStyleDetectionTool: React.FC<HairStyleDetectionToolProps> = ({
-  faceShape,
-  hairstyles,
   detectFaceShape,
   setFaceShape,
   setHairstyles,
@@ -85,7 +83,7 @@ export const HairStyleDetectionTool: React.FC<HairStyleDetectionToolProps> = ({
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-md p-6 mb-8">
           <h2 className="text-2xl font-bold mb-6 text-darkblue">
-            Select Your Gender
+            Select Gender
           </h2>
 
           <RadioGroup

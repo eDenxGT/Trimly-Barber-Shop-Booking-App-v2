@@ -10,6 +10,7 @@ import { AdminCreateCommunityPage } from "@/pages/admin/community/AdminCreateCom
 import { AdminEditCommunityPage } from "@/pages/admin/community/AdminEditCommunityPage";
 import { AdminMeetingsPage } from "@/pages/admin/community/AdminMeetingsListPage";
 import { AdminScheduleMeetingPage } from "@/pages/admin/community/AdminScheduleMeetingPage";
+import { AdminHairstylesListPage } from "@/pages/admin/hairstyle-detector/AdminHairstylesListPage";
 import { AdminBarberManagementPage } from "@/pages/admin/managementPages/AdminBarberShopManagementPage";
 import { AdminClientManagementPage } from "@/pages/admin/managementPages/AdminClientManagementPage";
 import { AdminChangePasswordPage } from "@/pages/admin/settings/AdminChangePasswordPage";
@@ -56,6 +57,11 @@ export const AdminRoutes = () => {
         <Route
           path="withdrawal-requests"
           element={<AdminUserWithdrawalsPage />}
+        />
+
+        <Route
+          path="hairstyles"
+          element={<AdminHairstylesListPage />}
         />
 
         <Route path="settings" element={<AdminSettingsPage />} />

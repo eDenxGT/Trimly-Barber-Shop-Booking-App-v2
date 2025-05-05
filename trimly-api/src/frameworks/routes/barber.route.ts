@@ -24,6 +24,7 @@ import {
   serviceController,
   userController,
   dashboardController,
+  hairstyleDetectorController,
 } from "../di/resolver.js";
 
 export class BarberRoutes extends BaseRoute {
@@ -87,6 +88,20 @@ export class BarberRoutes extends BaseRoute {
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
           bookingController.updateBookingComplete(req, res);
+        }
+      );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                🛠️ Hairstyle Detector Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router
+      .route("/barber/hairstyles")
+      .get(
+        verifyAuth,
+        authorizeRole(["barber"]),
+        blockStatusMiddleware.checkStatus as RequestHandler,
+        (req: Request, res: Response) => {
+          hairstyleDetectorController.getHairstylesByFaceShape(req, res);
         }
       );
 
