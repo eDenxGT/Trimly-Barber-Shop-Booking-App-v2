@@ -21,7 +21,7 @@ export const BarberProfileEditPage = () => {
 
 	const dispatch = useAppDispatch();
 
-	const handleBarberProfileUpdate = (data) => {
+	const handleBarberProfileUpdate = (data: IBarber) => {
 		updateProfile(
 			{
 				...data,

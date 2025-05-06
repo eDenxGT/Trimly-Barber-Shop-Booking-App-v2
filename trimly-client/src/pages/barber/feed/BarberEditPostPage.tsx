@@ -17,7 +17,8 @@ export const BarberEditPostPage = () => {
 
   const { data, isLoading, isError } = useGetPostByPostId(
     fetchPostByPostIdForBarbers,
-    postId || ""
+    postId || "",
+    "edit"
   );
 
   const {

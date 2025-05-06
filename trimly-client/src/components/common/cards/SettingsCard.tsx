@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 interface SettingsCardProps {

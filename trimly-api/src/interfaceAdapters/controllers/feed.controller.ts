@@ -145,6 +145,7 @@ export class FeedController implements IFeedController {
         });
         return;
       }
+      
       const post = await this._getSinglePostByPostIdUseCase.execute(
         userId,
         role,

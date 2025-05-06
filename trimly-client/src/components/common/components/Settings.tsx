@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
 	ArrowLeft,
-	ChevronRight,
 	LockKeyhole,
 	LogOut,
 	SettingsIcon,

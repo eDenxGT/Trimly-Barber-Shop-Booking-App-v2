@@ -4,7 +4,6 @@ import { useToaster } from "@/hooks/ui/useToaster";
 import { logoutClient } from "@/services/auth/authService";
 import {
 	clientLogout,
-	refreshClientSessionThunk,
 } from "@/store/slices/client.slice";
 import { useAppDispatch } from "@/store/store";
 import { motion } from "framer-motion";

@@ -16,9 +16,9 @@ import { TimePicker } from "@/components/common/fields/TimePickerField";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { useNavigate } from "react-router-dom";
 
-type TimeValue = string | null;
+type TimeValue = string | null | undefined;
 type DayHours = { open: TimeValue; close: TimeValue };
-type BusinessHours = Record<string, DayHours>;
+export type BusinessHours = Record<string, DayHours>;
 
 interface OpeningHoursManagerProps {
 	initialHours: BusinessHours;

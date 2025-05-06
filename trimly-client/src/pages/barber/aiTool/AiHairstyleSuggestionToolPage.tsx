@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import { AnimatePresence, motion } from "framer-motion";
 import { IHairstyle } from "@/types/Hairstyle";
 import { HairStyleDetectionTool } from "@/components/barber/aiTool/HairStyleDetectionTool";
-import { HairstyleCarousel } from "@/components/barber/aiTool/HairstyleCarousel";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { useFaceShapeDetection } from "@/hooks/barber/useHairStyle";
 import { getBarberHairstyles } from "@/services/barber/barberService";

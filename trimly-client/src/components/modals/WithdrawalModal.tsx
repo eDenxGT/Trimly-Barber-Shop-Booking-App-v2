@@ -48,7 +48,7 @@ export function WithdrawalModal({
       }
       return errors;
     },
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       const details =
         values.method === "upi"
           ? { upiId: values.upiId }

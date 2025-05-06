@@ -106,13 +106,25 @@ export function ClientBookingPage() {
     return parse(dayHours.close, "HH:mm", date);
   };
 
+  const sanitizedOpeningHours: OpeningHours = Object.fromEntries(
+    Object.entries(shopData?.openingHours ?? {}).map(([day, hours]) => [
+      day,
+      hours
+        ? {
+            open: hours.open ?? null,
+            close: hours.close ?? null,
+          }
+        : null,
+    ])
+  );
+
   useEffect(() => {
     if (!shopData?.openingHours || initialSlotsProcessed.current) return;
 
-    const slots = generateSlots(shopData?.openingHours, 30);
+    const slots = generateSlots(sanitizedOpeningHours, 30);
     setAllTimeSlots(slots);
     initialSlotsProcessed.current = true;
-  }, [shopData?.openingHours]);
+  }, [shopData?.openingHours, sanitizedOpeningHours]);
 
   useEffect(() => {
     if (
@@ -131,7 +143,7 @@ export function ClientBookingPage() {
       if (slotsForDate) {
         booking.bookedTimeSlots.forEach((bookedTime) => {
           const slotIndex = slotsForDate.findIndex(
-            (slot) => slot.time === bookedTime
+            (slot: TimeSlot) => slot.time === bookedTime
           );
           if (slotIndex !== -1 && slotsForDate[slotIndex].available) {
             slotsForDate[slotIndex].available = false;
@@ -247,7 +259,7 @@ export function ClientBookingPage() {
     const requiredSlots = selectedServices.length;
     const availableTimesCopy = JSON.parse(JSON.stringify(availableTimes));
     const startSlotIndex = availableTimesCopy.findIndex(
-      (slot) => slot.time === time
+      (slot: TimeSlot) => slot.time === time
     );
 
     for (let i = 0; i < requiredSlots; i++) {
@@ -422,8 +434,8 @@ export function ClientBookingPage() {
                           totals.totalDuration
                         );
                         return format(endTime, "h:mm a");
-                      } catch (err) {
-                        return "Unknown";
+                      } catch (err: any) {
+                        return "Unknown" + err.message;
                       }
                     })()}
                   </p>

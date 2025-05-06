@@ -1,3 +1,5 @@
 /node_modules
 .env
 /dist
+trimly-playground-1.mongodb.js
+/logs

@@ -26,7 +26,7 @@ export const NoAuthRoute = ({ element }: NoAuthRouteProps) => {
 			barber: "/barber/dashboard",
 			admin: "/admin/dashboard",
 		};
-		return <Navigate to={roleRedirects[session.role] || "/unauthorized"} />;
+		return <Navigate to={roleRedirects[session.type] || "/unauthorized"} />;
 	}
 
 	return element;

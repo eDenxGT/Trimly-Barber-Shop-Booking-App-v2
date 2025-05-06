@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
-import { format, isAfter, addHours } from "date-fns";
+import { format, isAfter, addHours, parseISO } from "date-fns";
 import { CalendarIcon, Clock, Info } from "lucide-react";
 import {
   Card,
@@ -105,7 +105,7 @@ export const AdminScheduleMeetingPage = () => {
       title: "",
       description: "",
       meetLink: "",
-      meetingDate: null as Date | null,
+      meetingDate: parseISO(new Date().toISOString()),
       startHour: "9",
       startMinute: "00",
       startPeriod: "AM",

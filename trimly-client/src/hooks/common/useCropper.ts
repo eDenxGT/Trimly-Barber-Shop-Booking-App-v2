@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 interface UseCropperProps {
   aspectRatio: number;
@@ -6,12 +6,23 @@ interface UseCropperProps {
   onCancel: () => void;
 }
 
-export const useCropper = ({ aspectRatio, onCropComplete, onCancel }: UseCropperProps) => {
+type CroppedAreaPixels = {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+};
+
+export const useCropper = ({
+  aspectRatio,
+  onCropComplete,
+  onCancel,
+}: UseCropperProps) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<CroppedAreaPixels | null>(null);
 
   const openCropper = useCallback((imageUrl: string) => {
     setImageUrl(imageUrl);
@@ -32,7 +43,7 @@ export const useCropper = ({ aspectRatio, onCropComplete, onCancel }: UseCropper
     setZoom(newZoom);
   }, []);
 
-  const handleCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
+  const handleCropComplete = useCallback((croppedAreaPixels: CroppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
@@ -42,19 +53,19 @@ export const useCropper = ({ aspectRatio, onCropComplete, onCancel }: UseCropper
 
       const image = new Image();
       image.src = imageUrl;
-      
+
       await new Promise((resolve) => {
         image.onload = resolve;
       });
 
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
       if (!ctx) return;
-      
+
       canvas.width = croppedAreaPixels.width;
       canvas.height = croppedAreaPixels.height;
-      
+
       // Draw the cropped image onto the canvas
       ctx.drawImage(
         image,
@@ -67,7 +78,7 @@ export const useCropper = ({ aspectRatio, onCropComplete, onCancel }: UseCropper
         croppedAreaPixels.width,
         croppedAreaPixels.height
       );
-      
+
       canvas.toBlob((blob) => {
         if (blob) {
           const croppedImageUrl = URL.createObjectURL(blob);
@@ -76,7 +87,7 @@ export const useCropper = ({ aspectRatio, onCropComplete, onCancel }: UseCropper
         }
       });
     } catch (error) {
-      console.error('Error creating cropped image:', error);
+      console.error("Error creating cropped image:", error);
     }
   }, [imageUrl, croppedAreaPixels, onCropComplete]);
 
@@ -91,6 +102,6 @@ export const useCropper = ({ aspectRatio, onCropComplete, onCancel }: UseCropper
     handleZoomChange,
     handleCropComplete,
     createCroppedImage,
-    aspectRatio
+    aspectRatio,
   };
 };

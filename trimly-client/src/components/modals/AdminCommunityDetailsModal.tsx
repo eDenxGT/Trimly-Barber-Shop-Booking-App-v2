@@ -32,7 +32,7 @@ export const CommunityDetailsModal = ({
 
   const handleRemoveBarber = (barberId: string, barberName: string) => {
     // TODO: Implement actual removal logic when backend is connected
-    console.log("Removing barber:", barberId);
+    console.log("Removing barber:", barberId, barberName);
     // toast({
     //   title: "Barber Removed",
     //   description: `${barberName} has been removed from the community.`,

@@ -1,5 +1,4 @@
 import {
-	Bell,
 	Settings2,
 	Menu,
 	MapPin,
@@ -7,13 +6,8 @@ import {
 	LogOut,
 	HelpCircle,
 } from "lucide-react";
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -24,7 +18,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
 import { IAdmin, IBarber, IClient, UserDTO } from "@/types/User";
 import { useNavigate } from "react-router-dom";
 
@@ -38,12 +31,10 @@ interface HeaderProps {
 
 export function PrivateHeader({
 	user,
-	notifications = 2,
 	onSidebarToggle,
 	onLogout,
 	className,
 }: HeaderProps) {
-	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
 
 	const isClient = user?.role === "client";
@@ -52,18 +43,8 @@ export function PrivateHeader({
 	const displayName = isBarber
 		? (user as IBarber)?.shopName
 		: (user as IClient | IAdmin)?.fullName || "User";
-	const initials = `${displayName?.trim().slice(0, 1) || ""}`;
 
-	useEffect(() => {
-		const down = (e: KeyboardEvent) => {
-			if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-				e.preventDefault();
-				setOpen((open) => !open);
-			}
-		};
-		document.addEventListener("keydown", down);
-		return () => document.removeEventListener("keydown", down);
-	}, []);
+	const initials = `${displayName?.trim().slice(0, 1) || ""}`;
 
 	const locationName = (user as IBarber | IClient)?.location?.name;
 	const settingsPath = isClient

@@ -195,8 +195,7 @@ export const BarberShopManagementComponent: React.FC<
 					<Pagination1
 						currentPage={currentPage}
 						totalPages={totalPages}
-						onPageNext={() => onPageChange(currentPage + 1)}
-						onPagePrev={() => onPageChange(currentPage - 1)}
+						onPageChange={onPageChange}
 					/>
 				</div>
 

@@ -68,7 +68,7 @@ export function BookingStatus({
             <Progress
               value={getProgressPercentage()}
               className="h-1 bg-gray-300"
-              indicatorClassName={isCancelled ? "bg-red-500" : "bg-blue-600"}
+              // indicatorClassName={isCancelled ? "bg-red-500" : "bg-blue-600"}
             />
 
             <div className="flex justify-between items-center">
