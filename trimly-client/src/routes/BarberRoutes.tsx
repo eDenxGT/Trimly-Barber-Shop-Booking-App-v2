@@ -19,8 +19,14 @@ import { BarberEditPostPage } from "@/pages/barber/feed/BarberEditPostPage";
 import { BarberChatPage } from "@/pages/barber/chat/BarberChatPage";
 import { BarberCommunityListPage } from "@/pages/barber/community/BarberCommunityListPage";
 import { AiHairstyleSuggestionToolPage } from "@/pages/barber/aiTool/AiHairstyleSuggestionToolPage";
+import { useEffect } from "react";
 
 export const BarberRoutes = () => {
+
+  useEffect(() => {
+    document.title = "Barber Portal | Trimly";
+  }, []);
+
   return (
     <Routes>
       <Route index element={<NoAuthRoute element={<BarberAuth />} />} />

@@ -18,77 +18,97 @@ import { AdminProfileEditPage } from "@/pages/admin/settings/AdminProfileEditPag
 import { AdminSettingsPage } from "@/pages/admin/settings/AdminSettingsPage";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
+import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 
 export const AdminRoutes = () => {
-  return (
-    <Routes>
-      <Route index element={<NoAuthRoute element={<AdminAuth />} />} />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute allowedRoles={["admin"]} element={<AdminLayout />} />
-        }
-      >
-        <Route path="dashboard" element={<AdminDashBoardPage />} />
+	useEffect(() => {
+		document.title = "Admin Portal | Trimly";
+	}, []);
 
-        <Route path="shops" element={<AdminBarberManagementPage />} />
-        <Route path="clients" element={<AdminClientManagementPage />} />
-        <Route path="communities" element={<AdminCommunityListPage />} />
-        <Route
-          path="communities/create"
-          element={<AdminCreateCommunityPage />}
-        />
-        <Route
-          path="communities/edit/:communityId"
-          element={<AdminEditCommunityPage />}
-        />
+	return (
+		<Routes>
+			<Route index element={<NoAuthRoute element={<AdminAuth />} />} />
+			<Route
+				path="/"
+				element={
+					<ProtectedRoute
+						allowedRoles={["admin"]}
+						element={<AdminLayout />}
+					/>
+				}>
+				<Route path="dashboard" element={<AdminDashBoardPage />} />
 
-        <Route
-          path="communities/:communityId/schedule-meeting"
-          element={<AdminScheduleMeetingPage />}
-        />
-        <Route path="communities/meetings" element={<AdminMeetingsPage />} />
-        <Route
-          path="shop-applications"
-          element={<AdminBarberShopApplicationPage />}
-        />
+				<Route path="shops" element={<AdminBarberManagementPage />} />
+				<Route path="clients" element={<AdminClientManagementPage />} />
+				<Route
+					path="communities"
+					element={<AdminCommunityListPage />}
+				/>
+				<Route
+					path="communities/create"
+					element={<AdminCreateCommunityPage />}
+				/>
+				<Route
+					path="communities/edit/:communityId"
+					element={<AdminEditCommunityPage />}
+				/>
 
-        <Route
-          path="withdrawal-requests"
-          element={<AdminUserWithdrawalsPage />}
-        />
+				<Route
+					path="communities/:communityId/schedule-meeting"
+					element={<AdminScheduleMeetingPage />}
+				/>
+				<Route
+					path="communities/meetings"
+					element={<AdminMeetingsPage />}
+				/>
+				<Route
+					path="shop-applications"
+					element={<AdminBarberShopApplicationPage />}
+				/>
 
-        <Route
-          path="hairstyles"
-          element={<AdminHairstylesListPage />}
-        />
+				<Route
+					path="withdrawal-requests"
+					element={<AdminUserWithdrawalsPage />}
+				/>
 
-        <Route path="settings" element={<AdminSettingsPage />} />
-        <Route
-          path="settings/change-password"
-          element={<AdminChangePasswordPage />}
-        />
-        <Route path="settings/profile" element={<AdminProfileEditPage />} />
-      </Route>
+				<Route
+					path="hairstyles"
+					element={<AdminHairstylesListPage />}
+				/>
 
-      {/*//? Forgot and reset pages */}
-      <Route
-        path="/forgot-password"
-        element={
-          <NoAuthRoute
-            element={<ForgotPassword role="admin" signInPath="/admin" />}
-          />
-        }
-      />
-      <Route
-        path="/reset-password/:token"
-        element={
-          <NoAuthRoute
-            element={<ResetPassword role="admin" signInPath="/admin" />}
-          />
-        }
-      />
-    </Routes>
-  );
+				<Route path="settings" element={<AdminSettingsPage />} />
+				<Route
+					path="settings/change-password"
+					element={<AdminChangePasswordPage />}
+				/>
+				<Route
+					path="settings/profile"
+					element={<AdminProfileEditPage />}
+				/>
+			</Route>
+
+			{/*//? Forgot and reset pages */}
+			<Route
+				path="/forgot-password"
+				element={
+					<NoAuthRoute
+						element={
+							<ForgotPassword role="admin" signInPath="/admin" />
+						}
+					/>
+				}
+			/>
+			<Route
+				path="/reset-password/:token"
+				element={
+					<NoAuthRoute
+						element={
+							<ResetPassword role="admin" signInPath="/admin" />
+						}
+					/>
+				}
+			/>
+		</Routes>
+	);
 };
