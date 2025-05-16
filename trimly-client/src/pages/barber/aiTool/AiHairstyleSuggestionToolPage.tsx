@@ -24,7 +24,6 @@ export const AiHairstyleSuggestionToolPage: React.FC = () => {
       barberDetectFaceShape(imageFile, {
         onSuccess: (data) => {
           setFaceShape(data.faceShape);
-          console.log("Detected Face Shape:", data);
           successToast("Face shape detected successfully");
           resolve(data.faceShape);
         },
@@ -76,7 +75,6 @@ export const AiHairstyleSuggestionToolPage: React.FC = () => {
         gender: formik.values.gender,
         faceShape: detectedFaceShape,
       });
-      console.log("Fetched Hairstyles:", data);
       setHairstyles(data?.hairstyles || []);
     } catch (error: any) {
       console.error("Error fetching hairstyles:", error);

@@ -52,6 +52,7 @@ export class BarberRepository
     if (filters.location) {
       pipeline.push(filters.location);
     }
+
     pipeline.push({
       $match: {
         status: "active",
@@ -60,22 +61,33 @@ export class BarberRepository
 
     if (filters.search) {
       pipeline.push({
+        $lookup: {
+          from: "services",
+          localField: "userId",
+          foreignField: "barberId",
+          as: "services",
+        },
+      });
+
+      pipeline.push({
         $match: {
           $or: [
             {
-              "location.displayName": {
-                $regex: filters.search,
-                $options: "i",
-              },
+              "location.displayName": { $regex: filters.search, $options: "i" },
             },
-            {
-              "location.name": {
-                $regex: filters.search,
-                $options: "i",
-              },
-            },
+            { "location.name": { $regex: filters.search, $options: "i" } },
             { shopName: { $regex: filters.search, $options: "i" } },
+            { "services.name": { $regex: filters.search, $options: "i" } },
           ],
+        },
+      });
+    } else {
+      pipeline.push({
+        $lookup: {
+          from: "services",
+          localField: "userId",
+          foreignField: "barberId",
+          as: "services",
         },
       });
     }

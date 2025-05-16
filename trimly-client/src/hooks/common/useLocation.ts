@@ -43,7 +43,6 @@ const useLocation = () => {
 			if (!response.ok) throw new Error("Network error");
 
 			const data = await response.json();
-			console.log("data", data);
 			const formattedSuggestions = data.map((place: any) => {
 				const address = place.address || {};
 				const locationParts = [
@@ -93,7 +92,6 @@ const useLocation = () => {
 								throw new Error("Failed to fetch location");
 
 							const data = await response.json();
-							console.log("curr", data);
 							const address = data.address || {};
 							const locationParts = [
 								address.city ||

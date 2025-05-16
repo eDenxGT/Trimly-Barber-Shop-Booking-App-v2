@@ -20,7 +20,7 @@ export function ChatLayout({
 }: ChatLayoutProps) {
   const [showChatArea, setShowChatArea] = useState(false);
   const isMobile = useIsMobile();
-  const { currentChat, onTypeChange, handleChangeChat, chatType } = useChat();
+  const { currentChat, onTypeChange, handleChangeChat, chatType, setCurrentChatId } = useChat();
   const socket = useSocket();
 
   const navigate = useNavigate();
@@ -35,10 +35,14 @@ export function ChatLayout({
     navigate(
       `${
         userRole === "barber" ? "/barber" : ""
-      }/chat?chatId=${chatId}&type=${chatType}`
+      }/chat?chatId=${chatId}&type=${chatType}`,
+      {
+        replace: true,
+      }
     );
 
     handleChangeChat();
+    setCurrentChatId(chatId);
     if (chatType === "dm") {
       socket.emit("direct-chat:read-message", { chatRoomId: chatId });
     }

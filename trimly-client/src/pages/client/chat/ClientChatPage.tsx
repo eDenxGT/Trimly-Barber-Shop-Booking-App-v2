@@ -1,9 +1,5 @@
 import { ChatLayout } from "@/components/chat/ChatLayout";
 import {
-  useFetchAllChatByUserId,
-  useFetchChatById,
-} from "@/hooks/chat/useChats";
-import {
   getAllChatsByClientId,
   getChatByChatIdForClient,
   getChatByUserIdForClient,
@@ -24,33 +20,30 @@ export const ClientChatPage = () => {
   const queryFunc = chatIdFromUrl
     ? getChatByChatIdForClient
     : getChatByUserIdForClient;
-
-  const {
-    data: allChatsData,
-    isLoading: allChatsLoading,
-    isError: allChatsError,
-  } = useFetchAllChatByUserId(getAllChatsByClientId);
-
-  const {
-    data: chatRes,
-    isLoading: chatByIdLoading,
-    isError: chatByIdError,
-  } = useFetchChatById(queryFunc, id || "");
-
+    
   useEffect(() => {
-    if (allChatsData?.chats) {
-      setAllChats(allChatsData.chats);
-    }
-  }, [allChatsData, setAllChats]);
+    const fetchData = async () => {
+      try {
+        const [allChatsData, chatRes] = await Promise.all([
+          getAllChatsByClientId(),
+          id ? queryFunc(id) : Promise.resolve({ chat: null }),
+        ]);
 
-  useEffect(() => {
-    if (chatRes?.chat) {
-      setCurrentChat(chatRes.chat);
-    }
-  }, [chatRes, setCurrentChat]);
+        if (allChatsData?.chats) {
+          setAllChats(allChatsData.chats);
+        }
 
-  const isOverallLoading = allChatsLoading || chatByIdLoading;
-  const isOverallError = allChatsError || chatByIdError;
+        if (chatRes?.chat) {
+          setCurrentChat(chatRes.chat);
+        }
+
+      } catch (error: any) {
+        console.error("Error fetching chat data:", error);
+      }
+    };
+
+    fetchData();
+  }, [id, queryFunc]);
 
   return (
     <AnimatePresence mode="wait">
@@ -61,11 +54,7 @@ export const ClientChatPage = () => {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
       >
-        {isOverallLoading && !isOverallError ? (
-          <div className="text-center text-gray-500 py-10">Loading chat...</div>
-        ) : (
-          <ChatLayout userRole="client" />
-        )}
+        <ChatLayout userRole="client" />
       </motion.div>
     </AnimatePresence>
   );

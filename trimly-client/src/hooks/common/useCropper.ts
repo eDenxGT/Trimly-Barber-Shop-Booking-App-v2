@@ -23,15 +23,30 @@ export const useCropper = ({
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<CroppedAreaPixels | null>(null);
+  // const [originalImageDimensions, setOriginalImageDimensions] = useState<{width: number, height: number} | null>(null);
 
   const openCropper = useCallback((imageUrl: string) => {
     setImageUrl(imageUrl);
     setIsModalOpen(true);
+    
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    
+    const img = new Image();
+    // img.onload = () => {
+    //   setOriginalImageDimensions({
+    //     width: img.width,
+    //     height: img.height
+    //   });
+    // };
+    img.src = imageUrl;
   }, []);
 
   const closeCropper = useCallback(() => {
     setIsModalOpen(false);
     setImageUrl(null);
+    setCroppedAreaPixels(null);
+    // setOriginalImageDimensions(null);
     onCancel();
   }, [onCancel]);
 
@@ -43,30 +58,37 @@ export const useCropper = ({
     setZoom(newZoom);
   }, []);
 
-  const handleCropComplete = useCallback((croppedAreaPixels: CroppedAreaPixels) => {
+  const handleCropComplete = useCallback((_croppedArea: any, croppedAreaPixels: CroppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
   const createCroppedImage = useCallback(async () => {
     try {
-      if (!imageUrl || !croppedAreaPixels) return;
+      if (!imageUrl || !croppedAreaPixels) {
+        console.error("Missing image URL or cropped area pixels");
+        return;
+      }
 
       const image = new Image();
-      image.src = imageUrl;
-
-      await new Promise((resolve) => {
+      image.crossOrigin = "anonymous";
+      
+      await new Promise((resolve, reject) => {
         image.onload = resolve;
+        image.onerror = reject;
+        image.src = imageUrl;
       });
 
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      if (!ctx) return;
+      if (!ctx) {
+        console.error("Could not get canvas context");
+        return;
+      }
 
       canvas.width = croppedAreaPixels.width;
       canvas.height = croppedAreaPixels.height;
 
-      // Draw the cropped image onto the canvas
       ctx.drawImage(
         image,
         croppedAreaPixels.x,
@@ -79,13 +101,19 @@ export const useCropper = ({
         croppedAreaPixels.height
       );
 
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const croppedImageUrl = URL.createObjectURL(blob);
-          onCropComplete(croppedImageUrl, blob);
-          setIsModalOpen(false);
-        }
-      });
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            const croppedImageUrl = URL.createObjectURL(blob);
+            onCropComplete(croppedImageUrl, blob);
+            setIsModalOpen(false);
+          } else {
+            console.error("Failed to create blob from canvas");
+          }
+        },
+        "image/jpeg",
+        0.95 
+      );
     } catch (error) {
       console.error("Error creating cropped image:", error);
     }

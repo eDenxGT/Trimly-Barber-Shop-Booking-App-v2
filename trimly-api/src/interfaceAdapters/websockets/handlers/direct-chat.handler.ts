@@ -27,7 +27,6 @@ export class DirectChatSocketHandler implements IDirectChatSocketHandler {
 
   handleSendMessage = async (data: any) => {
     try {
-      console.log(data);
       socketLogger.info("Message sent", {
         socketId: this._socket.id,
         userId: this._socket.data.userId,
@@ -66,10 +65,7 @@ export class DirectChatSocketHandler implements IDirectChatSocketHandler {
         userId,
       });
 
-      this._io.emit(DIRECT_CHAT_EVENTS.READ_MESSAGE, {
-        chatRoomId,
-        success: true,
-      });
+      this._socket.emit(DIRECT_CHAT_EVENTS.MARK_AS_READ, chatRoomId);
     } catch (err: any) {
       this._socket.emit("error", { message: err.message });
     }

@@ -28,7 +28,6 @@ export const handlePostShare = async (postId: string) => {
         text: "Look at this cool haircut!",
         url: `${frontendUrl}/feed/post/${postId}`,
       });
-      console.log("Post shared successfully!");
     } catch (error) {
       console.error("Sharing failed:", error);
     }

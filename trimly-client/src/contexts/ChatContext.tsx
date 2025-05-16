@@ -18,6 +18,7 @@ type ChatContextType = {
   currentChat: IDirectChat | ICommunityChat | null;
   chatType: "dm" | "community";
   setCurrentChat: (chat: IDirectChat | ICommunityChat) => void;
+  setCurrentChatId: (chatId: string | null) => void;
   allChats: IDirectChatPreview[] | ICommunityChatPreview[];
   setAllChats: (chats: IDirectChatPreview[] | ICommunityChatPreview[]) => void;
   onTypeChange: (type: "dm" | "community") => void;
@@ -47,6 +48,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   const currentChatRef = useRef<IDirectChat | ICommunityChat | null>(null);
   const messagesRef = useRef<(IDirectMessage | ICommunityMessage)[]>([]);
+  const allChatsRef = useRef<IDirectChatPreview[] | ICommunityChatPreview[]>(
+    []
+  );
 
   useEffect(() => {
     currentChatRef.current = currentChat;
@@ -55,6 +59,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     messagesRef.current = messages;
   }, [messages]);
+
+  useEffect(() => {
+    allChatsRef.current = allChats;
+  }, [allChats]);
 
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
 
@@ -107,6 +115,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
                   timestamp: newMessage.timestamp,
                   mediaUrl: newMessage.mediaUrl,
                 },
+                ...(currentChatId !== newMessage.chatRoomId
+                  ? { unreadCount: updatedChat.unreadCount + 1 }
+                  : {}),
               } as IDirectChatPreview;
 
               return [chatWithNewMessage, ...chatsArray];
@@ -136,7 +147,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
               (msg) => msg.messageId === newMessage.messageId
             )
           ) {
-            console.log("neewwwwww", newMessage);
             setMessages((prev) => [...prev, newMessage]);
           }
         } else {
@@ -153,8 +163,23 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
+    const handleMarkDirectMessageAsRead = (chatRoomId: string) => {
+      if (chatType === "dm") {
+        if (currentChatId === chatRoomId) {
+          setAllChatsData((prevChats) => {
+            return (prevChats as IDirectChatPreview[]).map((chat) =>
+              chat.chatRoomId === chatRoomId
+                ? { ...chat, unreadCount: 0 }
+                : chat
+            );
+          });
+        }
+      }
+    };
+
     socket.on("direct-chat:receive-message", handleReceiveDirectMessage);
     socket.on("community-chat:receive-message", handleReceiveCommunityMessage);
+    socket.on("direct-chat:mark-as-read", handleMarkDirectMessageAsRead);
 
     return () => {
       socket.off("direct-chat:receive-message", handleReceiveDirectMessage);
@@ -162,30 +187,29 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         "community-chat:receive-message",
         handleReceiveCommunityMessage
       );
+      socket.off("direct-chat:mark-as-read", handleMarkDirectMessageAsRead);
     };
   }, [socket, chatType, allChats, notifyToast]);
 
   const setAllChats = (
     chats: IDirectChatPreview[] | ICommunityChatPreview[]
   ) => {
-    setAllChatsData(chats);
+    if (allChatsRef.current.length === 0) {
+      setAllChatsData(chats);
+    }
   };
 
   const setCurrentChat = (chat: IDirectChat | ICommunityChat) => {
     const chatId = "chatRoomId" in chat ? chat.chatRoomId : chat.communityId;
-
-    if (currentChatId !== chatId) {
-      setCurrentChatId(chatId);
-      setMessages(chat.messages || []);
-      setCurrentChatData(chat);
-    } else {
-      setCurrentChatData(chat);
-    }
+    setCurrentChatId(chatId);
+    setMessages(chat.messages || []);
+    setCurrentChatData(chat);
   };
 
   const onTypeChange = (type: "dm" | "community") => {
     setChatType(type);
     setCurrentChatData(null);
+    setAllChatsData([]);
     setCurrentChatId(null);
     setMessages([]);
   };
@@ -217,7 +241,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       socket.emit("direct-chat:send-message", newMessage);
 
       setMessages((prev) => [...prev, newMessage]);
-
       setAllChatsData((prevChats) => {
         const chatsArray = [...(prevChats as IDirectChatPreview[])];
         const chatIndex = chatsArray.findIndex(
@@ -225,7 +248,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         );
 
         if (chatIndex > -1) {
-          const updatedChat = chatsArray.splice(chatIndex, 1)[0];
+          const updatedChat = chatsArray[chatIndex];
           const chatWithNewMessage = {
             ...updatedChat,
             lastMessage: {
@@ -237,8 +260,15 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
             },
           };
 
-          return [chatWithNewMessage, ...chatsArray];
+          const newChatsArray = [
+            chatWithNewMessage,
+            ...chatsArray.slice(0, chatIndex),
+            ...chatsArray.slice(chatIndex + 1),
+          ];
+
+          return newChatsArray;
         }
+
         return chatsArray;
       });
     } else {
@@ -295,7 +325,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleChangeChat = () => {
     setCurrentChatData(null);
-    setCurrentChatId(null);
+    // setCurrentChatId(chatId);
     setMessages([]);
   };
 
@@ -311,6 +341,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         onTypeChange,
         messages,
         sendMessage,
+        setCurrentChatId,
       }}
     >
       {children}

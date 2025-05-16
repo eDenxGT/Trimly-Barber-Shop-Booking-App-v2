@@ -11,21 +11,7 @@ export const ClientHomePage = () => {
   );
   const [permissionDenied, setPermissionDenied] = useState(false);
 
-  const getLocation = async () => {
-    if (navigator.permissions) {
-      const status = await navigator.permissions.query({
-        name: "geolocation" as PermissionName,
-      });
-
-      if (status.state === "denied") {
-        alert(
-          "You've blocked location access. Please enable it from browser settings."
-        );
-        setPermissionDenied(true);
-        return;
-      }
-    }
-
+  const getLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLocation({
@@ -43,10 +29,37 @@ export const ClientHomePage = () => {
       }
     );
   };
-
+  
   useEffect(() => {
-    getLocation();
-  }, []);
+    const checkPermission = async () => {
+      if (navigator.permissions) {
+        const status = await navigator.permissions.query({
+          name: "geolocation" as PermissionName,
+        });
+  
+        if (status.state === "granted") {
+          getLocation();
+        } else if (status.state === "prompt") {
+          getLocation();
+        } else if (status.state === "denied") {
+          alert(
+            "You've blocked location access. Please enable it from browser settings."
+          );
+          setPermissionDenied(true);
+        }
+  
+        status.onchange = () => {
+          if (status.state === "granted") {
+            getLocation();
+          }
+        };
+      } else {
+        getLocation();
+      }
+    };
+  
+    checkPermission();
+  }, []);  
 
   const { data: homeData, isLoading } = useGetClientHomeData({
     latitude: location?.lat as number | null,

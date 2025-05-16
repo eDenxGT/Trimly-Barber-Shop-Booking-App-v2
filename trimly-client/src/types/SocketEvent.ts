@@ -3,6 +3,7 @@ export interface ServerToClientEvents {
   "receive-notification": (notificationData: { message: string }) => void;
   "community-chat:receive-message": (data: any) => void;
   "direct-chat:read-message": (data: any) => void;
+  "direct-chat:mark-as-read": (data: any) => void;
 }
 
 export interface ClientToServerEvents {

@@ -179,7 +179,6 @@ export const adminDeleteCommunity = async ({
 }: {
   communityId: string;
 }) => {
-  console.log(communityId);
   const response = await adminAxiosInstance.delete<IAxiosResponse>(
     "/admin/community",
     { params: { communityId } }

@@ -160,12 +160,14 @@ export const ERROR_MESSAGES = {
   START_TIME_MUST_BE_BEFORE_END_TIME: "Start time must be before end time.",
   HAIRSTYLE_ALREADY_EXISTS: "Hairstyle with this name already exists",
   HAIRSTYLE_NOT_FOUND: "Hairstyle not found",
+  BOOKING_LIMIT_EXCEEDED_FOR_TODAY: "Your Booking limit exceeded"
 } as const;
 
 export const DIRECT_CHAT_EVENTS = {
   SEND_MESSAGE: "direct-chat:send-message",
   RECEIVE_MESSAGE: "direct-chat:receive-message",
   READ_MESSAGE: "direct-chat:read-message",
+  MARK_AS_READ: "direct-chat:mark-as-read",
 } as const;
 
 export const COMMUNITY_CHAT_EVENTS = {

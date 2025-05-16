@@ -29,7 +29,6 @@ export const BarberProfileEditPage = () => {
 			{
 				onSuccess: (data) => {
 					successToast(data.message);
-					console.log("barber", barber);
 					dispatch(barberLogin(data.user as IBarber));
 				},
 				onError: (error: any) => {

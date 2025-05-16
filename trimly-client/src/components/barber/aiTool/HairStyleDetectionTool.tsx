@@ -60,7 +60,6 @@ export const HairStyleDetectionTool: React.FC<HairStyleDetectionToolProps> = ({
         });
 
         imageFileRef.current = file;
-        console.log(imageFileRef.current);
       }
     }
   };

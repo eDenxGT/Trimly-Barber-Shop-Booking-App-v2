@@ -35,7 +35,6 @@ const SignIn = ({
 		},
 		validationSchema: signinSchema,
 		onSubmit: (values) => {
-			console.log(values);
 			onSubmit(values);
 		},
 	});

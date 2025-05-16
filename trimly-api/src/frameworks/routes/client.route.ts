@@ -271,6 +271,16 @@ export class ClientRoutes extends BaseRoute {
       }
     );
 
+    this.router.get(
+      "/client/posts/liked-users/:postId",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        feedController.getPostLikedUsers(req, res);
+      }
+    );
+
     this.router.post(
       "/client/posts/:postId/comment",
       verifyAuth,
@@ -329,7 +339,6 @@ export class ClientRoutes extends BaseRoute {
       "/client/refresh-token",
       decodeToken,
       (req: Request, res: Response) => {
-        console.log("refreshing client", req.body);
         authController.handleTokenRefresh(req, res);
       }
     );

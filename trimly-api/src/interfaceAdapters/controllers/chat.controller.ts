@@ -176,7 +176,6 @@ export class ChatController implements IChatController {
       const { userId } = (req as CustomRequest).user;
 
       const { search, page, limit } = req.query;
-      console.log(req.query);
 
       if (!userId) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
@@ -332,7 +331,6 @@ export class ChatController implements IChatController {
   async deleteCommunity(req: Request, res: Response) {
     try {
       const { communityId } = req.query;
-      console.log(req.query);
 
       if (!communityId) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
@@ -430,7 +428,7 @@ export class ChatController implements IChatController {
         userId,
         chatId: String(chatId),
       });
-      console.log("fetched chat", chat);
+
       res.status(HTTP_STATUS.OK).json({
         success: true,
         chat,

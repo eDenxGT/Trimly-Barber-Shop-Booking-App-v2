@@ -1,6 +1,6 @@
 export class SocketUserStore {
 	private static instance: SocketUserStore;
-	private connectedUsers: Map<string, string> = new Map(); 
+	private connectedUsers: Map<string, string> = new Map();
 
 	private constructor() {}
 

@@ -1,5 +1,6 @@
 import { IBaseRepository } from "../base-repository.interface.js";
 import { IPostEntity } from "../../models/post.entity.js";
+import { IClientEntity } from "../../models/client.entity.js";
 
 export interface IPostRepository extends IBaseRepository<IPostEntity> {
   findAllPosts(
@@ -9,7 +10,7 @@ export interface IPostRepository extends IBaseRepository<IPostEntity> {
     userId: string,
     isForClient?: boolean
   ): Promise<{ items: IPostEntity[]; total: number }>;
-  
+
   getSinglePostByPostId(
     filter: Partial<IPostEntity>,
     userId: string
@@ -30,4 +31,12 @@ export interface IPostRepository extends IBaseRepository<IPostEntity> {
     postId: string;
     userId: string;
   }): Promise<IPostEntity | null>;
+
+  getLikedUsers({ postId }: { postId: string }): Promise<
+    {
+      userId: string;
+      fullName: string;
+      avatar?: string;
+    }[]
+  >;
 }

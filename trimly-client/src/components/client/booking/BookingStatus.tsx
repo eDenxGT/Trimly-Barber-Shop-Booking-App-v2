@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { MapPin, MessageCircle, Calendar, CircleDot } from "lucide-react";
+import {
+  MapPin,
+  MessageCircle,
+  Calendar,
+  CircleDot,
+  SearchX,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -8,8 +14,8 @@ import MuiButton from "@/components/common/buttons/MuiButton";
 import { openInGoogleMap } from "@/utils/helpers/googleMapRedirect";
 import { ReviewModal } from "@/components/modals/ReviewModal";
 import { useNavigate } from "react-router-dom";
-import { format } from "date-fns";
 import { MdCancel } from "react-icons/md";
+import { getSmartDate } from "@/utils/helpers/timeFormatter";
 
 export function BookingStatus({
   bookingData,
@@ -17,7 +23,7 @@ export function BookingStatus({
   isLoading,
 }: {
   isLoading: boolean;
-  bookingData: IBooking;
+  bookingData?: IBooking | null;
   handleCancel: (bookingId: string) => void;
 }) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -49,10 +55,52 @@ export function BookingStatus({
 
   const currentStepIndex = steps.findIndex((step) => step.id === currentStep);
 
-  const formatBookingDate = (date: Date) => {
-    if (!date) return "";
-    return format(new Date(date), "MMM d, yyyy");
-  };
+
+  if (!bookingData?.bookingId) {
+    return (
+      <div className="w-full max-w-5xl mx-auto bg-gray-200 rounded-xl p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Booking Status Section - Fallback */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-center md:text-left">
+              Your Last Booking Status
+            </h2>
+
+            <Card className="bg-white shadow-sm py-8">
+              <CardContent className="p-4 flex flex-col items-center justify-center">
+                <SearchX className="h-16 w-16 text-gray-400 mb-4" />
+                <h3 className="text-xl font-medium text-center">
+                  No Bookings Found
+                </h3>
+                <p className="text-gray-500 text-center mt-2">
+                  You haven't made any bookings yet.
+                </p>
+                <Button
+                  onClick={() => navigate("/shops")}
+                  className="mt-6 bg-indigo-900 text-white hover:bg-indigo-800"
+                >
+                  Find a Shop
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Find Salon Section - Fallback */}
+          <div className="space-y-4 max-h-79">
+            <h2 className="text-2xl font-bold text-center md:text-left">Map</h2>
+            <div className="h-full rounded-lg overflow-hidden bg-gray-300 flex items-center justify-center">
+              <div className="flex flex-col items-center p-6">
+                <MapPin className="h-10 w-10 text-gray-400 mb-2" />
+                <p className="text-gray-500 text-center">
+                  Book a shop to see its location
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-5xl mx-auto bg-gray-200 rounded-xl p-6">
@@ -73,7 +121,6 @@ export function BookingStatus({
 
             <div className="flex justify-between items-center">
               {isCancelled ? (
-                // Show cancelled status
                 <div className="flex-1 flex justify-center">
                   <div className="flex flex-col items-center">
                     <div className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center">
@@ -85,7 +132,6 @@ export function BookingStatus({
                   </div>
                 </div>
               ) : (
-                // Show normal progress steps
                 steps.map((step, index) => (
                   <div key={step.id} className="flex flex-col items-center">
                     <div
@@ -131,7 +177,7 @@ export function BookingStatus({
                     <div className="flex items-center gap-1 text-gray-600">
                       <Calendar className="h-3 w-3" />
                       <span>
-                        {formatBookingDate(bookingData?.date)},{" "}
+                        {getSmartDate(bookingData?.date.toString() || "")},{" "}
                         {bookingData?.startTime}
                       </span>
                     </div>
@@ -142,21 +188,6 @@ export function BookingStatus({
                   </div>
                 </div>
               </div>
-
-              {/* Services list */}
-              {/* {bookingData?.servicesDetails?.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-gray-100">
-                  <p className="text-xs text-gray-500 mb-1">Services:</p>
-                  <ul className="text-sm space-y-1">
-                    {bookingData.servicesDetails.map((service, index) => (
-                      <li key={index} className="flex justify-between">
-                        <span>{service.name}</span>
-                        <span className="font-medium">₹{service.price}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )} */}
 
               <div className="flex justify-between mt-4">
                 <div className="flex gap-4">
@@ -203,7 +234,8 @@ export function BookingStatus({
                       Cancel
                     </MuiButton>
                   ) : (
-                    bookingData?.status === "completed" || bookingData?.status === "cancelled" && (
+                    (bookingData?.status === "completed" ||
+                      bookingData?.status === "cancelled") && (
                       <Button
                         onClick={() => setIsModalOpen(true)}
                         variant="outline"

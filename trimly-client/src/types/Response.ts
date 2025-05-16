@@ -1,3 +1,4 @@
+import { LikedUser } from "@/components/modals/LikedUsersModal";
 import { IBooking } from "./Booking";
 import {
   ICommunityChat,
@@ -120,6 +121,10 @@ export interface ICommunityChatResponse extends IAxiosResponse {
   community: ICommunityChat;
 }
 
+export interface ILikedUsersResponse extends IAxiosResponse {
+  users: LikedUser[];
+}
+
 // * Meetings
 export interface IMeetingRoomResponse extends IAxiosResponse {
   meeting: IMeetingRoom;
@@ -171,8 +176,8 @@ export interface IFaceShapeDetectionResponse extends IAxiosResponse {
 
 export interface IHairstyleResponse extends IAxiosResponse {
   hairstyles: IHairstyle[];
-  
 }
+
 export interface IHairstylePaginationResponse extends IAxiosResponse {
   hairstyles: IHairstyle[];
   totalPages: number;

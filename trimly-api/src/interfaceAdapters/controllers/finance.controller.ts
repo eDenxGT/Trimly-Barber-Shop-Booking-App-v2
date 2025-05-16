@@ -245,8 +245,6 @@ export class FinanceController implements IFinanceController {
 				sortDirection: sortDirection as "asc" | "desc",
 			});
 
-			console.log(result);
-
 			res.status(200).json(result);
 		} catch (error) {
 			handleErrorResponse(req, res, error);

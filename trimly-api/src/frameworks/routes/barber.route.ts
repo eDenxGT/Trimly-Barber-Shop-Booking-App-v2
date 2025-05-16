@@ -286,7 +286,6 @@ export class BarberRoutes extends BaseRoute {
         authorizeRole(["barber"]),
         blockStatusMiddleware.checkStatus as RequestHandler,
         (req: Request, res: Response) => {
-          console.log("getting services", req.body);
           serviceController.getAllServicesByBarberId(req, res);
         }
       )
@@ -396,7 +395,6 @@ export class BarberRoutes extends BaseRoute {
       "/barber/refresh-token",
       decodeToken,
       (req: Request, res: Response) => {
-        console.log("refreshing barber", req.body);
         authController.handleTokenRefresh(req, res);
       }
     );

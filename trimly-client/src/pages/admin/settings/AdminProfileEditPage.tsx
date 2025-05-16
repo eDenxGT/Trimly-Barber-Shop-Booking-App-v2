@@ -29,7 +29,6 @@ export const AdminProfileEditPage = () => {
         {
           onSuccess: (data) => {
             successToast(data.message);
-            console.log(data);
             dispatch(adminLogin(data.user as IAdmin));
           },
           onError: (error: any) => {

@@ -16,7 +16,6 @@ export const BarberDashBoardPage = () => {
 
   const { data, isFetching, isError } = useGetBarberDashboardData();
 
-  console.log(data);
   return (
     <>
       <AnimatePresence mode="wait">

@@ -37,7 +37,6 @@ export const CommunitiesTable = ({
   const [communityToDelete, setCommunityToDelete] = useState<string | null>(
     null
   );
-  console.log(selectedCommunity);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const handleSearch = (term: string) => {

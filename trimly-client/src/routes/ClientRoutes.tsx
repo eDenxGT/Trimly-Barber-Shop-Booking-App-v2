@@ -14,11 +14,12 @@ import { ClientSettingsPage } from "@/pages/client/settings/ClientSettingsPage";
 import { ClientShopDetailsPage } from "@/pages/client/shop/ClientShopDetailsPage";
 import ShopListingPage from "@/pages/client/shop/ClientShopListingPage";
 import ClientWalletPage from "@/pages/client/wallet/ClientWalletPage";
+import { NotFoundPage } from "@/pages/common/NotFoundPage";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
 
-export const ClientRoutes = () => {
+const ClientRoutes = () => {
   return (
     <Routes>
       <Route index element={<NoAuthRoute element={<ClientAuth />} />} />
@@ -77,6 +78,9 @@ export const ClientRoutes = () => {
           />
         }
       />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };
+
+export default ClientRoutes;

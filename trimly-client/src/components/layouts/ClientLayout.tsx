@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   clientLogout,
@@ -20,8 +20,12 @@ export const ClientLayout = () => {
   const { successToast, errorToast } = useToaster();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const user = useSelector((state: RootState) => state.client.client);
   const { mutate: logoutReq } = useLogout(logoutClient);
+
+  const isChatPage = location.pathname.startsWith("/chat");
 
   const handleLogout = () => {
     logoutReq(undefined, {
@@ -35,6 +39,7 @@ export const ClientLayout = () => {
       },
     });
   };
+
   useEffect(() => {
     const handleFocus = () => {
       dispatch(refreshClientSessionThunk());
@@ -69,7 +74,7 @@ export const ClientLayout = () => {
       />
       {/* Main content */}
       <Outlet context={user} />
-      <Footer />
+      {!isChatPage && <Footer />}
     </div>
   );
 };

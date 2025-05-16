@@ -36,7 +36,6 @@ socketServer.onConnection((socket) => {
   const userStore = SocketUserStore.getInstance();
 
   socket.on("registerUser", ({ userId }) => {
-    console.log("Received userId:", userId);
     socket.data.userId = userId;
     userStore.addUser(userId, socket.id);
   });
@@ -45,7 +44,6 @@ socketServer.onConnection((socket) => {
     socketId: socket.id,
     event: "connect",
   });
-  console.log("Connected users:", userStore.getAllUsers());
   socket.on("disconnect", () => {
     console.log(chalk.red.bold("❌ Socket disconnected:", socket.id));
     if (socket.data.userId) {

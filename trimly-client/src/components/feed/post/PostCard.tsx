@@ -1,148 +1,3 @@
-// import { useState } from "react";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Card,
-//   CardContent,
-//   CardFooter,
-//   CardHeader,
-// } from "@/components/ui/card";
-// import { Heart, MessageCircle, MoreHorizontal, Share2 } from "lucide-react";
-// import { cn } from "@/lib/utils";
-// import { IPost } from "@/types/Feed";
-// import { getSmartDate } from "@/utils/helpers/timeFormatter";
-
-// interface PostCardProps {
-//   post: IPost;
-//   onToggleLike: (postId: string) => void;
-//   onCommentClick: (postId: string) => void;
-//   onClick: (postId: string) => void;
-// }
-
-// export function PostCard({
-//   post,
-//   onToggleLike,
-//   onClick,
-//   onCommentClick,
-// }: PostCardProps) {
-//   const [liked, setLiked] = useState(post.isLiked || false);
-//   const [likeCount, setLikeCount] = useState(post.likesCount || 0);
-
-//   const handleLike = () => {
-//     onToggleLike(post.postId || "");
-//     if (liked) {
-//       setLikeCount(likeCount - 1);
-//     } else {
-//       setLikeCount(likeCount + 1);
-//     }
-//     setLiked(!liked);
-//   };
-
-//   const timeAgo = getSmartDate(post.createdAt?.toString() || "");
-
-//   return (
-//     <Card className="w-full max-w-md mx-auto overflow-hidden shadow-md">
-//       <CardHeader className="flex flex-row items-center justify-between p-4 space-y-0">
-//         <div className="flex items-center gap-3">
-//           <Avatar className="w-9 h-9 border">
-//             <AvatarImage
-//               src={post.userDetails?.avatar || "/placeholder.svg"}
-//               alt={post.userDetails?.fullName || "Barber"}
-//             />
-//             <AvatarFallback>
-//               {post.userDetails?.fullName?.charAt(0) || "B"}
-//             </AvatarFallback>
-//           </Avatar>
-//           <div>
-//             <p className="text-sm font-medium">
-//               {post.userDetails?.fullName || "Barber"}
-//             </p>
-//             <p className="text-xs text-muted-foreground">Barber</p>
-//           </div>
-//         </div>
-//         <div className="flex items-center gap-2">
-//           <p className="text-xs text-muted-foreground">{timeAgo}</p>
-//           <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-//             <MoreHorizontal className="h-5 w-5" />
-//           </Button>
-//         </div>
-//       </CardHeader>
-//       <CardContent className="p-0">
-//         <div
-//           className="relative w-full cursor-pointer"
-//           onClick={() => onClick(post.postId || "")}
-//         >
-//           <img
-//             src={post.image || "/placeholder.svg"}
-//             alt="Barber post"
-//             className="object-contain w-full h-full"
-//             sizes="(max-width: 768px) 100vw, 500px"
-//           />
-//         </div>
-//       </CardContent>
-//       <CardFooter className="flex flex-col p-0">
-//         <div className="flex items-center justify-between w-full p-3 pb-1">
-//           <div className="flex items-center gap-3">
-//             <Button
-//               variant="ghost"
-//               size="icon"
-//               className="h-9 w-9 rounded-full"
-//               onClick={handleLike}
-//             >
-//               <Heart
-//                 className={cn(
-//                   "h-6 w-6",
-//                   post.isLiked ? "fill-rose-500 text-rose-500" : ""
-//                 )}
-//               />
-//             </Button>
-//             <Button
-//               variant="ghost"
-//               size="icon"
-//               className="h-9 w-9 rounded-full"
-//               onClick={() => onCommentClick(post.postId || "")}
-//             >
-//               <MessageCircle className="h-6 w-6" />
-//             </Button>
-//           </div>
-//           <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
-//             <Share2 className="h-6 w-6" />
-//           </Button>
-//         </div>
-
-//         <div className="px-4 w-full">
-//           <p className="text-sm font-semibold">
-//             {post.likesCount?.toLocaleString()} likes
-//           </p>
-//           <div className="mt-1">
-//             <p className="text-sm">
-//               <span className="font-semibold">
-//                 {post.userDetails?.fullName || "Barber"}
-//               </span>{" "}
-//               <span className="font-medium">{post.caption}</span>
-//             </p>
-//             <p className="text-sm text-muted-foreground mt-0.5">
-//               {post.description}
-//             </p>
-//           </div>
-
-//           {post.totalComments && post.totalComments > 0 && (
-//             <div className="mt-2 space-y-1">
-//               <p
-//                 onClick={() => onCommentClick(post.postId || "")}
-//                 className="text-sm cursor-pointer text-muted-foreground"
-//               >
-//                 View {post.totalComments > 1 ? "all" : ""} {post.totalComments}{" "}
-//                 {post.totalComments > 1 ? "comments" : "comment"}
-//               </p>
-//             </div>
-//           )}
-//         </div>
-//       </CardFooter>
-//     </Card>
-//   );
-// }
-
 import { useState } from "react";
 import { format } from "date-fns";
 import { Heart, MessageCircle, MoreHorizontal, Share2 } from "lucide-react";
@@ -158,6 +13,7 @@ import { getSmartDate } from "@/utils/helpers/timeFormatter";
 interface SocialFeedCardProps {
   post: IPost;
   onToggleLike?: (postId: string) => void;
+  onViewLikedUsers: (postId: string) => void;
   onShare?: (postId: string) => void;
   onViewDetail?: () => void;
 }
@@ -165,6 +21,7 @@ interface SocialFeedCardProps {
 export const PostCard = ({
   post,
   onToggleLike,
+  onViewLikedUsers,
   onShare,
   onViewDetail,
 }: SocialFeedCardProps) => {
@@ -299,7 +156,10 @@ export const PostCard = ({
 
       {/* Likes Count */}
       <div className="px-4 pb-1">
-        <p className="text-sm font-semibold">
+        <p
+          className="text-sm font-semibold cursor-pointer"
+          onClick={() => onViewLikedUsers(post.postId || "")}
+        >
           {post.likesCount?.toLocaleString()}{" "}
           {post.likesCount === 1 ? "like" : "likes"}
         </p>

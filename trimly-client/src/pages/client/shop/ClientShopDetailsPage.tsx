@@ -5,14 +5,13 @@ import {
   Star,
   MessageCircle,
   Share2,
-  Heart,
-  Calendar,
   Clock,
   UserIcon,
   Wifi,
   Car,
   X,
   Check,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -29,11 +28,11 @@ import { formatTo12Hour } from "@/utils/helpers/timeFormatter";
 import { ReviewModal } from "@/components/modals/ReviewModal";
 import { RatingStars } from "@/components/common/fields/RatingStars";
 import { openInGoogleMap } from "@/utils/helpers/googleMapRedirect";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
   const { shopId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isFavorite, setIsFavorite] = useState(false);
   const { data, isLoading, error } = useBarberShopById(
     getBarberShopDetailsById,
     shopId || "",
@@ -41,36 +40,39 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
   );
   const shop = data?.user;
   const navigate = useNavigate();
-  const appointments = [
-    {
-      time: "09:30 am",
-      barber: "Adam Carl",
-      service: "Haircut + Beard",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      time: "10:00 am",
-      barber: "Sergio Wolf",
-      service: "Hair styling",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    { time: "10:30 am", barber: "", service: "", avatar: "" },
-    {
-      time: "11:00 am",
-      barber: "Sergio Wolf",
-      service: "Hair coloring",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    { time: "11:30 am", barber: "", service: "", avatar: "" },
-  ];
+  const { errorToast } = useToaster();
 
   const handleRedirectBooking = (shopId: string) => {
     navigate(`/shops/${shopId}/booking`);
   };
 
-  if (isLoading) return <div className="p-4">Loading...</div>;
-  if (error) return <div className="p-4">Error loading shop data</div>;
-  if (!shop) return <div className="p-4">Shop not found</div>;
+  if (isLoading)
+    return (
+      <div className="p-4 flex items-center justify-center h-screen">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="p-4 flex items-center justify-center h-screen">
+        Error loading shop data
+      </div>
+    );
+  if (!shop)
+    return (
+      <div className="p-4 flex items-center justify-center h-screen">
+        Shop not found
+      </div>
+    );
+
+  const handleCall = () => {
+    if (shop.phoneNumber) {
+      window.location.href = `tel:${shop.phoneNumber}`;
+    } else {
+      console.log("Phone number not available");
+      errorToast("Phone number not available");
+    }
+  };
 
   const displayWeeklySchedule = () => {
     const days = [
@@ -206,16 +208,20 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
               <span className="text-xs">Place</span>
             </Button>
             <Button
-              onClick={() =>
-                navigate(
-                  `/chat?userId=${shop.userId || ""}`
-                )
-              }
+              onClick={() => navigate(`/chat?userId=${shop.userId || ""}&type=dm`)}
               variant="ghost"
               className="flex flex-col items-center p-2 h-auto text-gray-600 transition-colors hover:text-[var(--yellow-hover)]"
             >
               <MessageCircle className="h-5 w-5 mb-1" />
               <span className="text-xs">Chat</span>
+            </Button>
+            <Button
+              variant="ghost"
+              className={`flex flex-col items-center p-2 h-auto transition-colors hover:text-[var(--yellow-hover)]`}
+              onClick={handleCall}
+            >
+              <Phone className="h-5 w-5 mb-1" />
+              <span className="text-xs">Call</span>
             </Button>
             <Button
               variant="ghost"
@@ -225,25 +231,13 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
               <Share2 className="h-5 w-5 mb-1" />
               <span className="text-xs">Share</span>
             </Button>
-            <Button
-              variant="ghost"
-              className={`flex flex-col items-center p-2 h-auto transition-colors ${
-                isFavorite ? "text-red-500" : "text-gray-600"
-              } hover:text-[var(--yellow-hover)]`}
-              onClick={() => setIsFavorite(!isFavorite)}
-            >
-              <Heart
-                className={`h-5 w-5 mb-1 ${isFavorite ? "fill-red-500" : ""}`}
-              />
-              <span className="text-xs">Favorite</span>
-            </Button>
           </div>
         </div>
 
         {/* Tabs Section */}
         <div className="px-1 mt-2">
           <Tabs defaultValue="about" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 bg-gray-100 p-1">
+            <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1">
               <TabsTrigger
                 value="about"
                 className="rounded-md data-[state=active]:bg-amber-100 data-[state=active]:text-black"
@@ -256,12 +250,12 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
               >
                 Service
               </TabsTrigger>
-              <TabsTrigger
+              {/* <TabsTrigger
                 value="schedule"
                 className="rounded-md data-[state=active]:bg-amber-100 data-[state=active]:text-black"
               >
                 Schedule
-              </TabsTrigger>
+              </TabsTrigger> */}
               <TabsTrigger
                 value="review"
                 className="rounded-md data-[state=active]:bg-amber-100 data-[state=active]:text-black"
@@ -432,7 +426,7 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
               </TabsContent>
 
               {/* Schedule Tab */}
-              <TabsContent value="schedule" className="mt-0">
+              {/* <TabsContent value="schedule" className="mt-0">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold">Schedule</h3>
@@ -519,7 +513,7 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
                     </div>
                   )}
                 </div>
-              </TabsContent>
+              </TabsContent> */}
 
               {/* Reviews Tab */}
               <TabsContent value="review" className="mt-0">

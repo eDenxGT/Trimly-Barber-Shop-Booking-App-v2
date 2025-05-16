@@ -28,7 +28,6 @@ export class CommunityChatSocketHandler implements ICommunityChatSocketHandler {
 
   handleSendMessage = async (data: any) => {
     try {
-      console.log(data);
       socketLogger.info("Community Message sent", {
         socketId: this._socket.id,
         userId: this._socket.data.userId,

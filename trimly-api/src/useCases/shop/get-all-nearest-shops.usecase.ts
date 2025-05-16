@@ -52,7 +52,6 @@ export class GetAllNearestShopsUseCase implements IGetAllNearestShopsUseCase {
 			sortBy: sortBy === "rating" ? "averageRating" : "",
 			sortOrder: sortOrder || "asc",
 		};
-		console.log(filters, sort, pagination);
 		const shops =
 			await this._barberRepository.findAllNearbyShopsWithFilters(
 				filters,

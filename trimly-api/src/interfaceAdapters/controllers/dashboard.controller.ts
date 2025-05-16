@@ -102,7 +102,7 @@ export class DashboardController implements IDashboardController {
       }
 
       const dashboardData = await this._getAdminDashboardDataUseCase.execute();
-console.log(dashboardData)
+
       res.status(HTTP_STATUS.OK).json({
         success: true,
         data: dashboardData,

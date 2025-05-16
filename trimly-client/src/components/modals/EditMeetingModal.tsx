@@ -94,7 +94,6 @@ export function EditMeetingModal({
 
     const endTime = new Date(values.meetingDate);
     endTime.setHours(Number.parseInt(endHour24), Number.parseInt(endMinute), 0);
-    console.log(startTime, endTime, values);
 
     if (!isAfter(endTime, startTime)) {
       setTimeError("End time must be after start time");

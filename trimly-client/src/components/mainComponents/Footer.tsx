@@ -154,16 +154,16 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-[#feba43] shrink-0 mt-0.5" />
                 <span className="text-gray-400">
-                  123 Barber Street, Haircut City, HC 12345
+                  123 Trimly Street, Haircut City, HC 12345
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-[#feba43] shrink-0" />
-                <span className="text-gray-400">+1 (555) 123-4567</span>
+                <span className="text-gray-400">+91 1234567890</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-[#feba43] shrink-0" />
-                <span className="text-gray-400">info@barberbook.com</span>
+                <span className="text-gray-400">info@trimly.in</span>
               </li>
             </ul>
           </div>
@@ -175,7 +175,7 @@ export default function Footer() {
         <div className="container mx-auto px-4 md:px-6 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-sm">
-              © {new Date().getFullYear()} BarberBook. All rights reserved.
+              © {new Date().getFullYear()} Trimly. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link

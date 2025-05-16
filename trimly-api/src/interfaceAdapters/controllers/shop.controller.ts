@@ -83,7 +83,7 @@ export class ShopController implements IShopController {
 				page ? Number(page) : 1,
 				limit ? Number(limit) : 9
 			);
-			// console.log(shops);
+
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
 				shops,
@@ -105,7 +105,6 @@ export class ShopController implements IShopController {
 				String(forType)
 			);
 
-			console.log(shop);
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
 				user: shop,

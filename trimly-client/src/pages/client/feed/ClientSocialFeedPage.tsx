@@ -21,10 +21,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { handlePostShare } from "@/utils/helpers/shareLink";
+import { LikedUsersModal } from "@/components/modals/LikedUsersModal";
 
 export function ClientSocialFeedPage() {
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [isPostOverviewModalOpen, setIsPostOverviewModalOpen] = useState(false);
+  const [isLikedUsersModalOpen, setIsLikedUsersModalOpen] = useState(false);
   const { data, fetchNextPage, hasNextPage, isFetching, isError } =
     useGetPostsForClient();
   const { mutate: toggleLike } = useToggleLikePost(clientToggleLikePost);
@@ -97,6 +100,11 @@ export function ClientSocialFeedPage() {
     setIsPostOverviewModalOpen(true);
   };
 
+  const handleOpenLikedUsersModal = (postId: string) => {
+    setSelectedPostId(postId);
+    setIsLikedUsersModalOpen(true);
+  };
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -155,6 +163,9 @@ export function ClientSocialFeedPage() {
                 {Array.isArray(posts) &&
                   posts.map((post) => (
                     <PostCard
+                      onViewLikedUsers={() =>
+                        handleOpenLikedUsersModal(post.postId)
+                      }
                       onShare={() => handlePostShare(post.postId)}
                       onToggleLike={() => handleToggleLike(post.postId)}
                       onViewDetail={() => handleOpenPostOverview(post)}
@@ -171,6 +182,14 @@ export function ClientSocialFeedPage() {
               <p className="text-xl font-semibold mb-2">No posts found</p>
               {/* <p>Try adjusting your search</p> */}
             </div>
+          )}
+
+          {selectedPostId && isLikedUsersModalOpen && (
+            <LikedUsersModal
+              postId={selectedPostId}
+              isOpen={isLikedUsersModalOpen}
+              onClose={() => setIsLikedUsersModalOpen(false)}
+            />
           )}
 
           <PostOverviewModal

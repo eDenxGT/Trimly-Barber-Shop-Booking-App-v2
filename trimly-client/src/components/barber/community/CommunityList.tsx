@@ -29,7 +29,6 @@ export const CommunitiesList = ({
   const handleJoinCommunity = (communityId: string) => {
     onJoin(communityId);
   };
-  console.log(communities)
 
   return (
     <div className="container mx-auto py-8 px-4">

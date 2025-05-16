@@ -43,7 +43,7 @@ export class BookingController implements IBookingController {
           userId,
           role
         );
-        // console.log(bookings);
+
         res.status(HTTP_STATUS.OK).json({ success: true, bookings });
         return;
       }
@@ -138,7 +138,7 @@ export class BookingController implements IBookingController {
   }
 
   //* ─────────────────────────────────────────────────────────────
-  //*                 🛠️  Handle Payment Failure
+  //*                 🛠️  Handle Cancel Booking
   //* ─────────────────────────────────────────────────────────────
   async cancelBooking(req: Request, res: Response): Promise<void> {
     try {
@@ -156,7 +156,7 @@ export class BookingController implements IBookingController {
   }
 
   //* ─────────────────────────────────────────────────────────────
-  //*                 🛠️  Handle Payment Failure
+  //*                 🛠️  Handle Booking Complete
   //* ─────────────────────────────────────────────────────────────
   async updateBookingComplete(req: Request, res: Response): Promise<void> {
     try {

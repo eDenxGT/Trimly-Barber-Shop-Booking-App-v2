@@ -31,7 +31,6 @@ export class CommunityRepository
     page: number;
     limit: number;
   }) {
-    console.log(userId);
     const skip = (page - 1) * limit;
 
     const pipeline: PipelineStage[] = [];

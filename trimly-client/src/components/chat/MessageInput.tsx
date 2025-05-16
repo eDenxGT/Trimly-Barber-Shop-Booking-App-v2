@@ -2,7 +2,7 @@ import type React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, ImageIcon, Smile, Mic, X } from "lucide-react";
+import { Send, ImageIcon, Smile, X } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import {
   Tooltip,
@@ -103,6 +103,14 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith("image/")) {
+        errorToast("Only image files are allowed.");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
+      }
+
       const objectUrl = URL.createObjectURL(file);
       setImagePreview(objectUrl);
       setFileToUpload(file);
@@ -221,7 +229,7 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
           className="flex-1 mx-1 bg-gray-50 border-1 rounded-full py-6"
         />
 
-        {!message.trim() ? (
+        {/* {!message.trim() ? (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -240,18 +248,18 @@ export function MessageInput({ onSendMessage }: MessageInputProps) {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        ) : (
-          <Button
-            type="button"
-            size="icon"
-            onClick={handleSend}
-            disabled={!message.trim() && !imageUrl}
-            className="bg-[var(--darkblue)] hover:bg-[var(--darkblue-hover)] rounded-sm h-10 w-10"
-          >
-            <Send className="h-5 w-5" />
-            <span className="sr-only">Send</span>
-          </Button>
-        )}
+        ) : ( */}
+        <Button
+          type="button"
+          size="icon"
+          onClick={handleSend}
+          disabled={!message.trim() && !imageUrl && !fileToUpload}
+          className="bg-[var(--darkblue)] hover:bg-[var(--darkblue-hover)] rounded-sm h-10 w-10"
+        >
+          <Send className="h-5 w-5" />
+          <span className="sr-only">Send</span>
+        </Button>
+        {/* )} */}
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import {
   IBookingResponse,
   IClientHomePageResponse,
   IClientResponse,
+  ILikedUsersResponse,
   ISinglePostResponse,
   IWalletPageResponse,
 } from "@/types/Response";
@@ -319,6 +320,15 @@ export const getHomePageData = async ({
   const response = await clientAxiosInstance.get<IClientHomePageResponse>(
     "/client/home-data",
     { params: { latitude, longitude } }
+  );
+  return response.data;
+};
+
+export const fetchLikedUsersByPostId = async (
+  postId: string
+): Promise<ILikedUsersResponse> => {
+  const response = await clientAxiosInstance.get<ILikedUsersResponse>(
+    `/client/posts/liked-users/${postId}`
   );
   return response.data;
 };

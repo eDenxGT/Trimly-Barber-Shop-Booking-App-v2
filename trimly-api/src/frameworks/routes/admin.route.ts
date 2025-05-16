@@ -128,7 +128,6 @@ export class AdminRoutes extends BaseRoute {
         verifyAuth,
         authorizeRole(["admin"]),
         (req: Request, res: Response) => {
-          console.log(req.body);
           shopController.updateShopStatus(req, res);
         }
       );
@@ -302,7 +301,6 @@ export class AdminRoutes extends BaseRoute {
       "/admin/refresh-token",
       decodeToken,
       (req: Request, res: Response) => {
-        console.log("refreshing Admin", req.body);
         authController.handleTokenRefresh(req, res);
       }
     );

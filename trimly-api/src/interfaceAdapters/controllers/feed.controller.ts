@@ -18,6 +18,7 @@ import { IToggleLikePostUseCase } from "../../entities/useCaseInterfaces/feed/po
 import { IAddCommentUseCase } from "../../entities/useCaseInterfaces/feed/comment/add-comment-usecase.interface.js";
 import { IToggleCommentLikeUseCase } from "../../entities/useCaseInterfaces/feed/comment/toggle-comment-like-usecase.interface.js";
 import { IGetAllPostsForClientUseCase } from "../../entities/useCaseInterfaces/feed/post/get-all-posts-for-client-usecase.interface.js";
+import { IGetPostLikedUsersUseCase } from "../../entities/useCaseInterfaces/feed/post/get-post-liked-users-usecase.interface.js";
 
 @injectable()
 export class FeedController implements IFeedController {
@@ -40,7 +41,9 @@ export class FeedController implements IFeedController {
     @inject("IToggleCommentLikeUseCase")
     private _toggleCommentLikeUseCase: IToggleCommentLikeUseCase,
     @inject("IGetAllPostsForClientUseCase")
-    private _getAllPostsForClientUseCase: IGetAllPostsForClientUseCase
+    private _getAllPostsForClientUseCase: IGetAllPostsForClientUseCase,
+    @inject("IGetPostLikedUsersUseCase")
+    private _getPostLikedUsersUseCase: IGetPostLikedUsersUseCase
   ) {}
 
   //? ✨=========================================================✨
@@ -145,7 +148,7 @@ export class FeedController implements IFeedController {
         });
         return;
       }
-      
+
       const post = await this._getSinglePostByPostIdUseCase.execute(
         userId,
         role,
@@ -329,6 +332,35 @@ export class FeedController implements IFeedController {
       res.status(HTTP_STATUS.OK).json({
         success: true,
         message: SUCCESS_MESSAGES.TOGGLE_LIKE_SUCCESS,
+      });
+    } catch (error) {
+      handleErrorResponse(req, res, error);
+    }
+  }
+
+  //* ─────────────────────────────────────────────────────────────
+  //*                   🛠️ Get Post Liked Users
+  //* ─────────────────────────────────────────────────────────────
+  async getPostLikedUsers(req: Request, res: Response): Promise<void> {
+    try {
+      const { postId } = req.params;
+
+      if (!postId) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: ERROR_MESSAGES.MISSING_PARAMETERS, 
+        });
+        return;
+      }
+
+      const users = await this._getPostLikedUsersUseCase.execute({
+        postId,
+      });
+
+
+      res.status(HTTP_STATUS.OK).json({
+        success: true,
+        users,
       });
     } catch (error) {
       handleErrorResponse(req, res, error);

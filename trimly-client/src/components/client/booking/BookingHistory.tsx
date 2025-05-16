@@ -93,7 +93,7 @@ export function BookingHistory({
         </TabsList>
       </Tabs>
 
-      <Card className="bg-white shadow-sm overflow-hidden border border-gray-100">
+      <Card className="bg-white shadow-sm py-0 overflow-hidden border border-gray-100">
         <CardContent className="p-0">
           {!bookings || filteredBookings?.length === 0 ? (
             <div className="p-12 text-center text-gray-500">
@@ -106,7 +106,7 @@ export function BookingHistory({
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto max-h-100">
+            <div className="overflow-x-auto overflow-y-auto no-scrollbar max-h-[calc(100vh-20rem)]">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-gray-50">

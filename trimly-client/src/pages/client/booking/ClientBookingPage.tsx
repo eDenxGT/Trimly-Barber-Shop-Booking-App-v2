@@ -27,6 +27,7 @@ import { RazorpayButton } from "@/services/payment/RazorPay";
 import { WalletPaymentModal } from "@/components/modals/WalletPaymentModal";
 import { useWalletPaymentMutation } from "@/hooks/client/useWalletPayment";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { parse12HourTime } from "@/utils/helpers/timeParser";
 
 export interface TimeSlot {
   time: string;
@@ -37,23 +38,12 @@ export interface OpeningHours {
   [key: string]: { open: string | null; close: string | null } | null;
 }
 
-export interface Booking {
-  clientId: string;
-  shopId: string;
-  services: string[];
-  date: Date;
-  startTime: string;
-  bookedTimeSlots: string[];
-  duration: number;
-  total: number;
-  status: string;
-}
-
 export function ClientBookingPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedServices, setSelectedServices] = useState<IService[]>([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [availableTimes, setAvailableTimes] = useState<TimeSlot[]>([]);
+  const [baseAvailableTimes, setBaseAvailableTimes] = useState<TimeSlot[]>([]);
   const [allTimeSlots, setAllTimeSlots] = useState<Record<string, TimeSlot[]>>(
     {}
   );
@@ -77,6 +67,7 @@ export function ClientBookingPage() {
   const existingBookings = shopData?.bookings;
   const minBookingDate = startOfDay(new Date());
 
+
   const isDateAvailable = (date: Date): boolean => {
     const dayName = format(date, "EEEE").toLowerCase();
     const dayHours = shopData?.openingHours?.[dayName];
@@ -88,12 +79,16 @@ export function ClientBookingPage() {
     return true;
   };
 
+  
+
   const disabledDates = (date: Date) => {
     if (isBefore(date, minBookingDate)) {
       return true;
     }
     return !isDateAvailable(date);
   };
+
+
 
   const getClosingTime = (date: Date): Date | null => {
     if (!shopData?.openingHours) return null;
@@ -105,6 +100,8 @@ export function ClientBookingPage() {
 
     return parse(dayHours.close, "HH:mm", date);
   };
+
+
 
   const sanitizedOpeningHours: OpeningHours = Object.fromEntries(
     Object.entries(shopData?.openingHours ?? {}).map(([day, hours]) => [
@@ -118,6 +115,8 @@ export function ClientBookingPage() {
     ])
   );
 
+
+
   useEffect(() => {
     if (!shopData?.openingHours || initialSlotsProcessed.current) return;
 
@@ -126,20 +125,41 @@ export function ClientBookingPage() {
     initialSlotsProcessed.current = true;
   }, [shopData?.openingHours, sanitizedOpeningHours]);
 
+
+
+
   useEffect(() => {
     if (
       Object.keys(allTimeSlots).length === 0 ||
       existingBookingsProcessed.current
     )
       return;
-
+  
     const updatedSlots = JSON.parse(JSON.stringify(allTimeSlots));
     let slotsUpdated = false;
-
+  
+    const now = new Date();
+    now.setSeconds(0, 0); 
+    const todayKey = now.toDateString();
+    const todaySlots = updatedSlots[todayKey];
+      
+    if (todaySlots) {
+      todaySlots.forEach((slot: TimeSlot) => {
+        const { hours, minutes } = parse12HourTime(slot.time);
+        const slotTime = new Date(now);
+        slotTime.setHours(hours, minutes, 0, 0);
+  
+        if (slotTime <= now && slot.available) {
+          slot.available = false;
+          slotsUpdated = true;
+        }
+      });
+    }
+  
     existingBookings?.forEach((booking) => {
       const dateKey = new Date(booking.date).toDateString();
       const slotsForDate = updatedSlots[dateKey];
-
+  
       if (slotsForDate) {
         booking.bookedTimeSlots.forEach((bookedTime) => {
           const slotIndex = slotsForDate.findIndex(
@@ -152,13 +172,16 @@ export function ClientBookingPage() {
         });
       }
     });
-
+  
     if (slotsUpdated) {
       setAllTimeSlots(updatedSlots);
     }
     existingBookingsProcessed.current = true;
   }, [allTimeSlots, existingBookings]);
+  
 
+
+  
   useEffect(() => {
     if (!selectedDate) return;
 
@@ -167,12 +190,14 @@ export function ClientBookingPage() {
 
     if (selectedServices.length === 0) {
       setAvailableTimes(timeSlotsForDate);
+      setBaseAvailableTimes(timeSlotsForDate);
       return;
     }
 
     const closingTime = getClosingTime(selectedDate);
     if (!closingTime) {
       setAvailableTimes([]);
+      setBaseAvailableTimes([]);
       return;
     }
 
@@ -210,7 +235,11 @@ export function ClientBookingPage() {
     });
 
     setAvailableTimes(updatedTimes);
+    setBaseAvailableTimes(updatedTimes);
   }, [selectedDate, allTimeSlots, selectedServices]);
+
+
+
 
   useEffect(() => {
     if (!selectedDate || !selectedTime || selectedServices.length === 0) {
@@ -235,6 +264,9 @@ export function ClientBookingPage() {
     setBookedTimeSlots(bookedSlots);
   }, [selectedDate, selectedTime, selectedServices, allTimeSlots]);
 
+
+
+
   const toggleService = (service: IService) => {
     setSelectedTime(null);
 
@@ -251,28 +283,36 @@ export function ClientBookingPage() {
     }
   };
 
+
+
   const handleTimeSelection = (time: string) => {
     if (!selectedDate || selectedServices.length === 0) return;
-
+  
     setSelectedTime(time);
-
+  
     const requiredSlots = selectedServices.length;
-    const availableTimesCopy = JSON.parse(JSON.stringify(availableTimes));
+  
+    const availableTimesCopy = baseAvailableTimes.map(slot => ({ ...slot }));
+  
     const startSlotIndex = availableTimesCopy.findIndex(
       (slot: TimeSlot) => slot.time === time
     );
-
+  
     for (let i = 0; i < requiredSlots; i++) {
       const slotIndex = startSlotIndex + i;
+  
       if (slotIndex < availableTimesCopy.length) {
+        if (!baseAvailableTimes[slotIndex].available) continue;
+  
         if (i > 0) {
           availableTimesCopy[slotIndex].available = false;
         }
       }
     }
-
-    setAvailableTimes(availableTimesCopy);
+  
+    setAvailableTimes(availableTimesCopy); 
   };
+  
 
   const calculateTotal = () => {
     const totalDuration = selectedServices.length * 30;
@@ -337,7 +377,7 @@ export function ClientBookingPage() {
   }
 
   return (
-    <div className="container mt-16 max-w-2xl mx-auto px-4 py-6">
+    <div className="container mt-16 max-w-2xl mx-auto px-6 py-6">
       <div className="flex items-center mb-6">
         <Link to="/shops" className="mr-3">
           <Button
@@ -358,7 +398,7 @@ export function ClientBookingPage() {
               Select Date
             </h2>
             <Card className="shadow-sm">
-              <CardContent className="p-4">
+              <CardContent className="p-4 ">
                 <Calendar
                   mode="single"
                   selected={selectedDate || undefined}
@@ -368,12 +408,12 @@ export function ClientBookingPage() {
                   }}
                   disabled={disabledDates}
                   fromDate={minBookingDate}
-                  className="rounded-md border"
+                  className="rounded-md w-full border"
                   classNames={{
                     day_today:
-                      "bg-primary/10 text-primary font-bold border border-primary",
+                      "bg-[var(--darkblue)]/10 text-[var(--darkblue)] font-bold border border-[var(--darkblue)]",
                     day_selected:
-                      "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                      "bg-[var(--darkblue)] text-white hover:bg-[var(--darkblue)] hover:text-white focus:bg-[var(--darkblue)] focus:text-white",
                     day_disabled:
                       "text-muted-foreground opacity-40 line-through",
                   }}
@@ -395,9 +435,9 @@ export function ClientBookingPage() {
                       variant="outline"
                       size="sm"
                       className={cn(
-                        "text-xs h-7 px-3 rounded-full",
+                        "text-xs h-7 px-3 rounded-full border-[var(--darkblue)]/20 text-[var(--darkblue)]",
                         selectedTime === slot.time &&
-                          "bg-primary text-primary-foreground hover:bg-primary/90",
+                          "bg-[var(--darkblue)] text-white hover:text-white border-[var(--darkblue)] hover:bg-[var(--darkblue)]/90",
                         !slot.available && "opacity-40 cursor-not-allowed"
                       )}
                       disabled={!slot.available}
@@ -446,11 +486,11 @@ export function ClientBookingPage() {
         </div>
 
         <div>
-          <div className="mb-6">
-            <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground mb-3">
+          <div className="mb-6 p-4 rounded-lg shadow-sm">
+            <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground mb-4">
               Select Services
             </h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {shopData.services?.map((service) => {
                 const isSelected = selectedServices.some(
                   (s) => s.serviceId === service.serviceId
@@ -460,20 +500,20 @@ export function ClientBookingPage() {
                   <div
                     key={service.serviceId}
                     className={cn(
-                      "flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all",
+                      "flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-all duration-200",
                       isSelected
-                        ? "border-primary bg-primary/5"
-                        : "hover:bg-muted/50"
+                        ? "border-[var(--darkblue)] bg-[var(--darkblue)]/10 shadow-sm"
+                        : "border-gray-200 hover:bg-[var(--darkblue)]/5"
                     )}
                     onClick={() => toggleService(service)}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       <div
                         className={cn(
-                          "w-8 h-8 rounded-full flex items-center justify-center",
+                          "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
                           isSelected
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted"
+                            ? "bg-[var(--yellow)] text-white"
+                            : "bg-gray-100"
                         )}
                       >
                         <Scissors className="h-4 w-4" />
@@ -483,12 +523,12 @@ export function ClientBookingPage() {
                         <p className="text-xs text-muted-foreground">30 min</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <span className="text-sm font-medium">
                         ₹{service.price}
                       </span>
                       {isSelected && (
-                        <Badge variant="outline" className="h-5 bg-primary/10">
+                        <Badge className="bg-[var(--darkblue)]/10 text-[var(--darkblue)] border border-[var(--darkblue)]/20">
                           Selected
                         </Badge>
                       )}
