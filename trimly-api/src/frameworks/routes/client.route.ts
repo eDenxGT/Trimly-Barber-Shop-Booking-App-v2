@@ -18,6 +18,7 @@ import {
   dashboardController,
   feedController,
   financeController,
+  notificationController,
   reviewController,
   s3Controller,
   shopController,
@@ -176,6 +177,39 @@ export class ClientRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         financeController.withdrawFromWallet(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                 🛠️ Notifications Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router.get(
+      "/client/notifications",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        notificationController.getNotificationsByUser(req, res);
+      }
+    );
+
+    this.router.patch(
+      "/client/notifications/read",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        notificationController.markAllNotificationsAsReadByUser(req, res);
+      }
+    );
+
+    this.router.patch(
+      "/client/notifications/:notificationId/read",
+      verifyAuth,
+      authorizeRole(["client"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        notificationController.markSingleNotificationAsReadByUser(req, res);
       }
     );
 

@@ -37,6 +37,10 @@ import { DashboardController } from "../../interfaceAdapters/controllers/dashboa
 import { IDashboardController } from "../../entities/controllerInterfaces/dashboard/dashboard-controller.interface.js";
 import { HairstyleDetectorController } from "../../interfaceAdapters/controllers/hairstyle-detector.controller.js";
 import { IHairstyleDetectorController } from "../../entities/controllerInterfaces/hairstyle-detector/hairstyle-detector-controller.interface.js";
+import { NotificationController } from "../../interfaceAdapters/controllers/notification.controller.js";
+import { INotificationController } from "../../entities/controllerInterfaces/notifications/notification-controller.interface.js";
+import { NotificationSocketHandler } from "../../interfaceAdapters/websockets/handlers/notification.handler.js";
+import { INotificationSocketHandler } from "../../entities/socketHandlerInterfaces/notification-handler.interface.js";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -80,6 +84,9 @@ export const dashboardController =
 
 export const hairstyleDetectorController =
   container.resolve<IHairstyleDetectorController>(HairstyleDetectorController);
+
+export const notificationController =
+  container.resolve<INotificationController>(NotificationController);
 
 export const s3Controller = container.resolve<IS3Controller>(S3Controller);
 

@@ -1,4 +1,4 @@
-import { model, ObjectId } from "mongoose";
+import { Document, model, ObjectId } from "mongoose";
 import { ITransactionEntity } from "../../../../entities/models/transaction.entity.js";
 import { transactionSchema } from "../schemas/transaction.schema.js";
 

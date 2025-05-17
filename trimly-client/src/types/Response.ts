@@ -22,6 +22,7 @@ import { IHairstyle } from "./Hairstyle";
 import { IService } from "./Service";
 import { IAdmin, IBarber, IClient, UserDTO } from "./User";
 import { ITransaction, IWithdrawal } from "./Wallet";
+import { INotification } from "./Notification";
 
 export interface IAxiosResponse {
   success: boolean;
@@ -182,4 +183,8 @@ export interface IHairstylePaginationResponse extends IAxiosResponse {
   hairstyles: IHairstyle[];
   totalPages: number;
   currentPage: number;
+}
+
+export interface INotificationResponse extends IAxiosResponse {
+  notifications: INotification[];
 }

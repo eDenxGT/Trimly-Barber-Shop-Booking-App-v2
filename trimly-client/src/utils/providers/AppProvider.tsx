@@ -6,8 +6,8 @@ import { persistor, store } from "@/store/store";
 import { ToastContainer } from "./ToastContainer";
 import { LoadingProvider } from "@/hooks/common/useLoading";
 import { SocketProvider } from "@/contexts/SocketContext";
-import { NotificationListener } from "@/utils/providers/NotificationListener";
 import { ChatProvider } from "@/contexts/ChatContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
 
 const queryClient = new QueryClient();
 
@@ -17,14 +17,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <QueryClientProvider client={queryClient}>
-            <ChatProvider>
-              <SocketProvider>
-                <NotificationListener />
-                <LoadingProvider>
-                  <ToastContainer>{children}</ToastContainer>
-                </LoadingProvider>
-              </SocketProvider>
-            </ChatProvider>
+            <NotificationProvider>
+              <ChatProvider>
+                <SocketProvider>
+                  <LoadingProvider>
+                    <ToastContainer>{children}</ToastContainer>
+                  </LoadingProvider>
+                </SocketProvider>
+              </ChatProvider>
+            </NotificationProvider>
           </QueryClientProvider>
         </PersistGate>
       </Provider>

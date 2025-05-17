@@ -16,7 +16,6 @@ import Footer from "../mainComponents/Footer";
 
 export const ClientLayout = () => {
   const [isSideBarVisible, setIsSideBarVisible] = useState(false);
-  const [notifications] = useState(2);
   const { successToast, errorToast } = useToaster();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -61,7 +60,6 @@ export const ClientLayout = () => {
         className="z-40"
         user={user}
         onLogout={handleLogout}
-        notifications={notifications}
         onSidebarToggle={() => setIsSideBarVisible(!isSideBarVisible)}
       />
 

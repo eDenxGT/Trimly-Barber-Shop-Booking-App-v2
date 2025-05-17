@@ -91,7 +91,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
           notifyToast({
             title: `You received a DM:`,
-            content: `${newMessage.content}`,
+            message: `${newMessage.content}`,
+            createdAt: newMessage.timestamp,
           });
         }
 
@@ -128,7 +129,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         notifyToast({
           title: `You received a DM:`,
-          content: `${newMessage.content}`,
+          message: `${newMessage.content}`,
+          createdAt: newMessage.timestamp,
         });
       }
     };
@@ -152,13 +154,15 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
           notifyToast({
             title: `New community message received!`,
-            content: `${newMessage.senderName}: ${newMessage.content}`,
+            message: `${newMessage.senderName}: ${newMessage.content}`,
+            createdAt: newMessage.timestamp,
           });
         }
       } else {
         notifyToast({
           title: `New community message received!`,
-          content: `${newMessage.senderName}: ${newMessage.content}`,
+          message: `${newMessage.senderName}: ${newMessage.content}`,
+          createdAt: newMessage.timestamp,
         });
       }
     };

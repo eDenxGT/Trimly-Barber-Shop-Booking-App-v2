@@ -1,6 +1,8 @@
+import { INotification } from "./Notification";
+
 export interface ServerToClientEvents {
   "direct-chat:receive-message": (data: any) => void;
-  "receive-notification": (notificationData: { message: string }) => void;
+  "receive-notification": (notification: INotification) => void;
   "community-chat:receive-message": (data: any) => void;
   "direct-chat:read-message": (data: any) => void;
   "direct-chat:mark-as-read": (data: any) => void;

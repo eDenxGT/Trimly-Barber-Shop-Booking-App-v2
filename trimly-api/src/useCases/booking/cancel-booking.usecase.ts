@@ -8,6 +8,9 @@ import { IBarberRepository } from "../../entities/repositoryInterfaces/users/bar
 import { ITransactionRepository } from "../../entities/repositoryInterfaces/finance/transaction-repository.interface.js";
 import { IWalletRepository } from "../../entities/repositoryInterfaces/finance/wallet-repository.interface.js";
 import { generateUniqueId } from "../../shared/utils/unique-uuid.helper.js";
+import { ISendNotificationByUserUseCase } from "../../entities/useCaseInterfaces/notifications/send-notification-by-user-usecase.interface.js";
+import { formatDate } from "../../shared/utils/date-formatter.js";
+import { getBookingDateTimeUTC } from "../../shared/utils/get-booking-date-time-utc.helper.js";
 
 @injectable()
 export class CancelBookingUseCase implements ICancelBookingUseCase {
@@ -18,7 +21,9 @@ export class CancelBookingUseCase implements ICancelBookingUseCase {
     private _barberRepository: IBarberRepository,
     @inject("IWalletRepository") private _walletRepository: IWalletRepository,
     @inject("ITransactionRepository")
-    private _transactionRepository: ITransactionRepository
+    private _transactionRepository: ITransactionRepository,
+    @inject("ISendNotificationByUserUseCase")
+    private _sendNotificationByUserUseCase: ISendNotificationByUserUseCase,
   ) {}
 
   async execute(bookingId: string): Promise<void> {
@@ -31,18 +36,7 @@ export class CancelBookingUseCase implements ICancelBookingUseCase {
     }
     if (booking.status === "cancelled") return;
 
-    const bookingDate = new Date(booking.date);
-    const startTimeStr = booking.startTime;
-
-    const fullDateTimeStr = `${format(
-      bookingDate,
-      "yyyy-MM-dd"
-    )} ${startTimeStr}`;
-    const bookingStartTime = parse(
-      fullDateTimeStr,
-      "yyyy-MM-dd h:mm a",
-      new Date()
-    );
+    const bookingDate = getBookingDateTimeUTC(booking.date, booking.startTime);
 
     const now = new Date();
 
@@ -63,7 +57,7 @@ export class CancelBookingUseCase implements ICancelBookingUseCase {
       return;
     }
 
-    const diffInMs = bookingStartTime.getTime() - now.getTime();
+    const diffInMs = bookingDate.getTime() - now.getTime();
     const diffInMinutes = diffInMs / (1000 * 60);
     if (diffInMinutes < 60) {
       throw new CustomError(
@@ -98,5 +92,19 @@ export class CancelBookingUseCase implements ICancelBookingUseCase {
         referenceId: bookingId,
       }),
     ]);
+
+    await this._sendNotificationByUserUseCase.execute({
+      receiverId: booking.shopId,
+      message: `Booking cancelled for ${formatDate(
+        booking.date.toString()
+      )} at ${booking.startTime}.`,
+    });
+
+    await this._sendNotificationByUserUseCase.execute({
+      receiverId: booking.clientId,
+      message: `Your booking is cancelled for ${formatDate(
+        booking.date.toString()
+      )} at ${booking.startTime}.`,
+    });
   }
 }

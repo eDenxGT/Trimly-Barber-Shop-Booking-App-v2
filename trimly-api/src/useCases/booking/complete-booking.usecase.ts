@@ -7,6 +7,9 @@ import { ITransactionRepository } from "../../entities/repositoryInterfaces/fina
 import { generateUniqueId } from "../../shared/utils/unique-uuid.helper.js";
 import { ICompleteBookingUseCase } from "../../entities/useCaseInterfaces/booking/complete-booking-usecase.interface.js";
 import { IIncrementWalletBalanceUseCase } from "../../entities/useCaseInterfaces/finance/wallet/increment-wallet-balance-usecase.interface.js";
+import { ISendNotificationByUserUseCase } from "../../entities/useCaseInterfaces/notifications/send-notification-by-user-usecase.interface.js";
+import { formatDate } from "../../shared/utils/date-formatter.js";
+import { getBookingDateTimeUTC } from "../../shared/utils/get-booking-date-time-utc.helper.js";
 
 @injectable()
 export class CompleteBookingUseCase implements ICompleteBookingUseCase {
@@ -16,7 +19,9 @@ export class CompleteBookingUseCase implements ICompleteBookingUseCase {
     @inject("ITransactionRepository")
     private _transactionRepository: ITransactionRepository,
     @inject("IIncrementWalletBalanceUseCase")
-    private _incrementWalletBalanceUseCase: IIncrementWalletBalanceUseCase
+    private _incrementWalletBalanceUseCase: IIncrementWalletBalanceUseCase,
+    @inject("ISendNotificationByUserUseCase")
+    private _sendNotificationByUserUseCase: ISendNotificationByUserUseCase
   ) {}
 
   async execute(bookingId: string, role: string): Promise<void> {
@@ -28,17 +33,9 @@ export class CompleteBookingUseCase implements ICompleteBookingUseCase {
       );
     }
 
-    const bookingDate = new Date(booking.date);
-    const startTimeStr = booking.startTime;
-
-    const fullDateTimeStr = `${format(
-      bookingDate,
-      "yyyy-MM-dd"
-    )} ${startTimeStr}`;
-    const bookingStartTime = parse(
-      fullDateTimeStr,
-      "yyyy-MM-dd h:mm a",
-      new Date()
+    const bookingStartTime = getBookingDateTimeUTC(
+      booking.date,
+      booking.startTime
     );
 
     const bookingEndTime = addMinutes(bookingStartTime, booking.duration);
@@ -84,6 +81,20 @@ export class CompleteBookingUseCase implements ICompleteBookingUseCase {
       ownerId: booking.shopId,
       amount: booking.total,
       role: role as "barber" | "client",
+    });
+
+    await this._sendNotificationByUserUseCase.execute({
+      receiverId: booking.shopId,
+      message: `Booking completed for ${formatDate(
+        booking.date.toString()
+      )} at ${booking.startTime}.`,
+    });
+
+    await this._sendNotificationByUserUseCase.execute({
+      receiverId: booking.clientId,
+      message: `Your booking is completed for ${formatDate(
+        booking.date.toString()
+      )} at ${booking.startTime}.`,
     });
   }
 }

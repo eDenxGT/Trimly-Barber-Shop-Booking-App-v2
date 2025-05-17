@@ -25,6 +25,7 @@ import {
   userController,
   dashboardController,
   hairstyleDetectorController,
+  notificationController,
 } from "../di/resolver.js";
 
 export class BarberRoutes extends BaseRoute {
@@ -66,6 +67,39 @@ export class BarberRoutes extends BaseRoute {
       blockStatusMiddleware.checkStatus as RequestHandler,
       (req: Request, res: Response) => {
         dashboardController.getBarberDashboardData(req, res);
+      }
+    );
+
+    //* ─────────────────────────────────────────────────────────────
+    //*                 🛠️ Notifications Endpoints
+    //* ─────────────────────────────────────────────────────────────
+    this.router.get(
+      "/barber/notifications",
+      verifyAuth,
+      authorizeRole(["barber"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        notificationController.getNotificationsByUser(req, res);
+      }
+    );
+
+    this.router.patch(
+      "/barber/notifications/read",
+      verifyAuth,
+      authorizeRole(["barber"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        notificationController.markAllNotificationsAsReadByUser(req, res);
+      }
+    );
+
+    this.router.patch(
+      "/barber/notifications/:notificationId/read",
+      verifyAuth,
+      authorizeRole(["barber"]),
+      blockStatusMiddleware.checkStatus as RequestHandler,
+      (req: Request, res: Response) => {
+        notificationController.markSingleNotificationAsReadByUser(req, res);
       }
     );
 

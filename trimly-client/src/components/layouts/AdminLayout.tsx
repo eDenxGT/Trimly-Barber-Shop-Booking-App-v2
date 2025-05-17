@@ -11,7 +11,6 @@ import { Sidebar } from "../mainComponents/SideBar";
 
 export const AdminLayout = () => {
 	const [isSideBarVisible, setIsSideBarVisible] = useState(false);
-	const [notifications] = useState(2);
 	const { successToast, errorToast } = useToaster();
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
@@ -50,7 +49,6 @@ export const AdminLayout = () => {
 				className="z-40"
 				user={user}
 				onLogout={handleLogout}
-				notifications={notifications}
 				onSidebarToggle={() => setIsSideBarVisible(!isSideBarVisible)}
 			/>
 

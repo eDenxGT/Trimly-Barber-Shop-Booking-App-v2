@@ -11,6 +11,7 @@ import {
   IClientHomePageResponse,
   IClientResponse,
   ILikedUsersResponse,
+  INotificationResponse,
   ISinglePostResponse,
   IWalletPageResponse,
 } from "@/types/Response";
@@ -329,6 +330,31 @@ export const fetchLikedUsersByPostId = async (
 ): Promise<ILikedUsersResponse> => {
   const response = await clientAxiosInstance.get<ILikedUsersResponse>(
     `/client/posts/liked-users/${postId}`
+  );
+  return response.data;
+};
+
+export const getNotificationsForClient = async () => {
+  const response = await clientAxiosInstance.get<INotificationResponse>(
+    "/client/notifications"
+  );
+  return response.data;
+};
+
+export const markSingleNotificationAsReadForClient = async ({
+  notificationId,
+}: {
+  notificationId: string;
+}) => {
+  const response = await clientAxiosInstance.patch(
+    `/client/notifications/${notificationId}/read`
+  );
+  return response.data;
+};
+
+export const markAllNotificationsAsReadForClient = async () => {
+  const response = await clientAxiosInstance.patch(
+    "/client/notifications/read"
   );
   return response.data;
 };

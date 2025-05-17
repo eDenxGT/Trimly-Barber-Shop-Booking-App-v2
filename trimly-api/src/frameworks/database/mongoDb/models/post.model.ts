@@ -1,4 +1,4 @@
-import { model, ObjectId } from "mongoose";
+import { Document, model, ObjectId } from "mongoose";
 import { IPostEntity } from "../../../../entities/models/post.entity.js";
 import { postSchema } from "../schemas/post.schema.js";
 

@@ -1,5 +1,4 @@
-import { model, ObjectId } from "mongoose";
-import { Document } from "mongoose";
+import { Document, model, ObjectId } from "mongoose";
 import { ICommunityMessageEntity } from "../../../../../entities/models/chat/community-message.entity.js";
 import { communityMessageSchema } from "../../schemas/chat/community-message.schema.js";
 

@@ -12,6 +12,7 @@ import {
   IFaceShapeDetectionResponse,
   IHairstyleResponse,
   IMeetingRoomResponse,
+  INotificationResponse,
   IServiceResponse,
   ISinglePostResponse,
   IWalletPageResponse,
@@ -388,6 +389,31 @@ export const getBarberHairstyles = async ({
         faceShape,
       },
     }
+  );
+  return response.data;
+};
+
+export const getBarberNotifications = async () => {
+  const response = await barberAxiosInstance.get<INotificationResponse>(
+    "/barber/notifications"
+  );
+  return response.data;
+};
+
+export const markSingleNotificationAsReadForBarber = async ({
+  notificationId,
+}: {
+  notificationId: string;
+}) => {
+  const response = await barberAxiosInstance.patch(
+    `/barber/notifications/${notificationId}/read`
+  );
+  return response.data;
+};
+
+export const markAllNotificationsAsReadForBarber = async () => {
+  const response = await barberAxiosInstance.patch(
+    "/barber/notifications/read"
   );
   return response.data;
 };

@@ -58,7 +58,8 @@ export function ClientBookingPage() {
   const { data, isLoading, error } = useBarberShopById(
     getBarberShopDetailsById,
     shopId || "",
-    "active"
+    "active",
+    true
   );
   const shopData = data?.user;
 
@@ -66,7 +67,6 @@ export function ClientBookingPage() {
 
   const existingBookings = shopData?.bookings;
   const minBookingDate = startOfDay(new Date());
-
 
   const isDateAvailable = (date: Date): boolean => {
     const dayName = format(date, "EEEE").toLowerCase();
@@ -79,16 +79,12 @@ export function ClientBookingPage() {
     return true;
   };
 
-  
-
   const disabledDates = (date: Date) => {
     if (isBefore(date, minBookingDate)) {
       return true;
     }
     return !isDateAvailable(date);
   };
-
-
 
   const getClosingTime = (date: Date): Date | null => {
     if (!shopData?.openingHours) return null;
@@ -100,8 +96,6 @@ export function ClientBookingPage() {
 
     return parse(dayHours.close, "HH:mm", date);
   };
-
-
 
   const sanitizedOpeningHours: OpeningHours = Object.fromEntries(
     Object.entries(shopData?.openingHours ?? {}).map(([day, hours]) => [
@@ -115,8 +109,6 @@ export function ClientBookingPage() {
     ])
   );
 
-
-
   useEffect(() => {
     if (!shopData?.openingHours || initialSlotsProcessed.current) return;
 
@@ -125,41 +117,38 @@ export function ClientBookingPage() {
     initialSlotsProcessed.current = true;
   }, [shopData?.openingHours, sanitizedOpeningHours]);
 
-
-
-
   useEffect(() => {
     if (
       Object.keys(allTimeSlots).length === 0 ||
       existingBookingsProcessed.current
     )
       return;
-  
+
     const updatedSlots = JSON.parse(JSON.stringify(allTimeSlots));
     let slotsUpdated = false;
-  
+
     const now = new Date();
-    now.setSeconds(0, 0); 
+    now.setSeconds(0, 0);
     const todayKey = now.toDateString();
     const todaySlots = updatedSlots[todayKey];
-      
+
     if (todaySlots) {
       todaySlots.forEach((slot: TimeSlot) => {
         const { hours, minutes } = parse12HourTime(slot.time);
         const slotTime = new Date(now);
         slotTime.setHours(hours, minutes, 0, 0);
-  
+
         if (slotTime <= now && slot.available) {
           slot.available = false;
           slotsUpdated = true;
         }
       });
     }
-  
+
     existingBookings?.forEach((booking) => {
       const dateKey = new Date(booking.date).toDateString();
       const slotsForDate = updatedSlots[dateKey];
-  
+
       if (slotsForDate) {
         booking.bookedTimeSlots.forEach((bookedTime) => {
           const slotIndex = slotsForDate.findIndex(
@@ -172,16 +161,13 @@ export function ClientBookingPage() {
         });
       }
     });
-  
+
     if (slotsUpdated) {
       setAllTimeSlots(updatedSlots);
     }
     existingBookingsProcessed.current = true;
   }, [allTimeSlots, existingBookings]);
-  
 
-
-  
   useEffect(() => {
     if (!selectedDate) return;
 
@@ -238,9 +224,6 @@ export function ClientBookingPage() {
     setBaseAvailableTimes(updatedTimes);
   }, [selectedDate, allTimeSlots, selectedServices]);
 
-
-
-
   useEffect(() => {
     if (!selectedDate || !selectedTime || selectedServices.length === 0) {
       setBookedTimeSlots([]);
@@ -264,9 +247,6 @@ export function ClientBookingPage() {
     setBookedTimeSlots(bookedSlots);
   }, [selectedDate, selectedTime, selectedServices, allTimeSlots]);
 
-
-
-
   const toggleService = (service: IService) => {
     setSelectedTime(null);
 
@@ -283,36 +263,33 @@ export function ClientBookingPage() {
     }
   };
 
-
-
   const handleTimeSelection = (time: string) => {
     if (!selectedDate || selectedServices.length === 0) return;
-  
+
     setSelectedTime(time);
-  
+
     const requiredSlots = selectedServices.length;
-  
-    const availableTimesCopy = baseAvailableTimes.map(slot => ({ ...slot }));
-  
+
+    const availableTimesCopy = baseAvailableTimes.map((slot) => ({ ...slot }));
+
     const startSlotIndex = availableTimesCopy.findIndex(
       (slot: TimeSlot) => slot.time === time
     );
-  
+
     for (let i = 0; i < requiredSlots; i++) {
       const slotIndex = startSlotIndex + i;
-  
+
       if (slotIndex < availableTimesCopy.length) {
         if (!baseAvailableTimes[slotIndex].available) continue;
-  
+
         if (i > 0) {
           availableTimesCopy[slotIndex].available = false;
         }
       }
     }
-  
-    setAvailableTimes(availableTimesCopy); 
+
+    setAvailableTimes(availableTimesCopy);
   };
-  
 
   const calculateTotal = () => {
     const totalDuration = selectedServices.length * 30;

@@ -1,4 +1,4 @@
-import { model, ObjectId } from "mongoose";
+import { Document, model, ObjectId } from "mongoose";
 import { ICommentEntity } from "../../../../entities/models/comment.entity.js";
 import { commentSchema } from "../schemas/comment.schema.js";
 
